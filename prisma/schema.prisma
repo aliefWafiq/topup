@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  jenis_id String   @id @default(cuid())
+  image String
+  nama String
+  margin Decimal
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum StatusTransaksi {
+  PENDING
+  PROCESSING  
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+model Transaksi {
+  id_transaksi    String   @id @default(cuid())
+  id_user         String
+  kode_produk     String
+  operator_produk String
+  server          String
+  harga           Int
+  status          StatusTransaksi @default(PENDING)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
