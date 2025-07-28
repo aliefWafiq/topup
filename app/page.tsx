@@ -7,7 +7,7 @@ export default async function Home() {
 
   return (
     <div className="flex items-center justify-center min-h-screen w-full">
-      <div className="flex flex-wrap w-full gap-4 justify-center">
+      <div className="flex flex-wrap w-full gap-4 justify-center my-52">
         {games.map((item: data) => (
           <Card key={item.jenis_id} data={item} />
         ))}

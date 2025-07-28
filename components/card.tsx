@@ -1,12 +1,12 @@
 'use client'
 
+import { gameIdMapping } from '@/lib/gameIdMapping'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { data } from '@/types/data' // tipe data dari database
 import { EditButton, DeleteButton } from '@/components/button'
 
-// panggil API eksternal
 async function getGameDetail(id: string) {
   const url = `https://api.tokovoucher.net/member/produk/jenis/list?member_code=M250723WMNE3166SS&signature=5dbf3705b0f3982e476f2d1e49e99ad5&id=${id}`
 
@@ -25,8 +25,16 @@ const Card = ({ data }: { data: data }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    console.log(data.nama)
-    getGameDetail(data.nama).then((result) => {
+    const mappedId = gameIdMapping[data.nama]
+
+    if(!mappedId){
+      console.warn("Id ndk jumpa ", data.nama)
+      setLoading(false)
+      return
+    }
+
+    // console.log(data.nama)
+    getGameDetail(String(mappedId)).then((result) => {
         console.log(result)
       if (result.length > 0) {
         setGameDetail(result[0])

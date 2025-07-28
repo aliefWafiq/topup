@@ -1,11 +1,11 @@
 'use client'
-
 import { submit } from '@/lib/action'
 import { useEffect, useState, useActionState } from 'react'
 import { Games } from '@/types/game'
 import { SubmitButton } from '@/components/button'
 
 export default function Form() {
+  const [value, setValue] = useState("game")
   const [games, setGames] = useState<Games[]>([])
   const [state, formAction] = useActionState(submit, null)
 
@@ -32,10 +32,10 @@ useEffect(() => {
         </div>
 
         <div className='mb-4'>
-          <select name="nama" className="border w-full py-2 px-3">
+          <select name="nama" className="border w-full py-2 px-3" >
             {games.map(game => (
-              <option key={game.operator_produk} value={game.jenis_id}>
-                {game.jenis_id} {game.operator_produk}
+              <option key={game.id} value={game.id}>
+                {game.id} {game.nama}
               </option>
             ))}
           </select>
