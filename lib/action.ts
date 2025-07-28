@@ -28,7 +28,10 @@ export const submit = async (prevState: unknown, FormData: FormData) => {
     })
 
     try{
-        await prisma.Game.create({
+        if (!prisma) {
+            throw new Error("Prisma client is not initialized");
+        }
+        await prisma.game.create({
             data: {
                 nama,
                 image: url,

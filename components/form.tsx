@@ -2,10 +2,11 @@
 
 import { submit } from '@/lib/action'
 import { useEffect, useState, useActionState } from 'react'
-import { Game } from '@/types/game'
+import { Games } from '@/types/game'
+import { SubmitButton } from '@/components/button'
 
 export default function Form() {
-  const [games, setGames] = useState<Game[]>([])
+  const [games, setGames] = useState<Games[]>([])
   const [state, formAction] = useActionState(submit, null)
 
 useEffect(() => {
@@ -33,8 +34,8 @@ useEffect(() => {
         <div className='mb-4'>
           <select name="nama" className="border w-full py-2 px-3">
             {games.map(game => (
-              <option key={game.id} value={game.nama}>
-                {game.nama}
+              <option key={game.operator_produk} value={game.jenis_id}>
+                {game.jenis_id} {game.operator_produk}
               </option>
             ))}
           </select>
@@ -52,9 +53,7 @@ useEffect(() => {
         </div>
 
         <div className='mb-4 pt-4'>
-          <button className='bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer'>
-            Submit
-          </button>
+            <SubmitButton label="submit" />
         </div>
 
         {state?.message && (

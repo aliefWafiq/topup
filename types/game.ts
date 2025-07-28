@@ -1,6 +1,9 @@
-export type Game = {
+export type Games = {
     id: string;
+    jenis_id: string;
+    operator_produk: string;
     nama: string;
     nama_produk: string;
-    price: number
+    price: number;
+    logo: string;
 }
