@@ -1,13 +1,11 @@
 'use server'
 import prisma from "@/lib/prisma";
 import {z} from "zod";
-import {put} from "@vercel/blob"
 import { redirect } from "next/navigation";
 
 const actionSchema = z.object({
     nama: z.string().min(1),
-    image: z.any(),
-    margin: z.string().min(0)
+    image: z.string().min(1),
 })
 
 export const submit = async (prevState: unknown, FormData: FormData) => {
@@ -21,12 +19,7 @@ export const submit = async (prevState: unknown, FormData: FormData) => {
         }
     }
 
-    const {nama, image, margin} = validatedData.data
-    const {url} = await put(image.name, image, {
-        access: 'public',
-        multipart: true,
-    })
-
+    const {nama, image} = validatedData.data
     try{
         if (!prisma) {
             throw new Error("Prisma client is not initialized");
@@ -34,8 +27,7 @@ export const submit = async (prevState: unknown, FormData: FormData) => {
         await prisma.game.create({
             data: {
                 nama,
-                image: url,
-                margin: margin,
+                image: image,
             }
         })
     }catch(error){

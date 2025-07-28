@@ -25,16 +25,7 @@ const Card = ({ data }: { data: data }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const mappedId = gameIdMapping[data.nama]
-
-    if(!mappedId){
-      console.warn("Id ndk jumpa ", data.nama)
-      setLoading(false)
-      return
-    }
-
-    // console.log(data.nama)
-    getGameDetail(String(mappedId)).then((result) => {
+    getGameDetail(data.nama).then((result) => {
         console.log(result)
       if (result.length > 0) {
         setGameDetail(result[0])

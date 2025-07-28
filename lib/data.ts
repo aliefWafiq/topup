@@ -9,7 +9,6 @@ export const getGames = async () => {
 
         const plainGames = result.map(game => ({
             ...game,
-            margin: game.margin.toNumber()
         }))
         return plainGames
     }catch(error){
