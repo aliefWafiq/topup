@@ -4,7 +4,7 @@ import { gameIdMapping } from '@/lib/gameIdMapping'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { data } from '@/types/data' // tipe data dari database
+import { data } from '@/types/data'
 import { EditButton, DeleteButton } from '@/components/button'
 
 async function getGameDetail(id: string) {

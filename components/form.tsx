@@ -5,7 +5,7 @@ import { useEffect, useState, useActionState } from 'react'
 import { Games } from '@/types/game'
 import { SubmitButton } from '@/components/button'
 
-export default function Form() {
+export function Form() {
   const [selectedId, setSelectedId] = useState<string>("")
   const [logo, setLogo] = useState<string>("")
   const [games, setGames] = useState<Games[]>([])
@@ -84,3 +84,40 @@ useEffect(() => {
     </div>
   )
 }
+
+export function FormPayment() {
+   return (
+      <form action={''} className='flex justify-center flex-col px-24 w-full'>
+        <div className='mb-4 pt-2'>
+            <input
+              type="number"
+              name="IdUser"
+              placeholder="Masukkan ID User"
+              className='py-2 px-4 rounded-sm border border-gray-400 w-full'
+            />
+          </div>
+         <div className='mb-4'>
+          <select 
+          name="nama" 
+          className="border w-full py-2 px-3" >
+            <option>
+              Asia
+            </option>
+          </select>
+        </div>
+          <div className='mb-4 pt-2'>
+            <input
+              type="text"
+              name="email"
+              placeholder="Email"
+              className='py-2 px-4 rounded-sm border border-gray-400 w-full'
+            />
+          </div>
+          <div className='mb-4 pt-4'>
+            <SubmitButton label="submit" />
+          </div>
+      </form>
+   )
+}
+  
+
