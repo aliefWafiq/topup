@@ -3,19 +3,24 @@ import { useFormStatus } from "react-dom"
 import {clsx} from "clsx"
 import Link from 'next/link'
 
-export const SubmitButton = ({label}:{label:string}) => {
+export const SubmitButton = ({label, onCLick}:{label:string, onCLick?:() => void}) => {
     const {pending} = useFormStatus() 
     return(
         <button className={clsx("bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer", 
         {
             "opacity-50 cursor-progress": pending
         }
-        )} type="submit" disabled={pending}>
+        )} 
+        type="submit" 
+        disabled={pending}
+        onClick={onCLick}>
             {label === 'submit' ? (
                 <>{pending ? "Submitting..." : "Submit"}</>
             ): (
                 <>{pending ? "Updating" : "Update"}</>
             )}
+
+            
         </button>
     )
 }

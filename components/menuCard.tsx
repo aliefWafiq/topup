@@ -18,10 +18,16 @@ const MenuCard = ({games}:{games:Games}) => {
                 onClick={() => setShowForm(true)} 
                 className='my-2 border-2 border-gray-200 rounded-md w-1/2 p-5 text-start hover:cursor-pointer'>
                 <p className="font-semibold">{games.nama_produk}</p>
+                {games.jenis_id}
                 <p>Rp {harga(games.price)}</p>
             </div>
             {showForm && (
-                <LayoutFormPayment onClose={() => setShowForm(false)}/>
+                <LayoutFormPayment 
+                onClose={() => setShowForm(false)}
+                namaProduk={games.nama_produk}
+                hargaProduk={games.price}
+                jenis_id={games.jenis_id}
+                operator_produk={games.operator_produk}/>
             )}
         </>
     )

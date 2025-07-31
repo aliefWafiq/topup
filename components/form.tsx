@@ -4,6 +4,13 @@ import { submit } from '@/lib/action'
 import { useEffect, useState, useActionState } from 'react'
 import { Games } from '@/types/game'
 import { SubmitButton } from '@/components/button'
+import Script from 'next/script'
+
+declare global {
+  interface Window {
+    snap: any
+  }
+}
 
 export function Form() {
   const [selectedId, setSelectedId] = useState<string>("")
@@ -74,7 +81,7 @@ useEffect(() => {
         </div>
 
         <div className='mb-4 pt-4'>
-            <SubmitButton label="submit" />
+            <SubmitButton label="submit"/>
         </div>
 
         {state?.message && (
@@ -85,9 +92,63 @@ useEffect(() => {
   )
 }
 
-export function FormPayment() {
+const handleCheckout = async (
+  jenis_id: string,
+  operator_produk: string,
+  nama_produk: string,
+  price: number
+) => {
+  const data = {
+    jenis_id: jenis_id,
+    operator_produk: operator_produk,
+    nama_produk: nama_produk,
+    price: price
+  }
+}
+
+
+export function FormPayment(
+  {namaProduk, hargaProduk, jenis_id, operator_produk} : {
+    namaProduk: string,
+    hargaProduk: number,
+    jenis_id: string,
+    operator_produk: string
+  }) {
+   const total = hargaProduk + 2000
+   
+
    return (
+   <>
+    <Script 
+        src={process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL} 
+        data-client-key={process.env.MIDTRANS_CLIENT_KEY}
+        strategy='lazyOnload' 
+      />
       <form action={''} className='flex justify-center flex-col px-24 w-full'>
+        <div className='mb-4 pt-2'>
+          <input
+            type="text"
+            name="nama_produk"
+            placeholder="Nama Produk"
+            value={namaProduk}
+            className='py-2 px-4 rounded-sm border border-gray-400 w-full hover:cursor-not-allowed bg-slate-100'
+            readOnly
+            disabled
+          />
+        </div>
+        <p>{jenis_id}</p>
+        <p>{operator_produk}</p>
+        <div className='mb-4 pt-2'>
+          <input
+            type="number"
+            name="harga_produk"
+            placeholder="Harga Produk"
+            value={total.toLocaleString('id-ID')}
+            className='py-2 px-4 rounded-sm border border-gray-400 w-full hover:cursor-not-allowed bg-slate-100'
+            readOnly
+            disabled
+          />
+        </div>
         <div className='mb-4 pt-2'>
             <input
               type="number"
@@ -105,18 +166,19 @@ export function FormPayment() {
             </option>
           </select>
         </div>
-          <div className='mb-4 pt-2'>
-            <input
-              type="text"
-              name="email"
-              placeholder="Email"
-              className='py-2 px-4 rounded-sm border border-gray-400 w-full'
-            />
-          </div>
-          <div className='mb-4 pt-4'>
-            <SubmitButton label="submit" />
-          </div>
+        <div className='mb-4 pt-2'>
+          <input
+            type="text"
+            name="email"
+            placeholder="Email"
+            className='py-2 px-4 rounded-sm border border-gray-400 w-full'
+          />
+        </div>
+        <div className='mb-4 pt-4'>
+          <SubmitButton label="submit" onCLick={() => handleCheckout(jenis_id, operator_produk, namaProduk, total)}/>
+        </div>
       </form>
+      </>
    )
 }
   

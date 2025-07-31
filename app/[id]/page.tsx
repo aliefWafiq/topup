@@ -21,10 +21,6 @@ export default async function ProductPage({params}:{
         <h1 className="text-2xl font-bold mb-4">{namaGame.operator_produk}</h1>
         {games.map((game: Games) => (
             <MenuCard key={game.nama_produk} games={game}/>
-            // <button key={game.nama_produk} className="my-2 border-2 border-gray-200 rounded-md w-1/2 p-5">
-            //     <h2 className="font-semibold">{game.nama_produk}</h2>
-            //     <p>Rp {harga(game.price)}</p>
-            // </button>
         ))}
       </div>
     )
