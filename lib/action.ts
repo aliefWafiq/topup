@@ -1,7 +1,7 @@
 'use server'
-import prisma from "@/lib/prisma";
-import {z} from "zod";
-import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma"
+import {z} from "zod"
+import { redirect } from "next/navigation"
 
 const actionSchema = z.object({
     nama: z.string().min(1),

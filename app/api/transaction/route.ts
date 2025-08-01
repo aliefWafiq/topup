@@ -1,5 +1,6 @@
 import createTransaction from "@/lib/transaction";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 type Data = {
     status: boolean;
@@ -18,10 +19,10 @@ export async function POST(req: NextRequest,){
         price,
         email,
         jenis_id,
-        server
+        server,
+        code,
+        id_user
        } = body
-
-       console.log("📥 Email diterima di server:", email)
 
         const params = {
             transaction_details: {
@@ -30,17 +31,40 @@ export async function POST(req: NextRequest,){
             },
             item_details: {
                 jenis_id: jenis_id,
+                id_user: id_user,
                 operator_produk: operator_produk,
                 name: nama_produk,   
                 email: email,
                 price: price,
                 quantity: 1,
-                server: server
+                server: server,
+                code: code,
             },
             customer_details: {
                 email
             }
         }
+
+        try{
+            if (!prisma) {
+                throw new Error("Prisma client is not initialized");
+            }
+            await prisma.transaksi.create({
+                data: {
+                    id_transaksi: String(id),
+                    harga: price,
+                    id_user: id_user,
+                    kode_produk: code,
+                    operator_produk: operator_produk,
+                    status: 'PENDING',
+                    server: server
+                }
+            })
+        }catch(error){
+            return {message: 'Failed to add game'}
+        }
+
+        
 
         const transaction: any = await new Promise((resolve, reject) => {
             createTransaction(params, (result: any) => {
@@ -48,7 +72,6 @@ export async function POST(req: NextRequest,){
             })
         })
 
-        console.log(transaction.token)
 
         return NextResponse.json({
             status: true,

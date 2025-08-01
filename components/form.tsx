@@ -99,18 +99,21 @@ export function FormPayment(
     hargaProduk: number,
     jenis_id: string,
     operator_produk: string,
-    code: string
+    code: string,
   }) {
    const emailRef = useRef<HTMLInputElement>(null)
    const serverRef = useRef<HTMLInputElement>(null)
+   const id_userRef = useRef<HTMLInputElement>(null)
    const total = hargaProduk + 2000
    const orderId = Math.floor(Math.random() * 100) + Date.now()
    
     const handleCheckout = async () => {
       const email = emailRef.current?.value
       const server = serverRef.current?.value || ''
+      const id_user = id_userRef.current?.value
       const body = {
         id: orderId,
+        id_user: id_user,
         nama_produk: namaProduk,
         price: total,
         email,
@@ -170,9 +173,10 @@ export function FormPayment(
         <div className='mb-4 pt-2 w-2/3'>
             <input
               type="number"
-              name="IdUser"
+              name="id_user"
               placeholder="Masukkan ID User"
               className='py-2 px-4 rounded-sm border border-gray-400 w-full'
+              ref={id_userRef}
             />
           </div>
          <div className='mb-4 w-2/3'>
