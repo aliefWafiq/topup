@@ -20,7 +20,7 @@ export default async function ProductPage({params}:{
       <div className="flex flex-col items-center justify-center min-h-screen py-32">
         <h1 className="text-2xl font-bold mb-4">{namaGame.operator_produk}</h1>
         {games.map((game: Games) => (
-            <MenuCard key={game.nama_produk} games={game}/>
+            <MenuCard key={game.nama_produk} games={game} jenis_id={id}/>
         ))}
       </div>
     )

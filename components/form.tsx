@@ -3,8 +3,9 @@ import Image from 'next/image'
 import { submit } from '@/lib/action'
 import { useEffect, useState, useActionState } from 'react'
 import { Games } from '@/types/game'
-import { SubmitButton } from '@/components/button'
+import { SubmitButton, CheckOut } from '@/components/button'
 import Script from 'next/script'
+import { useRef } from 'react'
 
 declare global {
   interface Window {
@@ -92,40 +93,58 @@ useEffect(() => {
   )
 }
 
-const handleCheckout = async (
-  jenis_id: string,
-  operator_produk: string,
-  nama_produk: string,
-  price: number
-) => {
-  const data = {
-    jenis_id: jenis_id,
-    operator_produk: operator_produk,
-    nama_produk: nama_produk,
-    price: price
-  }
-}
-
-
 export function FormPayment(
-  {namaProduk, hargaProduk, jenis_id, operator_produk} : {
+  {namaProduk, hargaProduk, jenis_id, operator_produk, code} : {
     namaProduk: string,
     hargaProduk: number,
     jenis_id: string,
-    operator_produk: string
+    operator_produk: string,
+    code: string
   }) {
+   const emailRef = useRef<HTMLInputElement>(null)
+   const serverRef = useRef<HTMLInputElement>(null)
    const total = hargaProduk + 2000
+   const orderId = Math.floor(Math.random() * 100) + Date.now()
    
+    const handleCheckout = async () => {
+      const email = emailRef.current?.value
+      const server = serverRef.current?.value || ''
+      const body = {
+        id: orderId,
+        nama_produk: namaProduk,
+        price: total,
+        email,
+        jenis_id: jenis_id,
+        operator_produk: operator_produk,
+        server: server,
+        code: code
+      } 
+
+    const response = await fetch('/api/transaction', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+    },
+      body: JSON.stringify(body)
+    })
+
+    const json = await response.json()
+    if(json.status && json.data?.token){
+      window.snap.pay(json.data.token)
+    }else{
+      alert('Transaksi gagal: ' + json.message)
+    }
+    }
 
    return (
    <>
     <Script 
         src={process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL} 
-        data-client-key={process.env.MIDTRANS_CLIENT_KEY}
+        data-client-key={process.env.NEXT_PUBLIC_CLIENT_KEY}
         strategy='lazyOnload' 
       />
-      <form action={''} className='flex justify-center flex-col px-24 w-full'>
-        <div className='mb-4 pt-2'>
+      <div className="flex flex-col items-center px-6 gap-3 w-full">
+        <div className='mb-4 pt-2 w-2/3'>
           <input
             type="text"
             name="nama_produk"
@@ -133,23 +152,22 @@ export function FormPayment(
             value={namaProduk}
             className='py-2 px-4 rounded-sm border border-gray-400 w-full hover:cursor-not-allowed bg-slate-100'
             readOnly
-            disabled
           />
         </div>
-        <p>{jenis_id}</p>
-        <p>{operator_produk}</p>
-        <div className='mb-4 pt-2'>
+        <input type="text" name='jenis_id' value={jenis_id} className='hidden' />
+        <input type="text" name='code' value={code} className='hidden' />
+        <input type="text" name='operator_produk' value={operator_produk} className='hidden' />
+        <div className='mb-4 pt-2 w-2/3'>
           <input
             type="number"
-            name="harga_produk"
-            placeholder="Harga Produk"
-            value={total.toLocaleString('id-ID')}
+            name="hargaProduk"
+            placeholder={total.toLocaleString('id-ID')}
+            value={total}
             className='py-2 px-4 rounded-sm border border-gray-400 w-full hover:cursor-not-allowed bg-slate-100'
             readOnly
-            disabled
           />
         </div>
-        <div className='mb-4 pt-2'>
+        <div className='mb-4 pt-2 w-2/3'>
             <input
               type="number"
               name="IdUser"
@@ -157,27 +175,28 @@ export function FormPayment(
               className='py-2 px-4 rounded-sm border border-gray-400 w-full'
             />
           </div>
-         <div className='mb-4'>
+         <div className='mb-4 w-2/3'>
           <select 
-          name="nama" 
+          name="server" 
           className="border w-full py-2 px-3" >
-            <option>
+            <option value='prod_official_asia'>
               Asia
             </option>
           </select>
         </div>
-        <div className='mb-4 pt-2'>
+        <div className='mb-4 pt-2 w-2/3'>
           <input
-            type="text"
+            type="email"
             name="email"
             placeholder="Email"
             className='py-2 px-4 rounded-sm border border-gray-400 w-full'
+            ref={emailRef}
           />
         </div>
-        <div className='mb-4 pt-4'>
-          <SubmitButton label="submit" onCLick={() => handleCheckout(jenis_id, operator_produk, namaProduk, total)}/>
+        <div className='mb-4 pt-4 w-2/3'>
+          <CheckOut label='checkout' onClick={handleCheckout} />
         </div>
-      </form>
+      </div>
       </>
    )
 }

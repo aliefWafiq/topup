@@ -25,6 +25,22 @@ export const SubmitButton = ({label, onCLick}:{label:string, onCLick?:() => void
     )
 }
 
+export const CheckOut = ({label, onClick}:{label:string, onClick?:() => void}) => {
+    const {pending} = useFormStatus()
+    return(
+         <button className={clsx("bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer", 
+        {
+            "opacity-50 cursor-progress": pending
+        }
+        )} 
+        type="submit" 
+        disabled={pending}
+        onClick={onClick}>
+        <>{pending ? "Checkout..." : "Checkout"}</>
+        </button>
+    )
+}
+
 export const EditButton = () => {
     return (
         <Link href={''} className="py-3 text-sm bg-gray-50 rounded-bl-md hover:bg-gray-100

@@ -9,27 +9,46 @@ type Data = {
 
 export async function POST(req: NextRequest,){
     try{
-        const {id, jenis_id, operator_produk, nama_produk, price, email, server} = await req.json()
+       const body = await req.json()
+
+       const {
+        id,
+        nama_produk,
+        operator_produk,
+        price,
+        email,
+        jenis_id,
+        server
+       } = body
+
+       console.log("📥 Email diterima di server:", email)
 
         const params = {
             transaction_details: {
-                order_id: id,
-                gross_amount: price + 2000,
+                order_id:id,
+                gross_amount: price,
             },
-            item_detail: {
+            item_details: {
                 jenis_id: jenis_id,
                 operator_produk: operator_produk,
-                nama_produk: nama_produk,
+                name: nama_produk,   
                 email: email,
-                server: 'prod_official_asia'
+                price: price,
+                quantity: 1,
+                server: server
+            },
+            customer_details: {
+                email
             }
         }
 
-        const transaction = await new Promise((resolve, reject) => {
+        const transaction: any = await new Promise((resolve, reject) => {
             createTransaction(params, (result: any) => {
                 resolve(result)
             })
         })
+
+        console.log(transaction.token)
 
         return NextResponse.json({
             status: true,

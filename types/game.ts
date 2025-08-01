@@ -4,6 +4,7 @@ export type Games = {
     operator_produk: string;
     nama: string;
     nama_produk: string;
+    code: string;
     price: number;
     logo: string;
 }
