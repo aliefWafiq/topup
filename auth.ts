@@ -1,45 +1,74 @@
-import NextAuth from "next-auth"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import {prisma} from "@/lib/prisma"
-import Credentials from "next-auth/providers/credentials"
-import { SignInSchema } from "@/lib/zod"
-import { compareSync } from "bcrypt-ts"
- 
+import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma } from "@/lib/prisma";
+import Credentials from "next-auth/providers/credentials";
+import { SignInSchema } from "@/lib/zod";
+import { compareSync } from "bcrypt-ts";
+import { url } from "inspector";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session:{strategy: "jwt"},
+  session: { strategy: "jwt" },
   pages: {
-    signIn: "/login"
+    signIn: "/login",
   },
   providers: [
     Credentials({
-      credentials:{
+      credentials: {
         email: {},
         password: {},
       },
-      authorize: async(credentials) => {
-        const validatedFields = SignInSchema.safeParse(credentials)
+      authorize: async (credentials) => {
+        const validatedFields = SignInSchema.safeParse(credentials);
 
-        if(!validatedFields.success){
-          return null
+        if (!validatedFields.success) {
+          return null;
         }
 
-        const {email, password} = validatedFields.data
+        const { email, password } = validatedFields.data;
 
         const user = await prisma.user.findUnique({
-          where: {email}
-        })
+          where: { email },
+        });
 
-        if(!user || !user.password){
-          throw new Error("No user found")
+        if (!user || !user.password) {
+          throw new Error("No user found");
         }
 
-        const passwordMatch = compareSync(password, user.password)
+        const passwordMatch = compareSync(password, user.password);
 
-        if(!passwordMatch) return null
+        if (!passwordMatch) return null;
 
-        return user
-      }
-    })
+        return user;
+      },
+    }),
   ],
-})
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const ProtectedRoutes = ["/dashboard", "/"];
+
+      if (!isLoggedIn && ProtectedRoutes.includes(nextUrl.pathname)) {
+        return Response.redirect(new URL("/login", nextUrl));
+      }
+
+      const LoggedInProtectedRoutes = ["/login", "/register"]
+      if (isLoggedIn && LoggedInProtectedRoutes.includes(nextUrl.pathname)) {
+        return Response.redirect(new URL("/dashboard", nextUrl));
+      }
+
+      return true
+    },
+    jwt({token, user}){
+      if(user) token.role = user.role
+      return token
+    },
+
+    session({session, token}){
+      session.user.id = token.sub
+      session.user.role = token.role
+
+      return session
+    }
+  },
+});

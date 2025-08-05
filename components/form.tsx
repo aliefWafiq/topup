@@ -1,88 +1,98 @@
-'use client'
-import Image from 'next/image'
-import { submit } from '@/lib/action'
-import { useEffect, useState, useActionState } from 'react'
-import { Games } from '@/types/game'
-import { SubmitButton, CheckOut } from '@/components/button'
-import Script from 'next/script'
-import { useRef } from 'react'
+"use client";
+import Image from "next/image";
+import { submit } from "@/lib/action";
+import { useEffect, useState, useActionState } from "react";
+import { Games } from "@/types/game";
+import { SubmitButton, CheckOut } from "@/components/button";
+import Script from "next/script";
+import { useRef } from "react";
 
 declare global {
   interface Window {
-    snap: any
+    snap: any;
   }
 }
 
 export function Form() {
-  const [selectedId, setSelectedId] = useState<string>("")
-  const [logo, setLogo] = useState<string>("")
-  const [games, setGames] = useState<Games[]>([])
-  const [state, formAction] = useActionState(submit, null)
+  const [selectedId, setSelectedId] = useState<string>("");
+  const [logo, setLogo] = useState<string>("");
+  const [games, setGames] = useState<Games[]>([]);
+  const [state, formAction] = useActionState(submit, null);
 
-useEffect(() => {
-    async function fetchGames(){
-        const res = await fetch(`https://api.tokovoucher.net/member/produk/operator/list?member_code=${process.env.NEXT_PUBLIC_MEMBER_CODE}&signature=${process.env.NEXT_PUBLIC_SIGNATURE_KEY}&id=1`)
-        const json = await res.json()
-        setGames(json.data)
+  useEffect(() => {
+    async function fetchGames() {
+      const res = await fetch(
+        `https://api.tokovoucher.net/member/produk/operator/list?member_code=${process.env.NEXT_PUBLIC_MEMBER_CODE}&signature=${process.env.NEXT_PUBLIC_SIGNATURE_KEY}&id=1`
+      );
+      const json = await res.json();
+      setGames(json.data);
     }
 
-    async function getLogo(){
-      const res = await fetch(`https://api.tokovoucher.net/member/produk/operator/list?member_code=${process.env.NEXT_PUBLIC_MEMBER_CODE}&signature=${process.env.NEXT_PUBLIC_SIGNATURE_KEY}&id=1`)
-      const json = await res.json()
-      setLogo(json.data)
+    async function getLogo() {
+      const res = await fetch(
+        `https://api.tokovoucher.net/member/produk/operator/list?member_code=${process.env.NEXT_PUBLIC_MEMBER_CODE}&signature=${process.env.NEXT_PUBLIC_SIGNATURE_KEY}&id=1`
+      );
+      const json = await res.json();
+      setLogo(json.data);
     }
 
-    getLogo()
-    fetchGames()
-}, [])
+    getLogo();
+    fetchGames();
+  }, []);
 
   return (
     <div>
       <form action={formAction}>
-        <div className='flex justify-center'>
-          <Image 
+        <div className="flex justify-center">
+          <Image
             src={logo}
-            alt='logo'
+            alt="logo"
             width={200}
             height={200}
-            className='mb-4'/>
+            className="mb-4"
+          />
         </div>
 
-        <div className='mb-4'>
-          <select 
-          name="nama" 
-          className="border w-full py-2 px-3" 
-          onChange={(e) => {
-            const selected = e.target.value
-            setSelectedId(selected)
+        <div className="mb-4">
+          <select
+            name="nama"
+            className="border w-full py-2 px-3"
+            onChange={(e) => {
+              const selected = e.target.value;
+              setSelectedId(selected);
 
-            const selectedGame = games.find(game => String(game.id) === selected)
-            if(selectedGame){
-              setLogo(selectedGame.logo || "")
-            }
-          }}>
-            {games.map(game => (
+              const selectedGame = games.find(
+                (game) => String(game.id) === selected
+              );
+              if (selectedGame) {
+                setLogo(selectedGame.logo || "");
+              }
+            }}
+          >
+            {games.map((game) => (
               <option key={game.id} value={game.id}>
                 {game.id} {game.nama}
               </option>
             ))}
           </select>
-          {state?.error?.nama && <p className="text-red-500 text-sm">{state?.error.nama[0]}</p>}
+          {state?.error?.nama && (
+            <p className="text-red-500 text-sm">{state?.error.nama[0]}</p>
+          )}
         </div>
 
-        <div className='mb-4 pt-2'>
+        <div className="mb-4 pt-2">
           <input
             type="text"
             name="image"
             placeholder="Logo"
-            className='py-2 px-4 rounded-sm border border-gray-400 w-full'
+            className="py-2 px-4 rounded-sm border border-gray-400 w-full"
             value={logo}
             readOnly
           />
         </div>
 
-        <div className='mb-4 pt-4'>
-            <SubmitButton label="submit"/>
+        <div className="mb-4 pt-4">
+          <SubmitButton label="submit" />
         </div>
 
         {state?.message && (
@@ -90,119 +100,138 @@ useEffect(() => {
         )}
       </form>
     </div>
-  )
+  );
 }
 
-export function FormPayment(
-  {namaProduk, hargaProduk, jenis_id, operator_produk, code} : {
-    namaProduk: string,
-    hargaProduk: number,
-    jenis_id: string,
-    operator_produk: string,
-    code: string,
-  }) {
-   const emailRef = useRef<HTMLInputElement>(null)
-   const serverRef = useRef<HTMLInputElement>(null)
-   const id_userRef = useRef<HTMLInputElement>(null)
-   const total = hargaProduk + 2000
-   const orderId = Math.floor(Math.random() * 100) + Date.now()
-   
-    const handleCheckout = async () => {
-      const email = emailRef.current?.value
-      const server = serverRef.current?.value || ''
-      const id_user = id_userRef.current?.value
-      const body = {
-        id: orderId,
-        id_user: id_user,
-        nama_produk: namaProduk,
-        price: total,
-        email,
-        jenis_id: jenis_id,
-        operator_produk: operator_produk,
-        server: server,
-        code: code
-      } 
+export function FormPayment({
+  namaProduk,
+  hargaProduk,
+  jenis_id,
+  operator_produk,
+  code,
+  id_user,
+  email
+}: {
+  namaProduk: string;
+  hargaProduk: number;
+  jenis_id: string;
+  operator_produk: string;
+  code: string;
+  id_user: string
+  email: string
+}) {
+  const serverRef = useRef<HTMLSelectElement>(null);
+  const id_gameUserRef = useRef<HTMLInputElement>(null);
+  const total = hargaProduk + 2000;
+  const orderId = Math.floor(Math.random() * 100) + Date.now();
 
-    const response = await fetch('/api/transaction', {
+  const handleCheckout = async () => {
+    const server = serverRef.current?.value || "";
+    const id_gameUser = id_gameUserRef.current?.value;
+    const body = {
+      id_transaksi: String(orderId),
+      id_user: id_user,
+      id_gameUser: id_gameUser,
+      nama_produk: namaProduk,
+      price: total,
+      jenis_id: jenis_id,
+      operator_produk: operator_produk,
+      server: server,
+      code: code,
+      email
+    };
+
+    console.log("Received:", {
+      orderId,
+      namaProduk,
+      total,
+      jenis_id,
+      operator_produk,
+      id_user,
+      id_gameUser,
+      server,
+      email
+    });
+
+    const response = await fetch("/api/transaction", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
-    },
-      body: JSON.stringify(body)
-    })
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
 
-    const json = await response.json()
-    if(json.status && json.data?.token){
-      window.snap.pay(json.data.token)
-    }else{
-      alert('Transaksi gagal: ' + json.message)
+    const json = await response.json();
+    if (json.status && json.data?.token) {
+      window.snap.pay(json.data.token);
+    } else {
+      alert("Transaksi gagal: " + json.message);
     }
-    }
+  };
 
-   return (
-   <>
-    <Script 
-        src={process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL} 
+  return (
+    <>
+      <Script
+        src={process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL}
         data-client-key={process.env.NEXT_PUBLIC_CLIENT_KEY}
-        strategy='lazyOnload' 
+        strategy="lazyOnload"
       />
       <div className="flex flex-col items-center px-6 gap-3 w-full">
-        <div className='mb-4 pt-2 w-2/3'>
+        <div className="mb-4 pt-2 w-2/3">
           <input
             type="text"
             name="nama_produk"
             placeholder="Nama Produk"
             value={namaProduk}
-            className='py-2 px-4 rounded-sm border border-gray-400 w-full hover:cursor-not-allowed bg-slate-100'
+            className="py-2 px-4 rounded-sm border border-gray-400 w-full hover:cursor-not-allowed bg-slate-100"
             readOnly
           />
         </div>
-        <input type="text" name='jenis_id' value={jenis_id} className='hidden' />
-        <input type="text" name='code' value={code} className='hidden' />
-        <input type="text" name='operator_produk' value={operator_produk} className='hidden' />
-        <div className='mb-4 pt-2 w-2/3'>
+        <input
+          type="text"
+          name="jenis_id"
+          value={jenis_id}
+          className="hidden"
+        />
+        <input type="text" name="code" value={code} className="hidden" />
+        <input
+          type="text"
+          name="operator_produk"
+          value={operator_produk}
+          className="hidden"
+        />
+        <div className="mb-4 pt-2 w-2/3">
           <input
             type="number"
             name="hargaProduk"
-            placeholder={total.toLocaleString('id-ID')}
+            placeholder={total.toLocaleString("id-ID")}
             value={total}
-            className='py-2 px-4 rounded-sm border border-gray-400 w-full hover:cursor-not-allowed bg-slate-100'
+            className="py-2 px-4 rounded-sm border border-gray-400 w-full hover:cursor-not-allowed bg-slate-100"
             readOnly
           />
         </div>
-        <div className='mb-4 pt-2 w-2/3'>
-            <input
-              type="number"
-              name="id_user"
-              placeholder="Masukkan ID User"
-              className='py-2 px-4 rounded-sm border border-gray-400 w-full'
-              ref={id_userRef}
-            />
-          </div>
-         <div className='mb-4 w-2/3'>
-          <select 
-          name="server" 
-          className="border w-full py-2 px-3" >
-            <option value='prod_official_asia'>
-              Asia
-            </option>
-          </select>
-        </div>
-        <div className='mb-4 pt-2 w-2/3'>
+        <div className="mb-4 pt-2 w-2/3">
           <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className='py-2 px-4 rounded-sm border border-gray-400 w-full'
-            ref={emailRef}
+            type="text"
+            name="id_gameUser"
+            placeholder="Masukkan ID Game User"
+            className="py-2 px-4 rounded-sm border border-gray-400 w-full"
+            ref={id_gameUserRef}
           />
         </div>
-        <div className='mb-4 pt-4 w-2/3'>
-          <CheckOut label='checkout' onClick={handleCheckout} />
+        <div className="mb-4 w-2/3">
+          <select
+            name="server"
+            className="border w-full py-2 px-3"
+            ref={serverRef}
+          >
+            <option value="prod_official_asia">Asia</option>
+          </select>
+        </div>
+        <div className="mb-4 pt-4 w-2/3">
+          <CheckOut onClick={handleCheckout} />
         </div>
       </div>
-      </>
-   )
+    </>
+  );
 }
-  
-

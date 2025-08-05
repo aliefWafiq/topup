@@ -2,10 +2,10 @@
 import { SubmitButton } from '@/components/button'
 import Link from 'next/link'
 import { signUpCredentials } from '@/lib/action'
-import { useFormState } from 'react-dom'
+import { useActionState } from "react";
 
 const FormRegister = () => {
-  const [state, formAction] = useFormState(signUpCredentials, null)
+  const [state, formAction] = useActionState(signUpCredentials, null)
   return (
     <form action={formAction} className='space-y-6'>
         {state?.message ? (

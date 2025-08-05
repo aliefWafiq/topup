@@ -11,6 +11,7 @@ export type Transaksi = {
     id_transaksi: string;
     harga: number;
     id_user: string;
+    id_gameUser: string;
     kode_produk: string;
     operator_produk: string;
     server: string;
