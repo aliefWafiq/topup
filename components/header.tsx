@@ -17,6 +17,11 @@ export default async function Header() {
                 Home
               </Link>
             </li>
+            <li>
+              <Link className="hover:text-gray-800" href="/history-transaksi">
+                Transaksi
+              </Link>
+            </li>
             {session && (
               <>
                 {session.user.role === "admin" ? (
@@ -43,8 +48,8 @@ export default async function Header() {
                       </Link>
                     </li>
                     <li>
-                      <Link className="hover:text-gray-800" href="/transaksi">
-                        Transaksi
+                      <Link className="hover:text-gray-800" href="/list-transaksi">
+                        List Transaksi
                       </Link>
                     </li>
                   </>

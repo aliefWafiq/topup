@@ -26,7 +26,7 @@ const TransaksiTable = async() => {
                 <td className='py-3 px-6'>{transaksi.id_gameUser}</td>
                 <td className='py-3 px-6'>{transaksi.operator_produk}</td>
                 <td className='py-3 px-6'>{transaksi.server}</td>
-                <td className='py-3 px-6'>{transaksi.harga}</td>
+                <td className='py-3 px-6'>Rp {transaksi.harga.toLocaleString("id-ID")}</td>
                 <td className='py-3 px-6'>{transaksi.status}</td>
             </tr>
             ))}

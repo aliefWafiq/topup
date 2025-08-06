@@ -56,3 +56,22 @@ export const getTransaksi = async () => {
     console.log(error);
   }
 };
+
+export const getHistoryTransaksiUser = async() => {
+  const session = await auth()
+
+  if(!session){
+    redirect("/login")
+  }
+
+  try {
+    const userId = session?.user.id
+    const historyTransaksi = await prisma.transaksi.findMany({
+      where: { id_user: userId},
+      orderBy: { createdAt: "desc" }
+    })
+    return historyTransaksi
+  } catch (error) {
+    console.log(error)
+  }
+}

@@ -46,7 +46,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const ProtectedRoutes = ["/dashboard", "/addGame", "/users", "/games", "/transaksi"];
+      const ProtectedRoutes = ["/dashboard", "/addGame", "/users", "/games", "/list-transaksi", "/"];
 
       if (!isLoggedIn && ProtectedRoutes.includes(nextUrl.pathname)) {
         return Response.redirect(new URL("/login", nextUrl));

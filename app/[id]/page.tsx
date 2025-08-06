@@ -19,10 +19,10 @@ export default async function ProductPage({params}:{
     const session = await auth()
     
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen py-32">
+      <div className="flex flex-col items-center justify-center min-h-screen py-10">
         <h1 className="text-2xl font-bold mb-4">{namaGame.operator_produk}</h1>
         {games.map((game: Games) => (
-            <MenuCard key={game.nama_produk} games={game} jenis_id={id} id_user={session?.user.id || ""}/>
+            <MenuCard key={game.nama_produk} games={game} jenis_id={id}/>
         ))}
       </div>
     )
