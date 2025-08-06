@@ -1,17 +1,58 @@
-import {prisma} from "@/lib/prisma"
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const getGames = async () => {
-    try{
-        if (!prisma) {
-            throw new Error("Prisma client is not initialized")
-        }
-        const result = await prisma.game.findMany()
-
-        const plainGames = result.map(game => ({
-            ...game,
-        }))
-        return plainGames
-    }catch(error){
-        throw new Error("failed to fetch data")
+  try {
+    if (!prisma) {
+      throw new Error("Prisma client is not initialized");
     }
-}
+    const result = await prisma.game.findMany();
+
+    const plainGames = result.map((game) => ({
+      ...game,
+    }));
+    return plainGames;
+  } catch (error) {
+    throw new Error("failed to fetch data");
+  }
+};
+
+export const getUsers = async () => {
+  const session = await auth();
+
+  if (!session || !session.user || session.user.role !== "admin") redirect("/");
+
+  try {
+    const users = await prisma.user.findMany();
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDatabaseGames = async () => {
+  const session = await auth();
+
+  if (!session || !session.user || session.user.role !== "admin") redirect("/");
+
+  try {
+    const games = await prisma.game.findMany();
+    return games;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getTransaksi = async () => {
+  const session = await auth();
+
+  if (!session || !session.user || session.user.role !== "admin") redirect("/");
+
+  try {
+    const transaksi = await prisma.transaksi.findMany();
+    return transaksi;
+  } catch (error) {
+    console.log(error);
+  }
+};

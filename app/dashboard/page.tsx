@@ -6,7 +6,7 @@ const Dashboard = async () => {
     <div className="max-w-screen-xl mx-auto py-24 p-4">
         <h1 className='text-2xl'>Dashboard</h1>
         <h2 className="text-xl">Welcome Back: <span className="font-bold">{session?.user?.name}</span></h2>
-        <p>{JSON.stringify(session)}</p>
+        
     </div>
   )
 }

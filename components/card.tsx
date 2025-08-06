@@ -1,11 +1,8 @@
 'use client'
-
-import { gameIdMapping } from '@/lib/gameIdMapping'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { data } from '@/types/data'
-import { EditButton, DeleteButton } from '@/components/button'
 
 async function getGameDetail(id: string) {
   const url = `https://api.tokovoucher.net/member/produk/jenis/list?member_code=M250723WMNE3166SS&signature=5dbf3705b0f3982e476f2d1e49e99ad5&id=${id}`
@@ -26,7 +23,6 @@ const Card = ({ data }: { data: data }) => {
 
   useEffect(() => {
     getGameDetail(data.nama).then((result) => {
-        console.log(result)
       if (result.length > 0) {
         setGameDetail(result[0])
       }
