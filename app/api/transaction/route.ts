@@ -87,8 +87,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const transaction: any = await new Promise((resolve, reject) => {
-      createTransaction(params, (result: any) => {
+    const transaction: unknown = await new Promise((resolve) => {
+        createTransaction(params, (result: unknown) => {
         resolve(result);
       });
     });
