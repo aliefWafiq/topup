@@ -18,17 +18,16 @@ async function getGameProducts(id: string): Promise<Games[]>{
 }
 
 export default async function ProductPage({params}:{
-    params: {id:string},
+    params: Promise<{id:string}>,
 }) {
-    const gameId = params.id
-    const games = await getGame(gameId)
-    
+    const {id} = await params
+    const games = await getGame(id)
+
     if(!games.length){
         return <div>Game tidak ditemukan</div>
     }
 
     const namaGame = games[0]
-
 
     const productId = namaGame.id
     const gameProducts = await getGameProducts(productId)
