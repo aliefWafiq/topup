@@ -22,11 +22,13 @@ export default async function ProductPage({params}:{
 }) {
     const gameId = params.id
     const games = await getGame(gameId)
-    const namaGame = games[0]
-
+    
     if(!games.length){
         return <div>Game tidak ditemukan</div>
     }
+
+    const namaGame = games[0]
+
 
     const productId = namaGame.id
     const gameProducts = await getGameProducts(productId)
