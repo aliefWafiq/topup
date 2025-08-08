@@ -187,19 +187,6 @@ export function FormPayment({
             readOnly
           />
         </div>
-        <input
-          type="text"
-          name="jenis_id"
-          value={jenis_id}
-          className="hidden"
-        />
-        <input type="text" name="code" value={code} className="hidden" />
-        <input
-          type="text"
-          name="operator_produk"
-          value={operator_produk}
-          className="hidden"
-        />
         <div className="mb-4 pt-2 w-2/3">
           <input
             type="number"

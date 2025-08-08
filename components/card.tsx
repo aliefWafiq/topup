@@ -4,37 +4,24 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { data } from '@/types/data'
 
-async function getGameDetail(id: string) {
-  const url = `https://api.tokovoucher.net/member/produk/jenis/list?member_code=M250723WMNE3166SS&signature=5dbf3705b0f3982e476f2d1e49e99ad5&id=${id}`
-
-  try {
-    const res = await fetch(url)
-    const json = await res.json()
-    return json.data ?? []
-  } catch (err) {
-    console.error("Gagal fetch dari API:", err)
-    return []
-  }
-}
-
 const Card = ({ data }: { data: data }) => {
-  const [gameDetail, setGameDetail] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    getGameDetail(data.nama).then((result) => {
-      if (result.length > 0) {
-        setGameDetail(result[0])
-      }
-      setLoading(false)
-    })
+    setMounted(true)
+    setLoading(false)
   }, [data.nama])
 
+  if(!mounted) return null
+
+  if(data.status !== 1) return null
+
   return (
-    <Link href={`/${gameDetail?.id}`} className="border-2 border-gray-300 rounded-lg w-1/5">
+    <Link href={`/${data?.id}`} className="border-2 border-gray-300 rounded-lg w-1/5">
       <div className="relative w-full h-64">
-          <Image
-            src={data.image}
+        <Image
+            src={data.logo}
             alt={data.nama}
             priority
             fill
@@ -43,7 +30,7 @@ const Card = ({ data }: { data: data }) => {
       </div>
       <div className="h-24 flex text-center items-center">
         <h1 className="text-2xl font-bold w-full">
-          {loading ? 'Memuat...' : gameDetail?.operator_nama ?? 'Tidak ditemukan'}
+          {loading ? 'Memuat...' : data?.nama ?? 'Tidak ditemukan'}
         </h1>
       </div>
     </Link>
