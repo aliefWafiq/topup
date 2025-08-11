@@ -2,9 +2,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { data } from '@/types/data'
+import { Games } from '@/types/game'
 
-const Card = ({ data }: { data: data }) => {
+const Card = ({ data }: { data: Games }) => {
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
 

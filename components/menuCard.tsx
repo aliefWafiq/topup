@@ -10,8 +10,21 @@ function harga(price: number){
     return total.toLocaleString("id-ID")
 }
 
-const MenuCard = ({games, jenis_id}:{games:Games, jenis_id: string}) => {
+const MenuCard = ({games, jenis_id, format_form}:{games:Games, jenis_id: string, format_form: any}) => {
     const [showForm, setShowForm] = useState(false)
+    const formatForm = React.useMemo(() => {
+         try {
+            return typeof format_form === "string" ? JSON.parse(format_form) : format_form;
+        } catch (error) {
+            console.error("Gagal parse format_form:", error);
+            return [];
+        }
+    }, [format_form])
+
+    const serverOption = React.useMemo(() => {
+        const serverObj = formatForm.find((item: any) => item.name === "server_id")
+        return serverObj ? serverObj.data : []
+    }, [formatForm])
 
     return (
         <>
@@ -30,6 +43,7 @@ const MenuCard = ({games, jenis_id}:{games:Games, jenis_id: string}) => {
                     jenis_id={jenis_id}
                     operator_produk={games.operator_produk}
                     code={games.code}
+                    serverOption={serverOption}
                 />
             )}
             </AuthProvider>

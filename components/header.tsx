@@ -31,12 +31,6 @@ export default async function Header() {
                         Dashboard
                       </Link>
                     </li>
-                    {/* <li>
-                      <Link className="hover:text-gray-800" href="/addGame">Add Game</Link>
-
-                      GANTI DARI DI NAVBAR JADI DI HALAMAN GAMES AJA
-
-                    </li> */}
                     <li>
                       <Link className="hover:text-gray-800" href="/users">
                         Users

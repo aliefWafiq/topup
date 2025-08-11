@@ -8,4 +8,6 @@ export type Games = {
     code: string;
     price: number;
     logo: string;
+    status: number;
+    format_form: string;
 }
