@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
           server: server,
         },
       });
+      console.log("TRANSAKSI MIDTRANSS")
     } catch (error) {
       return NextResponse.json(
         {

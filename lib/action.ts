@@ -132,6 +132,7 @@ export const topUp = async (orderId: string) => {
       data: { status: mappedStatus },
     });
 
+    console.log(mappedStatus)
     return mappedStatus
   } catch (error) {
     console.error("Error mengirim POST: ", error);
@@ -150,6 +151,8 @@ export const updateStatus = async (
   statusMidtrans: string
 ) => {
   try {
+    console.log("[updateStatus]", id_transaksi, statusMidtrans);
+
     let mappedStatus: StatusTransaksi;
     switch (statusMidtrans) {
       case "settlement":
@@ -178,6 +181,7 @@ export const updateStatus = async (
 
     if (mappedStatus === "PAID") topUp(id_transaksi);
 
+    console.log(mappedStatus)
     return mappedStatus;
   } catch (error) {
     console.log("Gagal", error);

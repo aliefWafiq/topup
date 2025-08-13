@@ -1,10 +1,8 @@
 import { getHistoryTransaksiUser } from "@/lib/data";
-// import {  topUp } from "@/lib/action";
+import clsx from "clsx";
 
 const HistoryTransaksiTable = async () => {
   let transaksi = (await getHistoryTransaksiUser()) ?? []
-
-  // topUp('12837982374', 'GIR11960', '213123123', 'os_asia')
 
   if (!transaksi?.length) return <h1 className="text-xl">No Data Found</h1>;
 
@@ -30,8 +28,16 @@ const HistoryTransaksiTable = async () => {
             <td className="py-3 px-6">
               Rp {transaksi.harga.toLocaleString("id-ID")}
             </td>
-            <td className="py-3 px-6">{transaksi.status}</td>
-            {/* <td>{statusArray[i].toUpperCase()}</td> */}
+            <td className="p-2">
+                <p className={
+                  clsx(transaksi.status, {
+                    'bg-red-500 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "FAILED" || transaksi.status === "REFUNDED" || transaksi.status === "CANCELLED", 
+                    'bg-blue-600 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "COMPLETED",
+                    'bg-blue-400 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "PROCESSING",
+                    'bg-orange-400 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "PENDING",
+                    'bg-green-500 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "PAID"
+                })}>{transaksi.status}</p>
+            </td>
           </tr>
         ))}
       </tbody>

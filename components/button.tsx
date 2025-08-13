@@ -43,7 +43,7 @@ export const CheckOut = ({ onClick }: { onClick?: () => void }) => {
           "opacity-50 cursor-progress": pending,
         }
       )}
-      type="submit"
+      type="button"
       disabled={pending}
       onClick={onClick}
     >
