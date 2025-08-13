@@ -1,11 +1,7 @@
 import { getTransaksi } from "@/lib/data"
-import { getStatus } from "@/lib/action"
 
 const TransaksiTable = async() => {
   const transaksi = await getTransaksi()
-//   const status = await getStatus(transaksi.id_)
-
-//   console.log(status)
 
   if(!transaksi?.length) return <h1 className="text-xl">No Data Found</h1>
 
@@ -32,7 +28,6 @@ const TransaksiTable = async() => {
                 <td className='py-3 px-6'>{transaksi.server}</td>
                 <td className='py-3 px-6'>Rp {transaksi.harga.toLocaleString("id-ID")}</td>
                 <td className='py-3 px-6'>{transaksi.status}</td>
-                {getStatus(transaksi.id_transaksi)}
             </tr>
             ))}
         </tbody>

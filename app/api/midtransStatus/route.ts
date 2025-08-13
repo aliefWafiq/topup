@@ -1,0 +1,31 @@
+import { updateStatus } from "@/lib/action";
+import { parse } from "path";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+export async function POST(req: Request) {
+  try {
+    const arrayBuffer = await req.arrayBuffer()
+    const raw = await Buffer.from(arrayBuffer)
+    const bodyString = raw.toString("utf-8");
+
+    console.log("Notifikasi Midtrans diterima:", bodyString );
+
+    const parsed = JSON.parse(bodyString)
+
+    const { order_id, transaction_status } = parsed
+
+    updateStatus(order_id, transaction_status)
+
+    return new Response(JSON.stringify({ status: "OK" }), { status: 200 });
+  } catch (err) {
+    console.error("Error membaca body:", err);
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+      status: 500,
+    });
+  }
+}

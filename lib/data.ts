@@ -15,26 +15,15 @@ export const getUsers = async () => {
   }
 };
 
-export const getDatabaseGames = async () => {
-  const session = await auth();
-
-  if (!session || !session.user || session.user.role !== "admin") redirect("/");
-
-  try {
-    const games = await prisma.game.findMany();
-    return games;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getTransaksi = async () => {
   const session = await auth();
 
   if (!session || !session.user || session.user.role !== "admin") redirect("/");
 
   try {
-    const transaksi = await prisma.transaksi.findMany();
+    const transaksi = await prisma.transaksi.findMany({
+      orderBy: { createdAt: "desc" }
+    });
     return transaksi;
   } catch (error) {
     console.log(error);

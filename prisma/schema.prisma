@@ -21,6 +21,7 @@ enum StatusTransaksi {
   FAILED
   CANCELLED
   REFUNDED
+  PAID
 }
 
 model Transaksi {

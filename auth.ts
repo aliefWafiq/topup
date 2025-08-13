@@ -45,15 +45,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const ProtectedRoutes = ["/dashboard", "/addGame", "/users", "/games", "/list-transaksi", "/"];
+      const ProtectedRoutes = ["/dashboard", "/users", "/list-transaksi", "/", "/thankyou", "/history-transaksi"];
+      const adminRoutes = ["/dashboard", "/list-transaksi", "users"]
+      const isAdmin = auth?.user?.role === "admin"
 
       if (!isLoggedIn && ProtectedRoutes.includes(nextUrl.pathname)) {
         return Response.redirect(new URL("/login", nextUrl));
       }
 
+      if(!isAdmin && adminRoutes.includes(nextUrl.pathname)){
+        return Response.redirect(new URL("/", nextUrl))
+      }
+
       const LoggedInProtectedRoutes = ["/login", "/register"]
       if (isLoggedIn && LoggedInProtectedRoutes.includes(nextUrl.pathname)) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
+        return Response.redirect(new URL("/", nextUrl));
       }
 
       return true

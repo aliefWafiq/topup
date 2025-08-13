@@ -1,20 +1,10 @@
 import { getHistoryTransaksiUser } from "@/lib/data";
-import { getStatus } from "@/lib/action";
+// import {  topUp } from "@/lib/action";
 
 const HistoryTransaksiTable = async () => {
-  const transaksi = (await getHistoryTransaksiUser()) ?? [];
+  let transaksi = (await getHistoryTransaksiUser()) ?? []
 
-  const statusArray = await Promise.all(
-    transaksi.map(async(t) => {
-        try {
-            const res = await getStatus(t.id_transaksi)
-            return res.transaction_status
-        } catch (error) {
-            console.log("Gagal mengambil satatus", error)
-            return "unknown"
-        }
-    })
-  )
+  // topUp('12837982374', 'GIR11960', '213123123', 'os_asia')
 
   if (!transaksi?.length) return <h1 className="text-xl">No Data Found</h1>;
 
