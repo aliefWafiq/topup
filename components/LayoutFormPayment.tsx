@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FormPayment } from "@/components/form";
 import { useSession } from "next-auth/react";
 
@@ -11,6 +11,8 @@ export default function LayoutFormPayment({
   operator_produk,
   code,
   serverOption,
+  id_user,
+  email
 }: {
   onClose: () => void;
   namaProduk: string;
@@ -19,43 +21,74 @@ export default function LayoutFormPayment({
   operator_produk: string;
   code: string;
   serverOption: { name: string; value: string }[];
+  id_user: string
+  email: string
 }) {
   const { data: session } = useSession();
-  const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu']
+  const [dateInfo, setDateInfo] = useState<{
+    dayName: string;
+    date: number;
+    month: string;
+    year: number;
+  } | null>(null);
 
-  const currentDate = new Date()
-  const date = currentDate.getDate()
-  const month = currentDate.toLocaleString('default', {month: 'long'})
-  const day = currentDate.getDay()
-  const year = currentDate.getFullYear()
-  const today = day - 1
+  useEffect(() => {
+    const days = [
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+      "Minggu",
+    ];
+    const currentDay = new Date();
+    const dayIndex = currentDay.getDay();
+    setDateInfo({
+      dayName: days[dayIndex],
+      date: currentDay.getDate(),
+      month: currentDay.toLocaleString("id-ID", { month: "long" }),
+      year: currentDay.getFullYear(),
+    });
+  }, []);
   return (
     <>
       <div className="z-30 fixed w-full h-full py-10 top-0 left-0 flex justify-center items-center hover:cursor-auto">
         <div className="bg-white w-1/4 h-fit p-5 rounded-lg relative flex flex-col">
           <button
             onClick={onClose}
-            className="hover:cursor-pointer absolute top-3">
+            className="hover:cursor-pointer absolute top-3"
+          >
             X
           </button>
           <div className="w-full h-fit text-center">
             <h1 className="text-3xl font-bold">Top Up Receipt</h1>
           </div>
-          <div className="mt-8 space-y-1 border-b-2 pb-2 border-slate-600">
-            <p>{days[today]}, {month} {date}, {year}</p>
-            <p>{session?.user.email}</p>
+          {dateInfo ? (
+            <>
+              <p>
+                {dateInfo.dayName}, {dateInfo.month} {dateInfo.date},{" "}
+                {dateInfo.year}
+              </p>
+              <p>{email}</p>
+            </>
+          ) : (
+            <>
+              <p className="animate-pulse bg-gray-300 rounded w-1/2 h-4"></p>
+              <p>{email}</p>
+            </>
+          )}
+          <div className="w-full border-b-2 border-slate-600 py-2">
+            <p>Transaction Detail</p>
           </div>
-        <div className="w-full border-b-2 border-slate-600 py-2">
-          <p>Transaction Detail</p>
-        </div>
           <FormPayment
             namaProduk={namaProduk}
             hargaProduk={hargaProduk}
             jenis_id={jenis_id}
             operator_produk={operator_produk}
             code={code}
-            id_user={session?.user.id || ""}
-            email={session?.user.email || ""}
+            id_user={id_user}
+            email={email}
             serverOption={serverOption}
           />
         </div>

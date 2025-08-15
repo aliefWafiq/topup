@@ -124,7 +124,7 @@ export const topUp = async (orderId: string) => {
         mappedStatus = "FAILED";
         break;
       default:
-        mappedStatus = "FAILED"
+        mappedStatus = "FAILED";
     }
 
     await prisma.transaksi.update({
@@ -132,8 +132,8 @@ export const topUp = async (orderId: string) => {
       data: { status: mappedStatus },
     });
 
-    console.log(mappedStatus)
-    return mappedStatus
+    console.log(mappedStatus);
+    return mappedStatus;
   } catch (error) {
     console.error("Error mengirim POST: ", error);
     return NextResponse.json({
@@ -181,7 +181,7 @@ export const updateStatus = async (
 
     if (mappedStatus === "PAID") topUp(id_transaksi);
 
-    console.log(mappedStatus)
+    console.log(mappedStatus);
     return mappedStatus;
   } catch (error) {
     console.log("Gagal", error);

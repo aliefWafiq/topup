@@ -1,34 +1,21 @@
 @import "tailwindcss";
 
-@keyframes expand {
-    100% {
-        transform: scale(100);
-        opacity: 100;
-    }
+@keyframes tilt {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
 }
 
-.expand-square {
+.loadingIcon {
     position: absolute;
-    animation: expand 4s ease-out forwards;
-}
-
-.square1 {
-    width: 6rem;
-    height: 6rem;
-    background-color: #3b82f6;
-    animation-delay: 0s;
-}
-
-.square2 {
-    width: 6rem;
-    height: 6rem;
-    background-color: #60a5fa;
-    animation-delay: 0.5s;
-}
-
-.square3 {
-    width: 6rem;
-    height: 6rem;
-    background-color: #93c5fd;
-    animation-delay: 1s;
+    animation: tilt 1s infinite ease-in-out;
 }

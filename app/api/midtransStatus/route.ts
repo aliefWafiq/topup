@@ -1,5 +1,5 @@
 import { updateStatus } from "@/lib/action";
-import { parse } from "path";
+import { error } from "console";
 
 export const config = {
   api: {
@@ -12,15 +12,16 @@ export async function POST(req: Request) {
     const arrayBuffer = await req.arrayBuffer()
     const raw = await Buffer.from(arrayBuffer)
     const bodyString = raw.toString("utf-8");
-    // const bodyString = await req.json()
 
     console.log("Notifikasi Midtrans diterima:", bodyString );
 
     const parsed = JSON.parse(bodyString)
     const { order_id, transaction_status } = parsed
 
-
-    await updateStatus(order_id, transaction_status)
+    setImmediate(() => {  
+      updateStatus(order_id, transaction_status)
+      .catch(error => console.log(error))
+    })
 
     return new Response(JSON.stringify({ status: "OK" }), { status: 200 });
   } catch (err) {

@@ -28,6 +28,7 @@ export function FormPayment({
   email: string;
   serverOption: { name: string; value: string }[];
 }) {
+  // const { data: session, status } = useSession();
   const serverRef = useRef<HTMLSelectElement>(null);
   const id_gameUserRef = useRef<HTMLInputElement>(null);
   const total = hargaProduk + 2000;
@@ -49,19 +50,6 @@ export function FormPayment({
       email,
     };
 
-    console.log("Received:", {
-      orderId,
-      namaProduk,
-      total,
-      jenis_id,
-      operator_produk,
-      id_user,
-      id_gameUser,
-      server,
-      email,
-    }
-  );
-
     const response = await fetch("/api/transaction", {
       method: "POST",
       headers: {
@@ -71,7 +59,6 @@ export function FormPayment({
     });
 
     const json = await response.json();
-    console.log("INI DI FORMM")
     if (json.status && json.data?.token) {
       window.snap.pay(json.data.token);
     } else {

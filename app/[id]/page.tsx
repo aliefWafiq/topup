@@ -1,5 +1,6 @@
 import { Games } from "@/types/game"
 import MenuCard from "@/components/menuCard"
+import { auth } from "@/auth"
 
 async function getGame(id: string): Promise<Games[]>{
     const res = await fetch("https://api.tokovoucher.net/member/produk/jenis/list?member_code="+ process.env.MEMBER_CODE +"&signature="+ process.env.SIGNATURE_KEY +"&id=" + id)
@@ -22,8 +23,7 @@ export default async function ProductPage({params}:{
 }) {
     const {id} = await params
     const games = await getGame(id)
-
-    // console.log(games)
+    const session = await auth()
 
     if(!games.length){
         return <div>Game tidak ditemukan</div>
@@ -36,11 +36,18 @@ export default async function ProductPage({params}:{
     const gameProduct = gameProducts
     
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen py-10">
-        <h1 className="text-2xl font-bold mb-4">{namaGame.operator_nama}</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen py-10">
+    <h1 className="text-2xl font-bold mb-4">{namaGame.operator_nama}</h1>
         {gameProduct.map((game: Games) => (
-            <MenuCard key={game.nama_produk} games={game} jenis_id={namaGame.id} format_form={namaGame.format_form}/>
+            <MenuCard 
+                key={game.code} 
+                games={game} 
+                jenis_id={namaGame.id} 
+                format_form={namaGame.format_form} 
+                id_user={session?.user.id || ""} 
+                email={session?.user.email || ""}    
+            />
         ))} 
-      </div>
+    </div>
     )
 }
