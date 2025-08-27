@@ -16,13 +16,9 @@ export const getUsers = async () => {
 };
 
 export const getTransaksi = async () => {
-  const session = await auth();
-
-  if (!session || !session.user || session.user.role !== "admin") redirect("/");
-
   try {
     const transaksi = await prisma.transaksi.findMany({
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
     });
     return transaksi;
   } catch (error) {
@@ -30,21 +26,46 @@ export const getTransaksi = async () => {
   }
 };
 
-export const getHistoryTransaksiUser = async() => {
-  const session = await auth()
-
-  if(!session){
-    redirect("/login")
+export const getDiscounts = async () => {
+  try {
+    const discount = await prisma.discount.findMany({
+      orderBy: { created_at: "desc" },
+    });
+    return discount;
+  } catch (error) {
+    console.log(error);
   }
+};
+
+export const getHistoryTransaksiUser = async () => {
+  const session = await auth();
 
   try {
-    const userId = session?.user.id
+    const userId = session?.user.id;
     const historyTransaksi = await prisma.transaksi.findMany({
-      where: { id_user: userId},
-      orderBy: { createdAt: "desc" }
-    })
-    return historyTransaksi
+      where: { id_user: userId },
+      orderBy: { createdAt: "desc" },
+    });
+    return historyTransaksi;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
+
+export const getJumlahTransaksi = async () => {
+  try {
+    const jumlahTransaksi = await prisma.transaksi.count();
+    return jumlahTransaksi;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getJumlahUser = async () => {
+  try {
+    const jumlahUser = await prisma.user.count();
+    return jumlahUser;
+  } catch (error) {
+    console.log(error);
+  }
+};

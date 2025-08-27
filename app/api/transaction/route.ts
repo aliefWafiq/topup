@@ -1,6 +1,7 @@
 import createTransaction from "@/lib/transaction";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { id } from "zod/v4/locales";
 
 type Data = {
   status: boolean;
@@ -23,6 +24,7 @@ export async function POST(req: NextRequest) {
       code,
       id_user,
       id_gameUser,
+      id_discount
     } = body;
 
     const params = {
@@ -58,12 +60,24 @@ export async function POST(req: NextRequest) {
       server,
       email,
       code,
+      id_discount
     });
 
     try {
       if (!prisma) {
         throw new Error("Prisma client is not initialized");
       }
+
+      if(id_discount != "") {
+        await prisma.usedDiscount.create({
+          data: {
+            userId: id_user,
+            discountId: id_discount,
+            usedAt: new Date(),
+          }
+        })
+      }
+
       await prisma.transaksi.create({
         data: {
           id_transaksi: String(id_transaksi),
@@ -72,11 +86,11 @@ export async function POST(req: NextRequest) {
           id_user: id_user,
           kode_produk: code,
           operator_produk: operator_produk,
-          status: "PENDING",
+          status: "PENDING", 
           server: server,
         },
       });
-      console.log("TRANSAKSI MIDTRANSS")
+
     } catch (error) {
       return NextResponse.json(
         {

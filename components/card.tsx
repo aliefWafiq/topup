@@ -21,7 +21,7 @@ const Card = ({ data }: { data: Games }) => {
     <Link href={`/${data?.id}`} className="border-2 border-gray-300 rounded-lg w-1/5">
       <div className="relative w-full h-64">
         <Image
-            src={data.logo}
+            src={data.logo || "/avatar.jpg"}
             alt={data.nama}
             priority
             fill

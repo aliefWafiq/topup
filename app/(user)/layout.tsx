@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Header from '@/components/header';
-import "./globals.css";
-import FontAwesomeConfig from "@/app/fontawesome";
+import "@/app/globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,9 +14,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <FontAwesomeConfig />
-      </head>
       <body className={`antialiased`}>
         <Header />
         <main>

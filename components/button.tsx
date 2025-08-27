@@ -1,8 +1,18 @@
 "use client";
 import { useFormStatus } from "react-dom";
+import { useActionState } from "react";
 import { clsx } from "clsx";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+
+const initialState = {
+  message: "",
+};
+
+interface GenericDeleteButtonProps {
+  id: string
+  deleteAction: (id: string) => Promise<{ message: string }>
+}
 
 export const SubmitButton = ({
   label,
@@ -56,28 +66,44 @@ export const EditButton = () => {
   return (
     <Link
       href={""}
-      className="py-3 text-sm bg-gray-50 rounded-bl-md hover:bg-gray-100
-        text-center"
+      className="text-sm bg-orange-500 text-white rounded-md hover:bg-orange-600
+        text-center px-5 py-3 cursor-pointer"
     >
       Edit
     </Link>
   );
 };
 
-export const DeleteButton = () => {
+const LayoutDeleteButton = () => {
+  const { pending } = useFormStatus();
+
   return (
-    <form
-      className="y-3 text-sm bg-gray-50 rounded-bl-md hover:bg-gray-100
-        text-center"
+    <button
+      type="submit"
+      className={`text-sm bg-red-500 text-white rounded-md text-center px-5 py-3 cursor-pointer 
+        ${pending ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600"}`}
     >
-      <button type="submit">delete</button>
+      {pending ? "Deleting" : "Delete"}
+    </button>
+  );
+};
+
+export const DeleteButton = ({ id, deleteAction }: GenericDeleteButtonProps) => {
+  const [state, formAction] = useActionState(
+    deleteAction.bind(null, id),  
+    initialState
+  );
+
+  return (
+    <form action={formAction}>
+      <LayoutDeleteButton />
     </form>
   );
 };
 
 export const LogoutButton = () => {
   const pending = useFormStatus();
-  
+
   return (
     <>
       <button

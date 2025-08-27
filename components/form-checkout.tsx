@@ -1,12 +1,19 @@
 "use client";
 import { CheckOut } from "@/components/button";
 import Script from "next/script";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { getDiscount, updateDiscountStatus } from "@/lib/action";
+import { checkUsedDiscount } from "@/lib/action";
+import { date } from "zod";
 
 declare global {
   interface Window {
     snap: any;
   }
+}
+
+type DiscountProps = {
+  initialPrice: number;
 }
 
 export function FormPayment({
@@ -28,11 +35,49 @@ export function FormPayment({
   email: string;
   serverOption: { name: string; value: string }[];
 }) {
-  // const { data: session, status } = useSession();
+  
   const serverRef = useRef<HTMLSelectElement>(null);
   const id_gameUserRef = useRef<HTMLInputElement>(null);
-  const total = hargaProduk + 2000;
+  const hargaToko = hargaProduk + 2000;
   const orderId = Math.floor(Math.random() * 100) + Date.now();
+
+  const [totalHarga, setTotalHarga] = useState<number>(hargaToko);
+  const [kodeDiskon, setKodeDiskon] = useState<string>("");
+  const [discountMessage, setDiscountMessage] = useState<string>("");
+  const [idDiscount, setIdDiscount] = useState<string | null>(null);
+
+  const handleDiscountChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
+    const currentCode = event.target.value
+    setKodeDiskon(currentCode)
+
+    const discount = await getDiscount(currentCode)
+
+    if(discount !== null){
+      const isUsed = await checkUsedDiscount(discount.id)
+      if(isUsed) {
+        setTotalHarga(hargaToko)
+        setKodeDiskon("")
+        setDiscountMessage("Kode diskon sudah pernah digunakan.")
+      }else if(new Date() > discount.berlaku_hingga && discount.status != true){
+        updateDiscountStatus(discount.id)
+        setTotalHarga(hargaToko)
+        setKodeDiskon("")
+        setDiscountMessage("Kode diskon sudah tidak berlaku.")
+      }else{
+        const potongan = hargaToko * (discount.persentase / 100)
+        setTotalHarga(Math.floor(hargaToko - potongan))
+        setIdDiscount(discount.id)
+        setDiscountMessage("Kode diskon berhasil diterapkan!")
+      }
+    }else{
+      setTotalHarga(hargaToko)
+      if(currentCode) {
+        setDiscountMessage("Kode diskon tidak valid.")
+      }else{
+        setDiscountMessage("")
+      }
+    }
+  }
 
   const handleCheckout = async () => {
     const server = serverRef.current?.value || "";
@@ -42,11 +87,12 @@ export function FormPayment({
       id_user: id_user,
       id_gameUser: id_gameUser,
       nama_produk: namaProduk,
-      price: total,
+      price: totalHarga,
       jenis_id: jenis_id,
       operator_produk: operator_produk,
       server: server,
       code: code,
+      id_discount: idDiscount != null ? idDiscount : "",
       email,
     };
 
@@ -106,18 +152,28 @@ export function FormPayment({
             ))}
           </select>
         </div>
+        <div className="w-full">
+          <input
+            type="text"
+            name="Kode Diskon"
+            placeholder="Masukkan Kode Diskon (opsional)"
+            className="w-full border rounded py-2 px-3"
+            value={kodeDiskon}
+            onChange={handleDiscountChange}
+          />
+          <p>{discountMessage}</p>
+        </div>
         <div className="w-full border-t-2 border-slate-600 py-2 flex mt-3">
           <p className="w-1/3 text-lg font-semibold">Total</p>
           <div className="w-full">
             <input
               type="number"
               name="hargaProduk"
-              placeholder={total.toLocaleString("id-ID")}
-              value={total}
+              placeholder={totalHarga.toLocaleString("id-ID")}
+              value={totalHarga}
               className="w-full text-end hover:cursor-not-allowed text-lg font-bold"
               readOnly
             />
-            {/* <p className="w-full text-end text-lg font-bold">Rp. {total.toLocaleString("id-ID")}</p> */}
           </div>
         </div>
         <div className="mb-2 pt-4 w-full">

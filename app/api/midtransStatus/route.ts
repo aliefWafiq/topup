@@ -13,11 +13,10 @@ export async function POST(req: Request) {
     const raw = await Buffer.from(arrayBuffer)
     const bodyString = raw.toString("utf-8");
 
-    console.log("Notifikasi Midtrans diterima:", bodyString );
-
     const parsed = JSON.parse(bodyString)
     const { order_id, transaction_status } = parsed
 
+    console.log("Received Midtrans Notification:", parsed);
     setImmediate(() => {  
       updateStatus(order_id, transaction_status)
       .catch(error => console.log(error))

@@ -2,7 +2,7 @@
 import React from "react";
 import { Games } from "@/types/game";
 import { useState } from "react";
-import LayoutFormPayment from "@/components/LayoutFormPayment";
+import LayoutFormPayment from "@/components/LayoutFormPayment"
 import AuthProvider from "@/app/authProvider";
 
 function harga(price: number) {

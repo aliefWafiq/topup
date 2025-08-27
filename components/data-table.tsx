@@ -169,16 +169,16 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "Id Transaksi",
-    header: "Id Transaksi",
+    accessorKey: "header",
+    header: "Header",
     cell: ({ row }) => {
       return <TableCellViewer item={row.original} />
     },
     enableHiding: false,
   },
   {
-    accessorKey: "Id User",
-    header: "Id user",
+    accessorKey: "type",
+    header: "Section Type",
     cell: ({ row }) => (
       <div className="w-32">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
@@ -188,9 +188,8 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    // lanjut ini https://g.co/gemini/share/1ae551ffefab
-    accessorKey: "Id Game User",
-    header: "Id Game User",
+    accessorKey: "status",
+    header: "Status",
     cell: ({ row }) => (
       <Badge variant="outline" className="text-muted-foreground px-1.5">
         {row.original.status === "Done" ? (
@@ -203,7 +202,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "Game",
+    accessorKey: "target",
     header: () => <div className="w-full text-right">Target</div>,
     cell: ({ row }) => (
       <form
@@ -228,7 +227,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "Harga",
+    accessorKey: "limit",
     header: () => <div className="w-full text-right">Limit</div>,
     cell: ({ row }) => (
       <form
@@ -253,7 +252,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "Status",
+    accessorKey: "reviewer",
     header: "Reviewer",
     cell: ({ row }) => {
       const isAssigned = row.original.reviewer !== "Assign reviewer"
@@ -337,7 +336,7 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
   )
 }
 
-export function TransaksiTable({
+export function DataTable({
   data: initialData,
 }: {
   data: z.infer<typeof schema>[]
@@ -806,82 +805,3 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
     </Drawer>
   )
 }
-
-
-
-
-// import { getTransaksi } from "@/lib/data";
-// import clsx from "clsx";
-// import { DeleteButton, EditButton } from "@/components/button";
-// import { DeleteTransaksi } from "@/lib/action";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-// const TransaksiTable = async () => {
-//   const transaksi = await getTransaksi();
-
-//   if (!transaksi?.length) return <h1 className="text-xl">No Data Found</h1>;
-
-//   return (
-//     <Tabs defaultValue="outline" className="w-full">
-//       <TabsContent value="outline" className="w-full">
-//         <table className="w-full mt-8 border">
-//           <thead className="border-b border-gray-100">
-//             <tr>
-//               <th className="py-3 px-6 text-left text-sm">Id Transaksi</th>
-//               <th className="py-3 px-6 text-left text-sm">Id User</th>
-//               <th className="py-3 px-6 text-left text-sm">Id Game User</th>
-//               <th className="py-3 px-6 text-left text-sm">Game</th>
-//               <th className="py-3 px-6 text-left text-sm">Server</th>
-//               <th className="py-3 px-6 text-left text-sm">Harga</th>
-//               <th className="py-3 px-6 text-center text-sm">Status</th>
-//               {/* <th className="py-3 px-6 text-left text-sm">Action</th> */}
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {transaksi.map((transaksi) => (
-//               <tr key={transaksi.id_transaksi}>
-//                 <td className="py-3 px-6">{transaksi.id_transaksi}</td>
-//                 <td className="py-3 px-6">{transaksi.id_user}</td>
-//                 <td className="py-3 px-6">{transaksi.id_gameUser}</td>
-//                 <td className="py-3 px-6">{transaksi.operator_produk}</td>
-//                 <td className="py-3 px-6">{transaksi.server}</td>
-//                 <td className="py-3 px-6">
-//                   Rp {transaksi.harga.toLocaleString("id-ID")}
-//                 </td>
-//                 <td className="p-2">
-//                   <p
-//                     className={clsx(transaksi.status, {
-//                       "bg-red-500 text-white text-center py-3 px-3 rounded-xl":
-//                         transaksi.status === "FAILED" ||
-//                         transaksi.status === "REFUNDED" ||
-//                         transaksi.status === "CANCELLED",
-//                       "bg-blue-600 text-white text-center py-3 px-3 rounded-xl":
-//                         transaksi.status === "COMPLETED",
-//                       "bg-blue-400 text-white text-center py-3 px-3 rounded-xl":
-//                         transaksi.status === "PROCESSING",
-//                       "bg-orange-400 text-white text-center py-3 px-3 rounded-xl":
-//                         transaksi.status === "PENDING",
-//                       "bg-green-500 text-white text-center py-3 px-3 rounded-xl":
-//                         transaksi.status === "PAID",
-//                     })}
-//                   >
-//                     {transaksi.status}
-//                   </p>
-//                 </td>
-//                 {/* <td className="flex p-2 space-x-2">
-//                 <DeleteButton
-//                   id={transaksi.id_transaksi}
-//                   deleteAction={DeleteTransaksi}
-//                 />
-//                 <EditButton />
-//               </td> */} 
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </TabsContent>
-//     </Tabs>
-//   );
-// };
-
-// export default TransaksiTable;

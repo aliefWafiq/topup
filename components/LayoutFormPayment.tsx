@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FormPayment } from "@/components/form";
+import { FormPayment } from "@/components/form-checkout";
 import { useSession } from "next-auth/react";
 
 export default function LayoutFormPayment({
@@ -53,15 +53,15 @@ export default function LayoutFormPayment({
   }, []);
   return (
     <>
-      <div className="z-30 fixed w-full h-full py-10 top-0 left-0 flex justify-center items-center hover:cursor-auto">
-        <div className="bg-white w-1/4 h-fit p-5 rounded-lg relative flex flex-col">
+      <div className="z-50 fixed w-full h-full py-10 top-0 left-0 flex justify-center items-center hover:cursor-auto">
+        <div className="bg-white w-1/4 h-fit p-5 rounded-lg relative flex flex-col z-50">
           <button
             onClick={onClose}
             className="hover:cursor-pointer absolute top-3"
           >
             X
           </button>
-          <div className="w-full h-fit text-center">
+          <div className="w-full h-fit text-center mb-4">
             <h1 className="text-3xl font-bold">Top Up Receipt</h1>
           </div>
           {dateInfo ? (
@@ -93,7 +93,7 @@ export default function LayoutFormPayment({
           />
         </div>
       </div>
-      <div className="bg-black opacity-85 fixed z-20 w-full h-full top-0 left-0"></div>
+      <div className="bg-black opacity-85 fixed z-40 w-full h-full top-0 left-0"></div>
     </>
   );
 }

@@ -7,13 +7,13 @@ import { auth } from "@/auth";
 export default async function Header() {
   const session = await auth();
   return (
-    <header className="border-b-2 max-w-screen bg-white">
+    <header className="border-b-2 w-screen bg-white fixed z-40 top-0">
       <div className="flex items-center justify-between mx-auto p-4">
         <h1 className="text-2xl font-bold">Top Up</h1>
         <div className="flex items-center gap-3">
           <ul className="hidden md:flex items-center gap-4 mr-5 font-semibold text-gray-600">
             <li>
-              <Link className="hover:text-gray-800" href="/">
+              <Link className="hover:text-gray-800" href="/home">
                 Home
               </Link>
             </li>
@@ -22,34 +22,6 @@ export default async function Header() {
                 Transaksi
               </Link>
             </li>
-            {session && (
-              <>
-                {session.user.role === "admin" ? (
-                  <>
-                    <li>
-                      <Link className="hover:text-gray-800" href="/dashboard">
-                        Dashboard
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="hover:text-gray-800" href="/users">
-                        Users
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="hover:text-gray-800" href="/games">
-                        Games
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="hover:text-gray-800" href="/list-transaksi">
-                        List Transaksi
-                      </Link>
-                    </li>
-                  </>
-                ) : null}
-              </>
-            )}
             <li>
               {session ? (
                 <SessionProvider>

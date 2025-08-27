@@ -45,8 +45,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const ProtectedRoutes = ["/dashboard", "/users", "/list-transaksi", "/", "/thankyou", "/history-transaksi"];
-      const adminRoutes = ["/dashboard", "/list-transaksi", "users"]
+      const ProtectedRoutes = ["/admin", "/users", "/list-transaksi", "/home", "/thankyou", "/history-transaksi", "discounts", "games"];
+      const adminRoutes = ["/admin", "/list-transaksi", "users", "discounts", "games"]
       const isAdmin = auth?.user?.role === "admin"
 
       if (!isLoggedIn && ProtectedRoutes.includes(nextUrl.pathname)) {

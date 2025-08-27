@@ -79,6 +79,30 @@ model User {
   accounts      Account[]
   sessions      Session[]
   transaksi     Transaksi[]
+  usedDiscounts   UsedDiscount[]
  
   @@map("users")
+}
+
+model Discount {
+  id              String    @id @default(cuid())
+  nama_diskon     String
+  kode_diskon     String   @unique
+  persentase      Float
+  berlaku_hingga  DateTime
+  status          Boolean   @default(true)
+  created_at      DateTime  @default(now())
+
+  usedBy  UsedDiscount[]
+}
+
+model UsedDiscount {
+  id             String    @id @default(cuid())
+  userId         String
+  discountId     String
+  usedAt         DateTime      @default(now())
+  user           User      @relation(fields: [userId], references: [id])
+  discount       Discount  @relation(fields: [discountId], references: [id])
+
+  @@unique([userId, discountId])
 }

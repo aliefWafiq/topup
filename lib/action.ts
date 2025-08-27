@@ -1,7 +1,7 @@
 "use server";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { RegisterSchema, actionSchema, SignInSchema } from "@/lib/zod";
+import { RegisterSchema, SignInSchema, DiscountSchema } from "@/lib/zod";
 import { hashSync } from "bcrypt-ts";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
@@ -9,6 +9,8 @@ import { StatusTransaksi } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { unknown } from "zod";
+import { revalidatePath } from "next/cache";
+import { Discount } from "@/types/discount";
 
 export const signUpCredentials = async (
   prevState: unknown,
@@ -75,6 +77,69 @@ export const SignInCredentials = async (
   }
 };
 
+export const AddDiscount = async (prevState: unknown, formData: FormData) => {
+  const validatedFields = DiscountSchema.safeParse(
+    Object.fromEntries(formData.entries())
+  );
+
+  if (!validatedFields.success) {
+    return {
+      error: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { nama_diskon, kode_diskon, persentase, berlaku_hingga } =
+    validatedFields.data;
+  const persentaseDiskon = parseFloat(persentase);
+  const tglKadaluarsa = new Date(berlaku_hingga);
+
+  try {
+    await prisma.discount.create({
+      data: {
+        nama_diskon,
+        kode_diskon,
+        persentase: persentaseDiskon,
+        berlaku_hingga: tglKadaluarsa,
+        status: true,
+      },
+    });
+  } catch (error) {
+    return {
+      message: "Failed to add",
+    };
+  }
+
+  redirect("/discounts");
+};
+
+export const getDiscount = async (
+  kode_discount: string
+): Promise<Discount | null> => {
+  if (!kode_discount) return null;
+
+  try {
+    const getDiscountCode = await prisma.discount.findUnique({
+      where: { kode_diskon: kode_discount },
+    });
+
+    return getDiscountCode ? getDiscountCode : null;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const checkUsedDiscount = async (id_discount: string) => {
+  try {
+    const checkUsedDicounts = await prisma.usedDiscount.findFirst({
+      where: { discountId: id_discount },
+    });
+
+    return checkUsedDicounts ? true : false;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const topUp = async (orderId: string) => {
   try {
     const getOrderId = await prisma.transaksi.findUnique({
@@ -97,6 +162,9 @@ export const topUp = async (orderId: string) => {
       member_code: process.env.MEMBER_CODE,
       signature: signature,
     };
+
+    console.log(orderId);
+    console.log(signature);
 
     const response = await fetch("https://api.tokovoucher.net/v1/transaksi", {
       method: "POST",
@@ -151,8 +219,6 @@ export const updateStatus = async (
   statusMidtrans: string
 ) => {
   try {
-    console.log("[updateStatus]", id_transaksi, statusMidtrans);
-
     let mappedStatus: StatusTransaksi;
     switch (statusMidtrans) {
       case "settlement":
@@ -181,10 +247,74 @@ export const updateStatus = async (
 
     if (mappedStatus === "PAID") topUp(id_transaksi);
 
-    console.log(mappedStatus);
     return mappedStatus;
   } catch (error) {
     console.log("Gagal", error);
     return unknown;
+  }
+};
+
+export const updateDiscountStatus = async (id: string) => {
+  try {
+    const checkStatus = await prisma.discount.findUnique({
+      where: { id },
+    });
+
+    if (checkStatus?.status != true) {
+      await prisma.discount.update({
+        where: { id },
+        data: {
+          status: false,
+        },
+      });
+    }
+    
+  } catch (error) {
+    return { message: "Data gagal diupdate" };
+  }
+};
+
+export const DeleteDiscount = async (id: string) => {
+  try {
+    await prisma.discount.delete({
+      where: {
+        id,
+      },
+    });
+
+    revalidatePath("/discounts");
+    return { message: "Data berhasil dihapus" };
+  } catch (error) {
+    return { message: "Data gagal dihapus" };
+  }
+};
+
+export const DeleteUser = async (id: string) => {
+  try {
+    await prisma.user.delete({
+      where: {
+        id,
+      },
+    });
+
+    revalidatePath("/users");
+    return { message: "Data berhasil dihapus" };
+  } catch (error) {
+    return { message: "Data gagal dihapus" };
+  }
+};
+
+export const DeleteTransaksi = async (id: string) => {
+  try {
+    await prisma.transaksi.delete({
+      where: {
+        id_transaksi: id,
+      },
+    });
+
+    revalidatePath("/list-transaksi");
+    return { message: "Data berhasil dihapus" };
+  } catch (error) {
+    return { message: "Data gagal dihapus" };
   }
 };
