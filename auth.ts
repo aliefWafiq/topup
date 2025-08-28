@@ -57,9 +57,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return Response.redirect(new URL("/", nextUrl))
       }
 
-      const LoggedInProtectedRoutes = ["/login", "/register"]
+      const LoggedInProtectedRoutes = ["/login", "/register", "/"]
       if (isLoggedIn && LoggedInProtectedRoutes.includes(nextUrl.pathname)) {
-        return Response.redirect(new URL("/", nextUrl));
+        if(!isAdmin) return Response.redirect(new URL("/home", nextUrl));
+        return Response.redirect(new URL("/admin", nextUrl));
       }
 
       return true

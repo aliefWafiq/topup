@@ -1,6 +1,17 @@
 import { getUsers } from "@/lib/data";
 import { DeleteButton, EditButton } from "@/components/button";
 import { DeleteUser } from "@/lib/action";
+import React from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { IconCircleCheckFilled, IconLoader } from "@tabler/icons-react";
+import { Badge } from "@/components/ui/badge";
 
 const UserTable = async () => {
   const users = await getUsers();
@@ -8,29 +19,31 @@ const UserTable = async () => {
   if (!users?.length) return <h1 className="text-xl">No Data Found</h1>;
 
   return (
-    <table className="w-full bg-white mt-14">
-      <thead className="border-b border-gray-100">
-        <tr>
-          <th className="py-3 px-6 text-left text-sm">Name</th>
-          <th className="py-3 px-6 text-left text-sm">Email</th>
-          <th className="py-3 px-6 text-left text-sm">Role</th>
-          <th className="py-3 px-6 text-left text-sm">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((user) => (
-          <tr key={user.id}>
-            <td className="py-3 px-6">{user.name}</td>
-            <td className="py-3 px-6">{user.email}</td>
-            <td className="py-3 px-6">{user.role}</td>
-            <td className="flex p-2 space-x-2">
-              <DeleteButton id={user.id} deleteAction={DeleteUser}/>
-              <EditButton />
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="overflow-hidden rounded-lg border mt-4">
+      <Table>
+        <TableHeader className="bg-slate-100">
+          <TableRow>
+            <TableHead className="px-8">Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+            <TableHead>Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {users.map((user) => (
+            <TableRow key={user.id} className="">
+              <TableCell className="py-4 px-8">{user.name}</TableCell>
+              <TableCell className="py-4">{user.email}</TableCell>
+              <TableCell className="py-4">{user.role}</TableCell>
+              <TableCell className="py-4 flex space-x-2">
+                <DeleteButton id={user.id} deleteAction={DeleteUser} />
+                <EditButton />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 

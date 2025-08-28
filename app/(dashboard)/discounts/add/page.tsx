@@ -8,10 +8,10 @@ const AddDiscountpage = () => {
   const [state, formAction] = useActionState(AddDiscount, null)
 
   return (
-    <div className="w-full h-screen bg-slate-100 flex justify-center items-center">
+    <div className="w-full h-screen flex justify-center items-center">
       <form
         action={formAction}
-        className="flex flex-col bg-white items-center gap-3 w-1/2 p-6 rounded-lg"
+        className="flex flex-col items-center gap-3 w-1/2 p-6 rounded-lg shadow-2xl"
       >
         {state?.message ? (
         <div className='p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100' role='alert'>

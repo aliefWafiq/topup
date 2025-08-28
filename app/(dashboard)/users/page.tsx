@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 
 const UserPage = () => {
   return (
-    <div className="bg-slate-50 min-h-screen py-32">
-        <div className="max-w-screen-md mx-auto">
+    <div className="min-h-screen flex justify-center py-14">
+        <div className="w-full px-6">
             <h1 className="text-2xl font-bold">User List</h1>
             <UserTable />
         </div>

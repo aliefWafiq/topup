@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import {TransaksiTable} from "@/components/table/transaksi-table"
+import TransaksiTable from "@/components/table/transaksi-table"
 import { getTransaksi } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ const TransaksiPage = async() => {
     <div className="min-h-screen flex justify-center py-14">
         <div className="w-full px-6">
           <h1 className="text-2xl font-bold">List Transaksi</h1>
-          <TransaksiTable data={transaksi} />
+          <TransaksiTable/>
         </div>
     </div>
   )

@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 
 const GamesPage = () => {
   return (
-    <div className="bg-slate-50 min-h-screen">
-        <div className="max-w-screen-md mx-auto py-10">
+    <div className="min-h-screen flex justify-center py-14">
+        <div className="w-full px-6">
             <h1 className="text-2xl font-bold">Game List</h1>
             <GamesTable />
         </div>
