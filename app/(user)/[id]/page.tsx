@@ -36,7 +36,7 @@ export default async function ProductPage({params}:{
     const gameProduct = gameProducts
     
     return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-32">
+    <div className="flex flex-col items-center justify-center min-h-screen py-32 px-8">
     <h1 className="text-2xl font-bold mb-4">{namaGame.operator_nama}</h1>
         {gameProduct.map((game: Games) => (
             <MenuCard 

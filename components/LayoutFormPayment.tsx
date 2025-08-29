@@ -54,7 +54,7 @@ export default function LayoutFormPayment({
   return (
     <>
       <div className="z-50 fixed w-full h-full py-10 top-0 left-0 flex justify-center items-center hover:cursor-auto">
-        <div className="bg-white w-1/4 h-fit p-5 rounded-lg relative flex flex-col z-50">
+        <div className="bg-white w-full lg:w-1/4 h-fit p-5 rounded-lg relative flex flex-col z-50 mx-12">
           <button
             onClick={onClose}
             className="hover:cursor-pointer absolute top-3"

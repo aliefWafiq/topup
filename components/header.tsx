@@ -3,15 +3,17 @@ import { LogoutButton } from "@/components/button";
 import { SessionProvider } from "next-auth/react";
 import Image from "next/image";
 import { auth } from "@/auth";
+// import { SidebarTrigger } from "@/components/ui/sidebar"
 
 export default async function Header() {
   const session = await auth();
   return (
     <header className="border-b-2 w-screen bg-white fixed z-40 top-0">
-      <div className="flex items-center justify-between mx-auto p-4">
-        <h1 className="text-2xl font-bold">Top Up</h1>
+      <div className="flex items-center justify-end lg:justify-between mx-auto p-4 lg:px-8">
+        <h1 className="text-2xl font-bold hidden lg:block">Top Up</h1> 
+        {/* <SidebarTrigger className="-ml-1 lg:hidden" /> */}
         <div className="flex items-center gap-3">
-          <ul className="hidden md:flex items-center gap-4 mr-5 font-semibold text-gray-600">
+          <ul className="flex items-center gap-4 mr-5 font-semibold text-gray-600">
             <li>
               <Link className="hover:text-gray-800" href="/home">
                 Home
@@ -38,7 +40,7 @@ export default async function Header() {
             </li>
           </ul>
           {session && (
-            <div className="flex gap-3 items-center">
+            <div className="lg:flex gap-3 items-center hidden">
               <div className="flex flex-col justify-center -space-y-1">
                 <span className="font-semibold text-gray-600 text-right capitalize">
                   {session.user.name}

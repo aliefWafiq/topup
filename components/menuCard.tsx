@@ -44,7 +44,7 @@ const MenuCard = ({
     <>
       <div
         onClick={() => setShowForm(true)}
-        className="my-2 border-2 border-gray-200 rounded-md w-1/2 p-5 text-start hover:cursor-pointer"
+        className="my-2 border-2 border-gray-200 rounded-md w-full lg:w-1/2 p-5 text-start hover:cursor-pointer"
       >
         <p className="font-semibold">{games.nama_produk}</p>
         <p>Rp {harga(games.price)}</p>
