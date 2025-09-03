@@ -1,5 +1,6 @@
 import "@/app/globals.css";
 import AuthProvider from "@/app/authProvider";
+import FontAwesomeConfig from "@/app/fontawesome";
 
 export const metadata = {
   title: "Auth Layout",
@@ -8,6 +9,9 @@ export const metadata = {
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html>
+      <head>
+        <FontAwesomeConfig />
+      </head>
       <body>
         <AuthProvider>{children}</AuthProvider>
       </body>

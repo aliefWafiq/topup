@@ -36,6 +36,7 @@
     "bcrypt-ts": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.542.0",
     "midtrans-client": "^1.4.3",
     "next": "15.4.3",

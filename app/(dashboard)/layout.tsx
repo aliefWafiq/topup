@@ -9,7 +9,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <>
       <head>
         <FontAwesomeConfig />
       </head>
@@ -28,6 +28,6 @@ export default function RootLayout({
           </SidebarInset>
         </SidebarProvider>
       </body>
-    </html>
+    </>
   );
 }

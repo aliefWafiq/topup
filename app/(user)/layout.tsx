@@ -13,11 +13,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`antialiased`}>
-        <Header />
-        <main className="px-6">{children}</main>
-      </body>
-    </html>
+    <>
+      <Header />
+      <main className="px-6">{children}</main>
+    </>
   );
 }

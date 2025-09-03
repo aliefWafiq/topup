@@ -50,7 +50,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const isAdmin = auth?.user?.role === "admin"
 
       if (!isLoggedIn && ProtectedRoutes.includes(nextUrl.pathname)) {
-        return Response.redirect(new URL("/login", nextUrl));
+        return Response.redirect(new URL("/", nextUrl));
       }
 
       if(!isAdmin && adminRoutes.includes(nextUrl.pathname)){
