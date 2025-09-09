@@ -1,7 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import FontAwesomeConfig from "@/app/fontawesome";
-import "@/app/globals.css";
 
 export default function RootLayout({
   children,

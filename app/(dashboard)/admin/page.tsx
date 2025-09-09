@@ -1,11 +1,9 @@
 // import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { DataTable } from "@/components/data-table";
 import { SiteHeader } from "@/components/site-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { faCreditCard, faBasketShopping, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getJumlahTransaksi, getJumlahUser } from "@/lib/data";
-import data from "@/app/(dashboard)/admin/data.json";
 
 export default async function Page() {
   const url = `https://api.tokovoucher.net/member?member_code=${process.env.MEMBER_CODE}&signature=${process.env.SIGNATURE_KEY}`;

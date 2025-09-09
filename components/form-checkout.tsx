@@ -4,7 +4,6 @@ import Script from "next/script";
 import { useRef, useState } from "react";
 import { getDiscount, updateDiscountStatus } from "@/lib/action";
 import { checkUsedDiscount } from "@/lib/action";
-import { date } from "zod";
 
 declare global {
   interface Window {

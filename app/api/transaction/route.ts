@@ -1,7 +1,6 @@
 import createTransaction from "@/lib/transaction";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { id } from "zod/v4/locales";
 
 type Data = {
   status: boolean;

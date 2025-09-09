@@ -1,6 +1,5 @@
 import { getUsers } from "@/lib/data";
 import { DeleteButton, EditButton } from "@/components/button";
-import { DeleteUser } from "@/lib/action";
 import React from "react";
 import {
   Table,
@@ -26,7 +25,6 @@ const UserTable = async () => {
             <TableHead className="px-8">Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Role</TableHead>
-            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -35,10 +33,6 @@ const UserTable = async () => {
               <TableCell className="py-4 px-8">{user.name}</TableCell>
               <TableCell className="py-4">{user.email}</TableCell>
               <TableCell className="py-4">{user.role}</TableCell>
-              <TableCell className="py-4 flex space-x-2">
-                <DeleteButton id={user.id} deleteAction={DeleteUser} />
-                <EditButton />
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -69,3 +69,14 @@ export const getJumlahUser = async () => {
     console.log(error);
   }
 };
+
+export const getDatakeuangan = async(bulan: string, tahun: string) => {
+  try {
+    const dataTransaksi = await prisma.dataKeuangan.findMany({
+      where: { bulan: bulan, tahun: tahun }
+    })
+    return dataTransaksi
+  } catch (error) {
+    console.log(error)
+  }
+}

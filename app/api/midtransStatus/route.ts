@@ -1,5 +1,4 @@
 import { updateStatus } from "@/lib/action";
-import { error } from "console";
 
 export const config = {
   api: {

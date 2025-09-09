@@ -11,7 +11,10 @@ import { createHash } from "crypto";
 import { unknown } from "zod";
 import { revalidatePath } from "next/cache";
 import { Discount } from "@/types/discount";
+import { dataKeuangan } from "@/types/dataKeuangan";
+import { getDatakeuangan } from "@/lib/data";
 
+// SIGN UP
 export const signUpCredentials = async (
   prevState: unknown,
   formData: FormData
@@ -46,6 +49,7 @@ export const signUpCredentials = async (
   redirect("/login");
 };
 
+// SIGN IN
 export const SignInCredentials = async (
   prevState: unknown,
   formData: FormData
@@ -77,6 +81,7 @@ export const SignInCredentials = async (
   }
 };
 
+// ADD DISCOUNT
 export const AddDiscount = async (prevState: unknown, formData: FormData) => {
   const validatedFields = DiscountSchema.safeParse(
     Object.fromEntries(formData.entries())
@@ -112,6 +117,7 @@ export const AddDiscount = async (prevState: unknown, formData: FormData) => {
   redirect("/discounts");
 };
 
+// GET DISCOUNT
 export const getDiscount = async (
   kode_discount: string
 ): Promise<Discount | null> => {
@@ -128,6 +134,7 @@ export const getDiscount = async (
   }
 };
 
+// CHECK USER
 export const checkUsedDiscount = async (id_discount: string) => {
   try {
     const checkUsedDicounts = await prisma.usedDiscount.findFirst({
@@ -140,6 +147,7 @@ export const checkUsedDiscount = async (id_discount: string) => {
   }
 };
 
+// TOPUP
 export const topUp = async (orderId: string) => {
   try {
     const getOrderId = await prisma.transaksi.findUnique({
@@ -163,9 +171,6 @@ export const topUp = async (orderId: string) => {
       signature: signature,
     };
 
-    console.log(orderId);
-    console.log(signature);
-
     const response = await fetch("https://api.tokovoucher.net/v1/transaksi", {
       method: "POST",
       headers: {
@@ -176,6 +181,10 @@ export const topUp = async (orderId: string) => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const currentDate = new Date()
+    const month = currentDate.toLocaleString("id-ID", { month: "long" })
+    const year = currentDate.getFullYear().toString()
 
     const responseData = await response.json();
     console.log(responseData);
@@ -200,7 +209,10 @@ export const topUp = async (orderId: string) => {
       data: { status: mappedStatus },
     });
 
-    console.log(mappedStatus);
+    await prisma.dataKeuangan.upsert({
+      where: { bulan: month, tahun: year }
+    })
+
     return mappedStatus;
   } catch (error) {
     console.error("Error mengirim POST: ", error);
@@ -214,6 +226,7 @@ export const topUp = async (orderId: string) => {
   }
 };
 
+// UPDATE STATUS
 export const updateStatus = async (
   id_transaksi: string,
   statusMidtrans: string
@@ -254,6 +267,7 @@ export const updateStatus = async (
   }
 };
 
+// UPDATE DISCOUNT STATUS
 export const updateDiscountStatus = async (id: string) => {
   try {
     const checkStatus = await prisma.discount.findUnique({
@@ -274,6 +288,7 @@ export const updateDiscountStatus = async (id: string) => {
   }
 };
 
+// DELETE DISCOUNT
 export const DeleteDiscount = async (id: string) => {
   try {
     await prisma.discount.delete({
@@ -283,36 +298,6 @@ export const DeleteDiscount = async (id: string) => {
     });
 
     revalidatePath("/discounts");
-    return { message: "Data berhasil dihapus" };
-  } catch (error) {
-    return { message: "Data gagal dihapus" };
-  }
-};
-
-export const DeleteUser = async (id: string) => {
-  try {
-    await prisma.user.delete({
-      where: {
-        id,
-      },
-    });
-
-    revalidatePath("/users");
-    return { message: "Data berhasil dihapus" };
-  } catch (error) {
-    return { message: "Data gagal dihapus" };
-  }
-};
-
-export const DeleteTransaksi = async (id: string) => {
-  try {
-    await prisma.transaksi.delete({
-      where: {
-        id_transaksi: id,
-      },
-    });
-
-    revalidatePath("/list-transaksi");
     return { message: "Data berhasil dihapus" };
   } catch (error) {
     return { message: "Data gagal dihapus" };

@@ -1,5 +1,4 @@
 import { getDiscounts } from "@/lib/data";
-import clsx from "clsx";
 import { DeleteButton, EditButton } from "@/components/button";
 import { DeleteDiscount } from "@/lib/action";
 import React from "react";
