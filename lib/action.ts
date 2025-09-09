@@ -209,9 +209,9 @@ export const topUp = async (orderId: string) => {
       data: { status: mappedStatus },
     });
 
-    await prisma.dataKeuangan.upsert({
-      where: { bulan: month, tahun: year }
-    })
+    // await prisma.dataKeuangan.upsert({
+    //   where: { bulan: month, tahun: year }
+    // })
 
     return mappedStatus;
   } catch (error) {
