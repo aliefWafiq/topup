@@ -10,9 +10,9 @@ import { NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { unknown } from "zod";
 import { revalidatePath } from "next/cache";
+import { checkUsedDiscount } from "@/lib/data";
+
 import { Discount } from "@/types/discount";
-import { dataKeuangan } from "@/types/dataKeuangan";
-import { getDatakeuangan } from "@/lib/data";
 
 // SIGN UP
 export const signUpCredentials = async (
@@ -93,8 +93,7 @@ export const AddDiscount = async (prevState: unknown, formData: FormData) => {
     };
   }
 
-  const { nama_diskon, kode_diskon, persentase, berlaku_hingga } =
-    validatedFields.data;
+  const { nama_diskon, kode_diskon, persentase, berlaku_hingga } = validatedFields.data;
   const persentaseDiskon = parseFloat(persentase);
   const tglKadaluarsa = new Date(berlaku_hingga);
 
@@ -134,19 +133,6 @@ export const getDiscount = async (
   }
 };
 
-// CHECK USER
-export const checkUsedDiscount = async (id_discount: string) => {
-  try {
-    const checkUsedDicounts = await prisma.usedDiscount.findFirst({
-      where: { discountId: id_discount },
-    });
-
-    return checkUsedDicounts ? true : false;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 // TOPUP
 export const topUp = async (orderId: string) => {
   try {
@@ -161,7 +147,10 @@ export const topUp = async (orderId: string) => {
         `${process.env.MEMBER_CODE}:${process.env.SECRET_KEY_TOKOVOUCHER}:${orderId}`
       )
       .digest("hex");
-
+    
+    const total = getOrderId.harga
+    const totalBersih = total - 2000
+    
     const body = {
       ref_id: orderId,
       produk: getOrderId?.kode_produk,
@@ -182,12 +171,12 @@ export const topUp = async (orderId: string) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const currentDate = new Date()
-    const month = currentDate.toLocaleString("id-ID", { month: "long" })
-    const year = currentDate.getFullYear().toString()
+    const currentDate = new Date();
+    const bulan = currentDate.toLocaleString("id-ID", { month: "long" });
+    const tahun = currentDate.getFullYear().toString();
 
     const responseData = await response.json();
-    console.log(responseData);
+    console.log(responseData)
 
     let mappedStatus: StatusTransaksi;
     switch (responseData.status) {
@@ -209,9 +198,31 @@ export const topUp = async (orderId: string) => {
       data: { status: mappedStatus },
     });
 
-    // await prisma.dataKeuangan.upsert({
-    //   where: { bulan: month, tahun: year }
-    // })
+    const existing = await prisma.dataKeuangan.findFirst({
+      where: {
+        bulan,
+        tahun,
+      },
+    });
+
+    if(existing) {
+      await prisma.dataKeuangan.update({
+        where: { id: existing.id },
+        data: {
+          total,
+          totalBersih,
+        },
+      });
+    }else{
+      await prisma.dataKeuangan.create({
+        data: {
+          bulan,
+          tahun,
+          total,
+          totalBersih
+        }
+      })
+    }
 
     return mappedStatus;
   } catch (error) {
@@ -260,6 +271,9 @@ export const updateStatus = async (
 
     if (mappedStatus === "PAID") topUp(id_transaksi);
 
+    console.log(mappedStatus)
+    console.log(statusMidtrans)
+
     return mappedStatus;
   } catch (error) {
     console.log("Gagal", error);
@@ -282,7 +296,6 @@ export const updateDiscountStatus = async (id: string) => {
         },
       });
     }
-    
   } catch (error) {
     return { message: "Data gagal diupdate" };
   }

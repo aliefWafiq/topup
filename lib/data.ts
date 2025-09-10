@@ -70,13 +70,15 @@ export const getJumlahUser = async () => {
   }
 };
 
-export const getDatakeuangan = async(bulan: string, tahun: string) => {
+// CHECK DISCOUNT
+export const checkUsedDiscount = async (id_discount: string) => {
   try {
-    const dataTransaksi = await prisma.dataKeuangan.findMany({
-      where: { bulan: bulan, tahun: tahun }
-    })
-    return dataTransaksi
+    const checkUsedDicounts = await prisma.usedDiscount.findFirst({
+      where: { discountId: id_discount },
+    });
+
+    return checkUsedDicounts ? true : false;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
