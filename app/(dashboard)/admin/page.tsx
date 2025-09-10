@@ -1,15 +1,28 @@
-// import { ChartAreaInteractive } from "@/components/chart-area-interactive";
+import { ChartKeuangan } from "@/components/chart-area-interactive";
 import { SiteHeader } from "@/components/site-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { faCreditCard, faBasketShopping, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCreditCard,
+  faBasketShopping,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getJumlahTransaksi, getJumlahUser } from "@/lib/data";
+import { listDataKeuangan } from "@/lib/data";
 
 export default async function Page() {
   const url = `https://api.tokovoucher.net/member?member_code=${process.env.MEMBER_CODE}&signature=${process.env.SIGNATURE_KEY}`;
   const res = await fetch(url);
   const json = await res.json();
   const saldo = json.data.saldo;
+
+  const data = await listDataKeuangan()
+
+  const chartData = (data ?? []).map(item => ({
+    month: `${item.bulan}`,
+    total: item.total,
+    totalBersih: item.totalBersih,
+  }))
 
   return (
     <>
@@ -44,9 +57,7 @@ export default async function Page() {
               </CardHeader>
               <CardContent>
                 <p>Jumlah Transaksi</p>
-                <h1 className="text-3xl font-bold">
-                  {getJumlahTransaksi()}
-                </h1>
+                <h1 className="text-3xl font-bold">{getJumlahTransaksi()}</h1>
               </CardContent>
             </Card>
             <Card className="w-72">
@@ -60,14 +71,13 @@ export default async function Page() {
               </CardHeader>
               <CardContent>
                 <p>Jumlah User</p>
-                <h1 className="text-3xl font-bold">
-                  {getJumlahUser()}
-                </h1>
+                <h1 className="text-3xl font-bold">{getJumlahUser()}</h1>
               </CardContent>
             </Card>
           </div>
           <div className="flex gap-4 py-4 md:gap-6 md:py-6">
-            
+            <ChartKeuangan chartData={chartData}/>
+            {/* PERBIKI BAGIAN INII */}
           </div>
         </div>
       </div>

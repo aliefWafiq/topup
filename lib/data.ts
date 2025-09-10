@@ -82,3 +82,15 @@ export const checkUsedDiscount = async (id_discount: string) => {
     console.log(error);
   }
 };
+
+export const listDataKeuangan = async() => {
+  try {
+    const listDataKeuangan = await prisma.dataKeuangan.findMany({
+      orderBy: { tahun: "asc" }
+    })
+
+    return listDataKeuangan
+  } catch (error) {
+    console.log(error)
+  }
+}
