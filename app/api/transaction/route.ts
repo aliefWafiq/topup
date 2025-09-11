@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
           id_user: id_user,
           kode_produk: code,
           operator_produk: operator_produk,
-          status: "PENDING", 
+          status: "CANCELLED", 
           server: server,
         },
       });

@@ -189,7 +189,7 @@ export const topUp = async (orderId: string) => {
         mappedStatus = "FAILED";
         break;
       default:
-        mappedStatus = "FAILED";
+        mappedStatus = "REFUNDED";
     }
 
     await prisma.transaksi.update({
@@ -246,7 +246,7 @@ export const updateStatus = async (
         mappedStatus = "PAID";
         break;
       case "pending":
-        mappedStatus = "PENDING";
+        mappedStatus = "REFUNDED";
         break;
       case "cancel":
         mappedStatus = "CANCELLED";
@@ -254,9 +254,9 @@ export const updateStatus = async (
       case "expire":
         mappedStatus = "FAILED";
         break;
-      case "refund":
-        mappedStatus = "REFUNDED";
-        break;
+      // case "refund":
+      //   mappedStatus = "REFUNDED";
+      //   break;
       default:
         mappedStatus = "FAILED";
     }
