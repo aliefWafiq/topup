@@ -19,7 +19,7 @@ export default async function Page() {
   const data = await listDataKeuangan()
 
   const chartData = (data ?? []).map(item => ({
-    month: `${item.bulan}`,
+    bulan: item.periode.toLocaleDateString("id-ID", { month: "long", year: "numeric" }),
     total: item.total,
     totalBersih: item.totalBersih,
   }))
@@ -75,9 +75,8 @@ export default async function Page() {
               </CardContent>
             </Card>
           </div>
-          <div className="flex gap-4 py-4 md:gap-6 md:py-6">
+          <div className="flex gap-4 p-5 md:gap-6 md:py-6 border-2 rounded-lg">
             <ChartKeuangan chartData={chartData}/>
-            {/* PERBIKI BAGIAN INII */}
           </div>
         </div>
       </div>

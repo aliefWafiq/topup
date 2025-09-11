@@ -1,7 +1,6 @@
 export type dataKeuangan = {
     id: String,
-    bulan: String,
-    tahun: String,
+    periode: Date,
     total: Number,
     totalBersih: Number
 }

@@ -172,8 +172,7 @@ export const topUp = async (orderId: string) => {
     }
 
     const currentDate = new Date();
-    const bulan = currentDate.toLocaleString("id-ID", { month: "long" });
-    const tahun = currentDate.getFullYear().toString();
+    const periode = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
 
     const responseData = await response.json();
     console.log(responseData)
@@ -200,8 +199,7 @@ export const topUp = async (orderId: string) => {
 
     const existing = await prisma.dataKeuangan.findFirst({
       where: {
-        bulan,
-        tahun,
+        periode
       },
     });
 
@@ -216,8 +214,7 @@ export const topUp = async (orderId: string) => {
     }else{
       await prisma.dataKeuangan.create({
         data: {
-          bulan,
-          tahun,
+          periode,
           total,
           totalBersih
         }

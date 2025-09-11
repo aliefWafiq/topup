@@ -59,10 +59,36 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "verification_tokens" (
-    "identifier" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "expires" TIMESTAMP(3) NOT NULL
+CREATE TABLE "Discount" (
+    "id" TEXT NOT NULL,
+    "nama_diskon" TEXT NOT NULL,
+    "kode_diskon" TEXT NOT NULL,
+    "persentase" DOUBLE PRECISION NOT NULL,
+    "berlaku_hingga" TIMESTAMP(3) NOT NULL,
+    "status" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Discount_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UsedDiscount" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "discountId" TEXT NOT NULL,
+    "usedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UsedDiscount_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "DataKeuangan" (
+    "id" TEXT NOT NULL,
+    "periode" TIMESTAMP(3) NOT NULL,
+    "total" INTEGER NOT NULL,
+    "totalBersih" INTEGER NOT NULL,
+
+    CONSTRAINT "DataKeuangan_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -75,7 +101,10 @@ CREATE UNIQUE INDEX "sessions_session_token_key" ON "sessions"("session_token");
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "verification_tokens_identifier_token_key" ON "verification_tokens"("identifier", "token");
+CREATE UNIQUE INDEX "Discount_kode_diskon_key" ON "Discount"("kode_diskon");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UsedDiscount_userId_discountId_key" ON "UsedDiscount"("userId", "discountId");
 
 -- AddForeignKey
 ALTER TABLE "Transaksi" ADD CONSTRAINT "Transaksi_id_user_fkey" FOREIGN KEY ("id_user") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -85,3 +114,9 @@ ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_fkey" FOREIGN KEY ("user
 
 -- AddForeignKey
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UsedDiscount" ADD CONSTRAINT "UsedDiscount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UsedDiscount" ADD CONSTRAINT "UsedDiscount_discountId_fkey" FOREIGN KEY ("discountId") REFERENCES "Discount"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
