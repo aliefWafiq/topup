@@ -134,7 +134,7 @@ export const getDiscount = async (
 };
 
 // TOPUP
-export const topUp = async (orderId: string) => {
+const topUp = async (orderId: string) => {
   try {
     const getOrderId = await prisma.transaksi.findUnique({
       where: { id_transaksi: orderId },
@@ -191,6 +191,8 @@ export const topUp = async (orderId: string) => {
       default:
         mappedStatus = "CANCELLED";
     }
+
+    console.log("TOP UP")
 
     await prisma.transaksi.update({
       where: { id_transaksi: orderId },
