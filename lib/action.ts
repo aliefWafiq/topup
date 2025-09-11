@@ -180,7 +180,7 @@ export const topUp = async (orderId: string) => {
     let mappedStatus: StatusTransaksi;
     switch (responseData.status) {
       case "pending":
-        mappedStatus = "PENDING";
+        mappedStatus = "PROCESSING";
         break;
       case "sukses":
         mappedStatus = "COMPLETED";
