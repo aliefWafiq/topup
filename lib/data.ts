@@ -94,3 +94,17 @@ export const listDataKeuangan = async() => {
     console.log(error)
   }
 }
+
+export const getDataKeuanganBulanIni = async(periode: Date) => {
+  try {
+    const getDataKeuangan = await prisma.dataKeuangan.findFirst({
+      where: {
+        periode
+      }
+    })
+
+    return getDataKeuangan
+  } catch (error) {
+    console.log(error)
+  }
+}

@@ -10,7 +10,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { unknown } from "zod";
 import { revalidatePath } from "next/cache";
-import { checkUsedDiscount } from "@/lib/data";
+import { getDataKeuanganBulanIni } from "@/lib/data";
 
 import { Discount } from "@/types/discount";
 
@@ -170,6 +170,7 @@ const topUp = async (orderId: string) => {
 
     const currentDate = new Date();
     const periode = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+    const dataKeuangan = await getDataKeuanganBulanIni(periode)
 
     const responseData = await response.json();
     console.log(responseData)
@@ -203,11 +204,13 @@ const topUp = async (orderId: string) => {
     });
 
     if(existing) {
+      const totalAkhir = (dataKeuangan?.total ?? 0) + total
+      const totalBersihAkhir = (dataKeuangan?.totalBersih ?? 0) + totalBersih
       await prisma.dataKeuangan.update({
         where: { id: existing.id },
         data: {
-          total,
-          totalBersih,
+          total: totalAkhir,
+          totalBersih: totalBersihAkhir,
         },
       });
     }else{
