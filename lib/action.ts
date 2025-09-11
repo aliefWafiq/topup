@@ -245,7 +245,7 @@ export const updateStatus = async (
         mappedStatus = "PAID";
         break;
       case "pending":
-        mappedStatus = "REFUNDED";
+        mappedStatus = "PENDING";
         break;
       case "cancel":
         mappedStatus = "CANCELLED";
@@ -253,9 +253,9 @@ export const updateStatus = async (
       case "expire":
         mappedStatus = "FAILED";
         break;
-      // case "refund":
-      //   mappedStatus = "REFUNDED";
-      //   break;
+      case "refund":
+        mappedStatus = "REFUNDED";
+        break;
       default:
         mappedStatus = "FAILED";
     }
