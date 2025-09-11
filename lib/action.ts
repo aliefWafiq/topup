@@ -142,7 +142,7 @@ const topUp = async (orderId: string) => {
 
     if (!getOrderId) throw new Error("Data tidak ditemukan");
 
-    const signature = createHash("md5").update(`${process.env.MEMBER_CODE}:${process.env.SECRET_KEY_TOKOVOUCHER}:${orderId}`).digest("hex");
+    const signature = createHash("md5").update(`M250723WMNE3166SS:12969e732aac1b9aa5388f39fd9f326268106ce3f57ff537ba79ffd69506fc3f:${orderId}`).digest("hex");
     
     console.log(signature)
     const total = getOrderId.harga
