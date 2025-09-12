@@ -1,47 +1,87 @@
 import { getHistoryTransaksiUser } from "@/lib/data";
 import clsx from "clsx";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { IconCircleCheckFilled } from "@tabler/icons-react";
+import { Badge } from "@/components/ui/badge";
 
 const HistoryTransaksiTable = async () => {
-  let transaksi = (await getHistoryTransaksiUser()) ?? []
+  let transaksi = (await getHistoryTransaksiUser()) ?? [];
 
-  if (!transaksi?.length) return <h1 className="text-xl">No Data Found</h1>;
+  if (!transaksi?.length)
+    return <h1 className="text-xl mt-8">No Data Found</h1>;
 
   return (
-    <table className="w-full bg-white mt-14">
-      <thead className="border-b border-gray-100">
-        <tr>
-          <th className="py-3 px-6 text-left text-sm">Id Transaksi</th>
-          <th className="py-3 px-6 text-left text-sm">Id Game User</th>
-          <th className="py-3 px-6 text-left text-sm">Game</th>
-          <th className="py-3 px-6 text-left text-sm">Server</th>
-          <th className="py-3 px-6 text-left text-sm">Harga</th>
-          <th className="py-3 px-6 text-left text-sm">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {transaksi.map((transaksi, i) => (
-          <tr key={transaksi.id_transaksi}>
-            <td className="py-3 px-6">{transaksi.id_transaksi}</td>
-            <td className="py-3 px-6">{transaksi.id_gameUser}</td>
-            <td className="py-3 px-6">{transaksi.operator_produk}</td>
-            <td className="py-3 px-6">{transaksi.server}</td>
-            <td className="py-3 px-6">
-              Rp {transaksi.harga.toLocaleString("id-ID")}
-            </td>
-            <td className="p-2">
-                <p className={
-                  clsx(transaksi.status, {
-                    'bg-red-500 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "FAILED" || transaksi.status === "REFUNDED" || transaksi.status === "CANCELLED", 
-                    'bg-blue-600 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "COMPLETED",
-                    'bg-blue-400 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "PROCESSING",
-                    'bg-orange-400 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "PENDING",
-                    'bg-green-500 text-white text-center py-3 px-3 rounded-xl': transaksi.status === "PAID"
-                })}>{transaksi.status}</p>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="overflow-hidden rounded-lg border mt-4">
+      <table>
+        <TableHeader className="bg-slate-100">
+          <TableRow>
+            <TableHead className="py-3 px-6 text-left text-sm">
+              Id Transaksi
+            </TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">
+              Id Game User
+            </TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">Game</TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">
+              Server
+            </TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">Harga</TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">
+              Status
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {transaksi.map((transaksi, i) => (
+            <TableRow key={transaksi.id_transaksi}>
+              <TableCell className="py-3 px-6">
+                {transaksi.id_transaksi}
+              </TableCell>
+              <TableCell className="py-3 px-6">
+                {transaksi.id_gameUser}
+              </TableCell>
+              <TableCell className="py-3 px-6">
+                {transaksi.operator_produk}
+              </TableCell>
+              <TableCell className="py-3 px-6">{transaksi.server}</TableCell>
+              <TableCell className="py-3 px-6">
+                Rp {transaksi.harga.toLocaleString("id-ID")}
+              </TableCell>
+              <TableCell className="p-2">
+                <Badge
+                  variant={"outline"}
+                  className={"text-muted-foreground px-1.5"}
+                >
+                  {transaksi.status === "COMPLETED" ? (
+                    <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
+                  ) : transaksi.status === "CANCELLED" ||
+                    transaksi.status === "FAILED" ||
+                    transaksi.status === "REFUNDED" ? (
+                    <IconCircleCheckFilled className="fill-red-500 dark:fill-red-400" />
+                  ) : transaksi.status === "PROCESSING" ? (
+                    <IconCircleCheckFilled className="fill-blue-500 dark:fill-blue-400" />
+                  ) : transaksi.status === "PAID" ? (
+                    <IconCircleCheckFilled className="fill-emerald-500 dark:fill-emerald-400" />
+                  ) : transaksi.status === "PENDING" ? (
+                    <IconCircleCheckFilled className="fill-orange-500 dark:fill-orange-400" />
+                  ) : (
+                    <IconCircleCheckFilled className="fill-red-500 dark:fill-red-400" />
+                  )}
+                  {transaksi.status}
+                </Badge>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </table>
+    </div>
   );
 };
 

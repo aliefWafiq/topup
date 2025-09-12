@@ -5,6 +5,7 @@ import {
   faCreditCard,
   faBasketShopping,
   faUsers,
+  faBookOpen
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getJumlahTransaksi, getJumlahUser } from "@/lib/data";
@@ -28,8 +29,8 @@ export default async function Page() {
     <>
       <SiteHeader />
       <div className="flex flex-1 flex-col">
-        <div className="@container/main flex flex-1 flex-col gap-2">
-          <div className="flex gap-4 px-6 py-4 md:gap-6 md:py-6">
+        <div className="@container/main flex flex-1 flex-col gap-2 px-6">
+          <div className="flex gap-4 py-4 md:gap-6 md:py-6">
             <Card className="w-72">
               <CardHeader>
                 <CardTitle>
@@ -75,9 +76,20 @@ export default async function Page() {
               </CardContent>
             </Card>
           </div>
-          <div className="flex gap-4 p-5 md:gap-6 md:py-6 border-2 rounded-lg">
-            <ChartKeuangan chartData={chartData}/>
-          </div>
+          <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <FontAwesomeIcon
+                    icon={faBookOpen}
+                    className="text-3xl bg-slate-100 p-3 rounded-xl"
+                  />
+                  <p className="ml-4">Data Keuangan</p>
+                </CardTitle>
+              </CardHeader>
+            <CardContent>
+              <ChartKeuangan chartData={chartData}/>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </>

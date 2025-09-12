@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IconCircleCheckFilled, IconLoader } from "@tabler/icons-react";
+import { IconCircleCheckFilled } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
 
 const berlaku = (date: Date) => {
@@ -21,7 +21,7 @@ const berlaku = (date: Date) => {
 const DiscountTable = async () => {
   let discount = (await getDiscounts()) ?? [];
 
-  if (!discount?.length) return <h1 className="text-xl">No Data Found</h1>;
+  if (!discount?.length) return <h1 className="text-xl mt-8">No Data Found</h1>;
 
   return (
     <div className="overflow-hidden rounded-lg border mt-4">

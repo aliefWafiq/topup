@@ -1,5 +1,4 @@
 import { getUsers } from "@/lib/data";
-import { DeleteButton, EditButton } from "@/components/button";
 import React from "react";
 import {
   Table,
@@ -9,13 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IconCircleCheckFilled, IconLoader } from "@tabler/icons-react";
-import { Badge } from "@/components/ui/badge";
 
 const UserTable = async () => {
   const users = await getUsers();
 
-  if (!users?.length) return <h1 className="text-xl">No Data Found</h1>;
+  if (!users?.length) return <h1 className="text-xl mt-8">No Data Found</h1>
 
   return (
     <div className="overflow-hidden rounded-lg border mt-4">
