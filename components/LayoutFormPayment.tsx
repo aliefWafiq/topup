@@ -24,7 +24,6 @@ export default function LayoutFormPayment({
   id_user: string
   email: string
 }) {
-  const { data: session } = useSession();
   const [dateInfo, setDateInfo] = useState<{
     dayName: string;
     date: number;

@@ -18,7 +18,7 @@ const GamesTable = async () => {
   const json = await res.json();
   const games = await json.data;
 
-  if (!games?.length) return <h1 className="text-xl mt-8">No User Found</h1>;
+  if (!games?.length) return <h1 className="text-xl mt-8">No Games Found</h1>;
 
   return (
     <div className="overflow-hidden rounded-lg border mt-4">

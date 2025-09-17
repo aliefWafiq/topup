@@ -10,7 +10,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { unknown } from "zod";
 import { revalidatePath } from "next/cache";
-import { getDataKeuanganBulanIni } from "@/lib/data";
+import { getDataKeuanganBulanIni, getDataTransaksi } from "@/lib/data";
 
 import { Discount } from "@/types/discount";
 
@@ -301,7 +301,7 @@ export const updateDiscountStatus = async (id: string) => {
 };
 
 // DELETE DISCOUNT
-export const DeleteDiscount = async (id: string) => {
+export const DeleteDiscount = async(id: string) => {
   try {
     await prisma.discount.delete({
       where: {
@@ -315,3 +315,8 @@ export const DeleteDiscount = async (id: string) => {
     return { message: "Data gagal dihapus" };
   }
 };
+
+// PAYMENT LINK
+export const PaymentLinkMidtrans = async(id: string) => {
+  
+}

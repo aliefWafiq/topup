@@ -1,5 +1,4 @@
 import { getHistoryTransaksiUser } from "@/lib/data";
-import clsx from "clsx";
 import {
   Table,
   TableBody,
@@ -10,6 +9,8 @@ import {
 } from "@/components/ui/table";
 import { IconCircleCheckFilled } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
+import { PaymentLinkMidtrans } from "@/lib/action";
+import { PaymentLink } from "@/components/button";
 
 const HistoryTransaksiTable = async () => {
   let transaksi = (await getHistoryTransaksiUser()) ?? [];
@@ -19,7 +20,7 @@ const HistoryTransaksiTable = async () => {
 
   return (
     <div className="overflow-hidden rounded-lg border mt-4">
-      <table>
+      <Table>
         <TableHeader className="bg-slate-100">
           <TableRow>
             <TableHead className="py-3 px-6 text-left text-sm">
@@ -35,6 +36,9 @@ const HistoryTransaksiTable = async () => {
             <TableHead className="py-3 px-6 text-left text-sm">Harga</TableHead>
             <TableHead className="py-3 px-6 text-left text-sm">
               Status
+            </TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">
+              Action
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -77,10 +81,13 @@ const HistoryTransaksiTable = async () => {
                   {transaksi.status}
                 </Badge>
               </TableCell>
+              <TableCell className="py-3 px-6">
+                <PaymentLink transaksi={transaksi.id_transaksi} status={transaksi.status} /> 
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
-      </table>
+      </Table>
     </div>
   );
 };

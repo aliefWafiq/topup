@@ -1,17 +1,19 @@
 "use client";
 import { useFormStatus } from "react-dom";
-import { useActionState } from "react";
+import { useActionState, useTransition } from "react";
 import { clsx } from "clsx";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { buttonVariants } from "./ui/button";
+import { PaymentLinkMidtrans } from "@/lib/action";
 
 const initialState = {
   message: "",
 };
 
 interface GenericDeleteButtonProps {
-  id: string
-  deleteAction: (id: string) => Promise<{ message: string }>
+  id: string;
+  deleteAction: (id: string) => Promise<{ message: string }>;
 }
 
 export const SubmitButton = ({
@@ -62,6 +64,57 @@ export const CheckOut = ({ onClick }: { onClick?: () => void }) => {
   );
 };
 
+export const PaymentLink = ({transaksi, status}: {transaksi:any, status: string}) => {
+  let [ispending, startTransition] = useTransition()
+
+  const handlePayment = () => {
+    startTransition(async() => {
+      const res = await PaymentLinkMidtrans(transaksi)
+    })
+  }
+
+  if(status !== 'PENDING'){
+    return <p className="bg-blue-400 px-4 py-2 text-sm text-white rounded-lg">Lunas</p>
+  }
+
+  return (
+    <button
+      onClick={handlePayment}
+      disabled={ispending}
+      className="bg-blue-600 px-4 py-2 text-sm text-white rounded-lg cursor-pointer hover:bg-blue-700"
+    >
+      {ispending ? 'Processing..' : "Bayar"}
+    </button>
+  )
+}
+
+// export const PaymentLink = ({
+//   onClick,
+//   status,
+// }: {
+//   onClick?: () => void;
+//   status: string;
+// }) => {
+//   let statusPembayaran = ""
+//   if(status !== "COMPLETED"){
+//     statusPembayaran = "Bayar"
+//   }else{
+//     statusPembayaran = "Lunas"
+//   }
+//   return (
+//     <button
+//       className={clsx(
+//         "bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer",
+//         {
+//           "opacity-50 cursor-none": "Sudah di bayar",
+//         }
+//       )}
+//     >
+//       {status ? "Lunas" : "Bayar"}
+//     </button>
+//   );
+// };
+
 export const EditButton = () => {
   return (
     <Link
@@ -88,9 +141,12 @@ const LayoutDeleteButton = () => {
   );
 };
 
-export const DeleteButton = ({ id, deleteAction }: GenericDeleteButtonProps) => {
+export const DeleteButton = ({
+  id,
+  deleteAction,
+}: GenericDeleteButtonProps) => {
   const [state, formAction] = useActionState(
-    deleteAction.bind(null, id),  
+    deleteAction.bind(null, id),
     initialState
   );
 

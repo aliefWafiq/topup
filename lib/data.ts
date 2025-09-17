@@ -52,6 +52,17 @@ export const getHistoryTransaksiUser = async () => {
   }
 };
 
+export const getDataTransaksi = async(id: string) => {
+  try {
+    const dataTransaksi = await prisma.transaksi.findFirst({
+      where: { id_transaksi: id }
+    })
+    return dataTransaksi
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const getJumlahTransaksi = async () => {
   try {
     const jumlahTransaksi = await prisma.transaksi.count();
