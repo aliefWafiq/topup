@@ -15,23 +15,10 @@ export const getUsers = async () => {
   }
 };
 
-export const getTransaksi = async () => {
+export const getJumlahUser = async () => {
   try {
-    const transaksi = await prisma.transaksi.findMany({
-      orderBy: { createdAt: "desc" },
-    });
-    return transaksi;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const getDiscounts = async () => {
-  try {
-    const discount = await prisma.discount.findMany({
-      orderBy: { created_at: "desc" },
-    });
-    return discount;
+    const jumlahUser = await prisma.user.count();
+    return jumlahUser;
   } catch (error) {
     console.log(error);
   }
@@ -47,6 +34,29 @@ export const getHistoryTransaksiUser = async () => {
       orderBy: { createdAt: "desc" },
     });
     return historyTransaksi;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDataUser = async(id: string) => {
+  try {
+    const dataUser = await prisma.user.findFirst({
+      where: { id }
+    })
+    return dataUser
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+export const getTransaksi = async () => {
+  try {
+    const transaksi = await prisma.transaksi.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return transaksi;
   } catch (error) {
     console.log(error);
   }
@@ -72,16 +82,19 @@ export const getJumlahTransaksi = async () => {
   }
 };
 
-export const getJumlahUser = async () => {
+
+
+export const getDiscounts = async () => {
   try {
-    const jumlahUser = await prisma.user.count();
-    return jumlahUser;
+    const discount = await prisma.discount.findMany({
+      orderBy: { created_at: "desc" },
+    });
+    return discount;
   } catch (error) {
     console.log(error);
   }
 };
 
-// CHECK DISCOUNT
 export const checkUsedDiscount = async (id_discount: string) => {
   try {
     const checkUsedDicounts = await prisma.usedDiscount.findFirst({
@@ -93,6 +106,8 @@ export const checkUsedDiscount = async (id_discount: string) => {
     console.log(error);
   }
 };
+
+
 
 export const listDataKeuangan = async() => {
   try {
@@ -115,6 +130,19 @@ export const getDataKeuanganBulanIni = async(periode: Date) => {
     })
 
     return getDataKeuangan
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+
+export const getPaymentLink = async(id_transaksi: string) => {
+  try {
+    const dataPaymentLink = await prisma.paymentLink.findFirst({
+      where: { id_transaksi }
+    })
+    return dataPaymentLink
   } catch (error) {
     console.log(error)
   }

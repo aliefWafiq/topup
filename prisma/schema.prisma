@@ -113,3 +113,9 @@ model DataKeuangan {
   total         Int
   totalBersih   Int
 }
+
+model PaymentLink {
+  id                String   @id @default(cuid())
+  id_transaksi      String
+  link_payment      String
+}

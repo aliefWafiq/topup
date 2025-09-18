@@ -91,6 +91,15 @@ CREATE TABLE "DataKeuangan" (
     CONSTRAINT "DataKeuangan_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "PaymentLink" (
+    "id" TEXT NOT NULL,
+    "id_transaksi" TEXT NOT NULL,
+    "link_payment" TEXT NOT NULL,
+
+    CONSTRAINT "PaymentLink_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "accounts_provider_provider_account_id_key" ON "accounts"("provider", "provider_account_id");
 

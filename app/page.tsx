@@ -18,12 +18,26 @@ export default async function RootLayout() {
           <h1 className="text-9xl font-bold my-4">Beli skin</h1>
           <h1 className="text-4xl font-bold">Tapi bingung dimana?</h1>
         </div>
-        <div className="w-1/2 h-1/2 px-16 flex items-center">
+        <div className="w-1/2 h-1/2 px-16 flex flex-col justify-center">
           <p className="w-2/3">
             Disini kami menyediakan top up dari berbagai macam game dengan harga
             terjangkau dan juga berbagai diskon yang membuat harga menjadi lebih
             terjangkau
           </p>
+          <div className="flex mt-4 gap-4">
+            <Link
+              className="bg-blue-400 p-4 text-white flex items-center w-24 rounded-lg"
+              href="/register"
+            >
+              Register
+            </Link>
+            <Link
+              className="bg-blue-400 p-4 text-white flex items-center w-24 rounded-lg"
+              href="/login"
+            >
+              Log in
+            </Link>
+          </div>
         </div>
         <div className="absolute bottom-0 right-0 w-2/3 h-[700px]">
           <div className="absolute w-[230px] h-[150px] z-20 bottom-5 right-12 hidden">
@@ -43,40 +57,35 @@ export default async function RootLayout() {
             alt="HSR"
           />
         </div>
-        {/* <Link
-            className="bg-blue-400 p-4 text-white flex items-center w-24 rounded-lg"
-            href="/register"
-          >
-            Register
-          </Link>
-          <Link
-            className="bg-blue-400 p-4 text-white flex items-center w-24 rounded-lg"
-            href="/login"
-          >
-            Log in
-          </Link> */}
       </section>
+
       <section className="w-full h-screen flex flex-col justify-center items-center">
         <h1 className="text-6xl font-bold">Lorem ipsum dolor sit amet.</h1>
-        <p className="w-1/2 mt-8 mb-12 text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias sed dicta tempore maxime laudantium a unde provident, quasi eaque assumenda neque eveniet quam labore voluptatem placeat blanditiis harum pariatur inventore?</p>
+        <p className="w-1/2 mt-8 mb-12 text-center">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias sed
+          dicta tempore maxime laudantium a unde provident, quasi eaque
+          assumenda neque eveniet quam labore voluptatem placeat blanditiis
+          harum pariatur inventore?
+        </p>
         <div className="flex flex-wrap gap-6 justify-center">
-          {games.map((games: Games) =>
-            // <Card className=" flex" key={games.id}>
-            //   <CardContent className="flex">
-            games.status !== 0 && parseInt(games.id) < 20 ? (
-              <div
-                key={games.id}
-                className="flex items-center gap-4 border-2 px-5 py-3 rounded-lg"
-              >
-                <Image
-                  src={games.logo || "/avatar.jpg"}
-                  alt={games.nama}
-                  width={50}
-                  height={70}
-                />
-                <p>{games.nama}</p>
-              </div>
-            ) : null
+          {games.map(
+            (games: Games) =>
+              // <Card className=" flex" key={games.id}>
+              //   <CardContent className="flex">
+              games.status !== 0 && parseInt(games.id) < 20 ? (
+                <div
+                  key={games.id}
+                  className="flex items-center gap-4 border-2 px-5 py-3 rounded-lg"
+                >
+                  <Image
+                    src={games.logo || "/avatar.jpg"}
+                    alt={games.nama}
+                    width={50}
+                    height={70}
+                  />
+                  <p>{games.nama}</p>
+                </div>
+              ) : null
             //   </CardContent>
             // </Card>
           )}

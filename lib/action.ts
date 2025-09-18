@@ -10,7 +10,12 @@ import { NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { unknown } from "zod";
 import { revalidatePath } from "next/cache";
-import { getDataKeuanganBulanIni, getDataTransaksi } from "@/lib/data";
+import {
+  getDataKeuanganBulanIni,
+  getDataTransaksi,
+  getDataUser,
+  getPaymentLink
+} from "@/lib/data";
 
 import { Discount } from "@/types/discount";
 
@@ -93,7 +98,8 @@ export const AddDiscount = async (prevState: unknown, formData: FormData) => {
     };
   }
 
-  const { nama_diskon, kode_diskon, persentase, berlaku_hingga } = validatedFields.data;
+  const { nama_diskon, kode_diskon, persentase, berlaku_hingga } =
+    validatedFields.data;
   const persentaseDiskon = parseFloat(persentase);
   const tglKadaluarsa = new Date(berlaku_hingga);
 
@@ -142,12 +148,16 @@ const topUp = async (orderId: string) => {
 
     if (!getOrderId) throw new Error("Data tidak ditemukan");
 
-    const signature = createHash("md5").update(`M250723WMNE3166SS:12969e732aac1b9aa5388f39fd9f326268106ce3f57ff537ba79ffd69506fc3f:${orderId}`).digest("hex");
-    
-    console.log(signature)
-    const total = getOrderId.harga
-    const totalBersih = total - 2000
-    
+    const signature = createHash("md5")
+      .update(
+        `${process.env.MEMBER_CODE}:${process.env.SECRET_KEY_TOKOVOUCHER}:${orderId}`
+      )
+      .digest("hex");
+
+    console.log(signature);
+    const total = getOrderId.harga;
+    const totalBersih = total - 2000;
+
     const body = {
       ref_id: orderId,
       produk: getOrderId?.kode_produk,
@@ -169,11 +179,15 @@ const topUp = async (orderId: string) => {
     }
 
     const currentDate = new Date();
-    const periode = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
-    const dataKeuangan = await getDataKeuanganBulanIni(periode)
+    const periode = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
+    const dataKeuangan = await getDataKeuanganBulanIni(periode);
 
     const responseData = await response.json();
-    console.log(responseData)
+    console.log(responseData);
 
     let mappedStatus: StatusTransaksi;
     switch (responseData.status) {
@@ -190,7 +204,7 @@ const topUp = async (orderId: string) => {
         mappedStatus = "CANCELLED";
     }
 
-    console.log("TOP UP")
+    console.log("TOP UP");
 
     await prisma.transaksi.update({
       where: { id_transaksi: orderId },
@@ -199,13 +213,13 @@ const topUp = async (orderId: string) => {
 
     const existing = await prisma.dataKeuangan.findFirst({
       where: {
-        periode
+        periode,
       },
     });
 
-    if(existing) {
-      const totalAkhir = (dataKeuangan?.total ?? 0) + total
-      const totalBersihAkhir = (dataKeuangan?.totalBersih ?? 0) + totalBersih
+    if (existing) {
+      const totalAkhir = (dataKeuangan?.total ?? 0) + total;
+      const totalBersihAkhir = (dataKeuangan?.totalBersih ?? 0) + totalBersih;
       await prisma.dataKeuangan.update({
         where: { id: existing.id },
         data: {
@@ -213,14 +227,14 @@ const topUp = async (orderId: string) => {
           totalBersih: totalBersihAkhir,
         },
       });
-    }else{
+    } else {
       await prisma.dataKeuangan.create({
         data: {
           periode,
           total,
-          totalBersih
-        }
-      })
+          totalBersih,
+        },
+      });
     }
 
     return mappedStatus;
@@ -270,8 +284,8 @@ export const updateStatus = async (
 
     if (mappedStatus === "PAID") topUp(id_transaksi);
 
-    console.log(mappedStatus)
-    console.log(statusMidtrans)
+    console.log(mappedStatus);
+    console.log(statusMidtrans);
 
     return mappedStatus;
   } catch (error) {
@@ -301,7 +315,7 @@ export const updateDiscountStatus = async (id: string) => {
 };
 
 // DELETE DISCOUNT
-export const DeleteDiscount = async(id: string) => {
+export const DeleteDiscount = async (id: string) => {
   try {
     await prisma.discount.delete({
       where: {
@@ -316,7 +330,81 @@ export const DeleteDiscount = async(id: string) => {
   }
 };
 
+export const AddPaymentLink = async (
+  id_transaksi: string,
+  link_payment: string
+) => {
+  try {
+    await prisma.paymentLink.create({
+      data: {
+        id_transaksi,
+        link_payment,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // PAYMENT LINK
-export const PaymentLinkMidtrans = async(id: string) => {
-  
+export const PaymentLinkMidtrans = async (id: string) => {
+  const dataTransaksi = await getDataTransaksi(id);
+  const startTime = new Date();
+  const dataUser = await getDataUser(dataTransaksi?.id_user || "");
+
+  const body = {
+    transaction_details: {
+      order_id: dataTransaksi?.id_transaksi,
+      gross_amount: dataTransaksi?.harga,
+      payment_link_id: "",
+    },
+    customer_required: false,
+    usage_limit: 1,
+    expiry: {
+      start_time: startTime,
+      duration: 20,
+      unit: "days",
+    },
+    item_details: [
+      {
+        id_user: dataTransaksi?.id_user,
+        id_gameUser: dataTransaksi?.id_gameUser,
+        operator_produk: dataTransaksi?.operator_produk,
+        name: dataTransaksi?.kode_produk,
+        price: dataTransaksi?.harga,
+        quantity: 1,
+        server: dataTransaksi?.server,
+      },
+    ],
+    customer_details: {
+      first_name: dataUser?.name,
+      email: dataUser?.email,
+    },
+  };
+
+  const base64Encode = Buffer.from(
+    process.env.MIDTRANS_SERVER_KEY + ":"
+  ).toString("base64");
+
+  const authHeader = `Basic ${base64Encode}`;
+
+  const response = await fetch(`${process.env.URL_PAYMENTLINK}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: authHeader,
+    },
+    body: JSON.stringify(body),
+  });
+
+  try {
+    const res = await response.json();
+    AddPaymentLink(dataTransaksi?.id_transaksi || "", res.payment_url);
+
+    redirect(res.payment_url);
+  } catch (error) {
+    const dataPaymentLink = await getPaymentLink(dataTransaksi?.id_transaksi || "")
+    redirect(dataPaymentLink?.link_payment || "")
+  }
 }

@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/table";
 import { IconCircleCheckFilled } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
-import { PaymentLinkMidtrans } from "@/lib/action";
 import { PaymentLink } from "@/components/button";
 
 const HistoryTransaksiTable = async () => {
