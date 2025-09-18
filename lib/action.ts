@@ -401,6 +401,7 @@ export const PaymentLinkMidtrans = async (id: string) => {
   try {
     const res = await response.json();
     AddPaymentLink(dataTransaksi?.id_transaksi || "", res.payment_url);
+    console.log(res.payment_url)
 
     redirect(res.payment_url);
   } catch (error) {
