@@ -9,9 +9,6 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <head>
-        <FontAwesomeConfig />
-      </head>
       <body className={`antialiased`}>
         <SidebarProvider
           style={

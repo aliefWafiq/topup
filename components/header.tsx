@@ -10,10 +10,17 @@ export default async function Header() {
   return (
     <header className="border-b-2 w-screen bg-white fixed z-40 top-0">
       <div className="flex items-center justify-end lg:justify-between mx-auto p-4 lg:px-8">
-        <h1 className="text-2xl font-bold hidden lg:block">Top Up</h1> 
+        <h1 className="text-2xl font-bold hidden lg:block">Top Up</h1>
         {/* <SidebarTrigger className="-ml-1 lg:hidden" /> */}
         <div className="flex items-center gap-3">
           <ul className="flex items-center gap-4 mr-5 font-semibold text-gray-600">
+            {session?.user?.role === "admin" && (
+              <li>
+                <Link className="hover:text-gray-800" href="/admin">
+                  Dashboard
+                </Link>
+              </li>
+            )}
             <li>
               <Link className="hover:text-gray-800" href="/home">
                 Home

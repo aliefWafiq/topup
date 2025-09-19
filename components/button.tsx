@@ -46,20 +46,13 @@ export const SubmitButton = ({
 };
 
 export const CheckOut = ({ onClick }: { onClick?: () => void }) => {
-  const { pending } = useFormStatus();
   return (
     <button
-      className={clsx(
-        "bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer",
-        {
-          "opacity-50 cursor-progress": pending,
-        }
-      )}
+      className={"bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer focus:bg-blue-500"}
       type="button"
-      disabled={pending}
       onClick={onClick}
     >
-      <>{pending ? "Checkout..." : "Checkout"}</>
+    Checkout
     </button>
   );
 };
@@ -70,6 +63,7 @@ export const PaymentLink = ({transaksi, status}: {transaksi:any, status: string}
   const handlePayment = () => {
     startTransition(async() => {
       const res = await PaymentLinkMidtrans(transaksi)
+      window.location.href = res
     })
   }
 
@@ -87,33 +81,6 @@ export const PaymentLink = ({transaksi, status}: {transaksi:any, status: string}
     </button>
   )
 }
-
-// export const PaymentLink = ({
-//   onClick,
-//   status,
-// }: {
-//   onClick?: () => void;
-//   status: string;
-// }) => {
-//   let statusPembayaran = ""
-//   if(status !== "COMPLETED"){
-//     statusPembayaran = "Bayar"
-//   }else{
-//     statusPembayaran = "Lunas"
-//   }
-//   return (
-//     <button
-//       className={clsx(
-//         "bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer",
-//         {
-//           "opacity-50 cursor-none": "Sudah di bayar",
-//         }
-//       )}
-//     >
-//       {status ? "Lunas" : "Bayar"}
-//     </button>
-//   );
-// };
 
 export const EditButton = () => {
   return (

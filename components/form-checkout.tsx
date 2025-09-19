@@ -13,7 +13,7 @@ declare global {
 
 type DiscountProps = {
   initialPrice: number;
-}
+};
 
 export function FormPayment({
   namaProduk,
@@ -34,7 +34,6 @@ export function FormPayment({
   email: string;
   serverOption: { name: string; value: string }[];
 }) {
-  
   const serverRef = useRef<HTMLSelectElement>(null);
   const id_gameUserRef = useRef<HTMLInputElement>(null);
   const hargaToko = hargaProduk + 2000;
@@ -45,69 +44,78 @@ export function FormPayment({
   const [discountMessage, setDiscountMessage] = useState<string>("");
   const [idDiscount, setIdDiscount] = useState<string | null>(null);
 
-  const handleDiscountChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
-    const currentCode = event.target.value
-    setKodeDiskon(currentCode)
+  const handleDiscountChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const currentCode = event.target.value;
+    setKodeDiskon(currentCode);
 
-    const discount = await getDiscount(currentCode)
+    const discount = await getDiscount(currentCode);
 
-    if(discount !== null){
-      const isUsed = await checkUsedDiscount(discount.id)
-      if(isUsed) {
-        setTotalHarga(hargaToko)
-        setKodeDiskon("")
-        setDiscountMessage("Kode diskon sudah pernah digunakan.")
-      }else if(new Date() > discount.berlaku_hingga && discount.status != true){
-        updateDiscountStatus(discount.id)
-        setTotalHarga(hargaToko)
-        setKodeDiskon("")
-        setDiscountMessage("Kode diskon sudah tidak berlaku.")
-      }else{
-        const potongan = hargaToko * (discount.persentase / 100)
-        setTotalHarga(Math.floor(hargaToko - potongan))
-        setIdDiscount(discount.id)
-        setDiscountMessage("Kode diskon berhasil diterapkan!")
+    if (discount !== null) {
+      const isUsed = await checkUsedDiscount(discount.id);
+      if (isUsed) {
+        setTotalHarga(hargaToko);
+        setKodeDiskon("");
+        setDiscountMessage("Kode diskon sudah pernah digunakan.");
+      } else if (
+        new Date() > discount.berlaku_hingga &&
+        discount.status != true
+      ) {
+        updateDiscountStatus(discount.id);
+        setTotalHarga(hargaToko);
+        setKodeDiskon("");
+        setDiscountMessage("Kode diskon sudah tidak berlaku.");
+      } else {
+        const potongan = hargaToko * (discount.persentase / 100);
+        setTotalHarga(Math.floor(hargaToko - potongan));
+        setIdDiscount(discount.id);
+        setDiscountMessage("Kode diskon berhasil diterapkan!");
       }
-    }else{
-      setTotalHarga(hargaToko)
-      if(currentCode) {
-        setDiscountMessage("Kode diskon tidak valid.")
-      }else{
-        setDiscountMessage("")
+    } else {
+      setTotalHarga(hargaToko);
+      if (currentCode) {
+        setDiscountMessage("Kode diskon tidak valid.");
+      } else {
+        setDiscountMessage("");
       }
     }
-  }
+  };
 
   const handleCheckout = async () => {
     const server = serverRef.current?.value || "";
     const id_gameUser = id_gameUserRef.current?.value;
-    const body = {
-      id_transaksi: String(orderId),
-      id_user: id_user,
-      id_gameUser: id_gameUser,
-      nama_produk: namaProduk,
-      price: totalHarga,
-      jenis_id: jenis_id,
-      operator_produk: operator_produk,
-      server: server,
-      code: code,
-      id_discount: idDiscount != null ? idDiscount : "",
-      email,
-    };
-
-    const response = await fetch("/api/transaction", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-
-    const json = await response.json();
-    if (json.status && json.data?.token) {
-      window.snap.pay(json.data.token);
+    if (id_gameUser == "") {
+      alert("Mohon isi id game");
     } else {
-      alert("Transaksi gagal: " + json.message);
+      const body = {
+        id_transaksi: String(orderId),
+        id_user: id_user,
+        id_gameUser: id_gameUser,
+        nama_produk: namaProduk,
+        price: totalHarga,
+        jenis_id: jenis_id,
+        operator_produk: operator_produk,
+        server: server,
+        code: code,
+        id_discount: idDiscount != null ? idDiscount : "",
+        email,
+      };
+
+      const response = await fetch("/api/transaction", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const json = await response.json();
+      if (json.status && json.data?.token) {
+        window.snap.pay(json.data.token);
+      } else {
+        alert("Transaksi gagal: " + json.message);
+      }
     }
   };
 

@@ -330,22 +330,6 @@ export const DeleteDiscount = async (id: string) => {
   }
 };
 
-export const AddPaymentLink = async (
-  id_transaksi: string,
-  link_payment: string
-) => {
-  try {
-    await prisma.paymentLink.create({
-      data: {
-        id_transaksi,
-        link_payment,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 // PAYMENT LINK
 export const PaymentLinkMidtrans = async (id: string) => {
   const dataTransaksi = await getDataTransaksi(id);
@@ -398,14 +382,33 @@ export const PaymentLinkMidtrans = async (id: string) => {
     body: JSON.stringify(body),
   });
 
-  try {
+  const checkData = await getPaymentLink(dataTransaksi?.id_transaksi || "")
+
+  if(!checkData) {
     const res = await response.json();
     AddPaymentLink(dataTransaksi?.id_transaksi || "", res.payment_url);
     console.log(res.payment_url)
 
-    redirect(res.payment_url);
-  } catch (error) {
-    const dataPaymentLink = await getPaymentLink(dataTransaksi?.id_transaksi || "")
-    redirect(dataPaymentLink?.link_payment || "")
+    // INI HARUS DI DEBUG KARNA DI HOSTING VERCEL DIA ERROR LINK NYA KEK JADI GK VALID
+
+    return res.payment_url;
+  }else {
+    return checkData?.link_payment || ""
   }
 }
+
+export const AddPaymentLink = async (
+  id_transaksi: string,
+  link_payment: string
+) => {
+  try {
+    await prisma.paymentLink.create({
+      data: {
+        id_transaksi,
+        link_payment,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
