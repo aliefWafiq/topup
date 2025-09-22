@@ -4,7 +4,7 @@ import { useActionState, useTransition } from "react";
 import { clsx } from "clsx";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { buttonVariants } from "./ui/button";
+import { ExportDataToExcel } from "@/lib/ExcelExport";
 import { PaymentLinkMidtrans } from "@/lib/action";
 
 const initialState = {
@@ -14,6 +14,11 @@ const initialState = {
 interface GenericDeleteButtonProps {
   id: string;
   deleteAction: (id: string) => Promise<{ message: string }>;
+}
+
+interface ExportButtonProps {
+  data: any[];
+  fileName: string;
 }
 
 export const SubmitButton = ({
@@ -145,3 +150,19 @@ export const LogoutButton = () => {
     </>
   );
 };
+
+export default function ExportButton({ data, fileName }: ExportButtonProps) {
+  
+  const handleExport = () => {
+    ExportDataToExcel(data, fileName);
+  };
+
+  return (
+    <button
+      onClick={handleExport}
+      className="bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 hover:cursor-pointer transition"
+    >
+      Export to Excel
+    </button>
+  );
+}
