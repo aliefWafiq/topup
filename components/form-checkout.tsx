@@ -1,9 +1,11 @@
 "use client";
 import { CheckOut } from "@/components/button";
 import Script from "next/script";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getDiscount, updateDiscountStatus } from "@/lib/action";
 import { checkUsedDiscount } from "@/lib/data";
+import { checkSaldo } from "@/lib/data";
+import { check } from "zod";
 
 declare global {
   interface Window {
@@ -85,9 +87,14 @@ export function FormPayment({
   const handleCheckout = async () => {
     const server = serverRef.current?.value || "";
     const id_gameUser = id_gameUserRef.current?.value;
+    const getSaldo = await checkSaldo();
+
     if (id_gameUser == "") {
       alert("Mohon isi id game");
-    } else {
+    }else if (getSaldo < totalHarga) {
+      alert("Maaf saldo sedang tidak mencukupi, silahkan melakukan top up lain kali");
+    }
+    else {
       const body = {
         id_transaksi: String(orderId),
         id_user: id_user,

@@ -11,13 +11,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getJumlahTransaksi, getJumlahUser } from "@/lib/data";
 import { listDataKeuangan } from "@/lib/data";
 import ExportButton from "@/components/button";
+import { checkSaldo } from "@/lib/data";
 
 export default async function Page() {
-  const url = `https://api.tokovoucher.net/member?member_code=${process.env.MEMBER_CODE}&signature=${process.env.SIGNATURE_KEY}`;
-  const res = await fetch(url);
-  const json = await res.json();
-  const saldo = json.data.saldo;
-
+  const saldo = await checkSaldo();
   const data = await listDataKeuangan();
 
   const chartData = (data ?? []).map((item) => ({

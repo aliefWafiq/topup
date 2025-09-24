@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FormPayment } from "@/components/form-checkout";
-import { useSession } from "next-auth/react";
 
 export default function LayoutFormPayment({
   onClose,

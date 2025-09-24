@@ -1,3 +1,4 @@
+"use server"
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
@@ -39,17 +40,16 @@ export const getHistoryTransaksiUser = async () => {
   }
 };
 
-export const getDataUser = async(id: string) => {
+export const getDataUser = async (id: string) => {
   try {
     const dataUser = await prisma.user.findFirst({
-      where: { id }
-    })
-    return dataUser
+      where: { id },
+    });
+    return dataUser;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
-
+};
 
 export const getTransaksi = async () => {
   try {
@@ -62,16 +62,16 @@ export const getTransaksi = async () => {
   }
 };
 
-export const getDataTransaksi = async(id: string) => {
+export const getDataTransaksi = async (id: string) => {
   try {
     const dataTransaksi = await prisma.transaksi.findFirst({
-      where: { id_transaksi: id }
-    })
-    return dataTransaksi
+      where: { id_transaksi: id },
+    });
+    return dataTransaksi;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 export const getJumlahTransaksi = async () => {
   try {
@@ -81,8 +81,6 @@ export const getJumlahTransaksi = async () => {
     console.log(error);
   }
 };
-
-
 
 export const getDiscounts = async () => {
   try {
@@ -107,43 +105,57 @@ export const checkUsedDiscount = async (id_discount: string) => {
   }
 };
 
-
-
-export const listDataKeuangan = async() => {
+export const listDataKeuangan = async () => {
   try {
+    const year = new Date().getFullYear();
+    const startDate = new Date(`${year}-01-01T00:00:00Z`);
+    const endDate = new Date(`${year + 1}-01-01T00:00:00Z`);
     const listDataKeuangan = await prisma.dataKeuangan.findMany({
-      orderBy: { periode: "asc" }
-    })
+      where: {
+        periode: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      orderBy: { periode: "asc" },
+    });
 
-    return listDataKeuangan
+    return listDataKeuangan;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
-export const getDataKeuanganBulanIni = async(periode: Date) => {
+export const getDataKeuanganBulanIni = async (periode: Date) => {
   try {
     const getDataKeuangan = await prisma.dataKeuangan.findFirst({
       where: {
-        periode
-      }
-    })
+        periode,
+      },
+    });
 
-    return getDataKeuangan
+    return getDataKeuangan;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
-
-
-export const getPaymentLink = async(id_transaksi: string) => {
+export const getPaymentLink = async (id_transaksi: string) => {
   try {
     const dataPaymentLink = await prisma.paymentLink.findFirst({
-      where: { id_transaksi }
-    })
-    return dataPaymentLink
+      where: { id_transaksi },
+    });
+    return dataPaymentLink;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
+
+export const checkSaldo = async () => {
+  const url = `https://api.tokovoucher.net/member?member_code=${process.env.MEMBER_CODE}&signature=${process.env.SIGNATURE_KEY}`;
+  const res = await fetch(url);
+  const json = await res.json();
+  const saldo = json.data.saldo;
+
+  return saldo
+};

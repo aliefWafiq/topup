@@ -1,6 +1,5 @@
 import * as XLSX from "xlsx";
 
-// Fungsi ini sekarang menerima data sebagai parameter, BUKAN mengambilnya sendiri
 export const ExportDataToExcel = (
   dataToExport: any[],
   title?: string,
@@ -12,7 +11,6 @@ export const ExportDataToExcel = (
       return;
     }
 
-    // Proses pemetaan data tetap di sini
     const chartData = dataToExport.map((item) => ({
       periode: new Date(item.periode).toLocaleDateString("id-ID", {
         month: "long",
