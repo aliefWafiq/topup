@@ -8,16 +8,16 @@ import {
 } from "@/components/ui/carousel";
 import SearchInput from "@/components/searchInput";
 import ListGames from "@/components/ListGames";
+import type { NextPage } from 'next';
 
 export const dynamic = "force-dynamic";
 
-export default function Home({
-  searchParams,
-}: {
+interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const queryValue = searchParams.query ?? "";
+}
 
+const Home: NextPage<PageProps> = ({ searchParams }) => {
+  const queryValue = searchParams.query ?? "";
   const finalQuery = Array.isArray(queryValue) ? queryValue[0] : queryValue;
 
   return (
@@ -54,3 +54,4 @@ export default function Home({
     </div>
   );
 }
+export default Home
