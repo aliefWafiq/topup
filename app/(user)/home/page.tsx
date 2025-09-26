@@ -14,9 +14,11 @@ export const dynamic = "force-dynamic";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { query?: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const query = searchParams?.query || "";
+  const singleQuery = Array.isArray(searchParams.query)
+    ? searchParams.query[0]
+    : searchParams.query;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full py-32">
@@ -47,7 +49,7 @@ export default async function Home({
       </div>
       <SearchInput />
       <div className="mt-8 w-full">
-        <ListGames query={query} />
+        <ListGames query={singleQuery ?? ""} />
       </div>
     </div>
   );
