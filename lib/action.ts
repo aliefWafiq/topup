@@ -152,7 +152,6 @@ const topUp = async (orderId: string) => {
       .update(
         `${process.env.MEMBER_CODE}:${process.env.SECRET_KEY_TOKOVOUCHER}:${orderId}`
       )
-      .digest("hex");
 
     console.log(signature);
     const total = getOrderId.harga;

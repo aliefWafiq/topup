@@ -32,12 +32,12 @@ export default async function Page() {
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2 px-6">
           <div className="flex gap-4 py-4 md:gap-6 md:py-6">
-            <Card className="w-72">
+            <Card className="w-96">
               <CardHeader>
                 <CardTitle>
                   <FontAwesomeIcon
                     icon={faCreditCard}
-                    className="text-3xl bg-slate-100 p-3 rounded-xl"
+                    className="text-2xl bg-slate-100 p-3 rounded-xl"
                   />
                 </CardTitle>
               </CardHeader>
@@ -53,7 +53,7 @@ export default async function Page() {
                 <CardTitle>
                   <FontAwesomeIcon
                     icon={faBasketShopping}
-                    className="text-3xl bg-slate-100 p-3 rounded-xl"
+                    className="text-2xl bg-slate-100 p-3 rounded-xl"
                   />
                 </CardTitle>
               </CardHeader>
@@ -67,7 +67,7 @@ export default async function Page() {
                 <CardTitle>
                   <FontAwesomeIcon
                     icon={faUsers}
-                    className="text-3xl bg-slate-100 p-3 rounded-xl"
+                    className="text-2xl bg-slate-100 p-3 rounded-xl"
                   />
                 </CardTitle>
               </CardHeader>
