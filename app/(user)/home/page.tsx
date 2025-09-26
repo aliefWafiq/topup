@@ -16,9 +16,9 @@ export default async function Home({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const singleQuery = Array.isArray(searchParams.query)
-    ? searchParams.query[0]
-    : searchParams.query;
+  const queryValue = searchParams.query ?? "";
+
+  const finalQuery = Array.isArray(queryValue) ? queryValue[0] : queryValue;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full py-32">
@@ -49,7 +49,7 @@ export default async function Home({
       </div>
       <SearchInput />
       <div className="mt-8 w-full">
-        <ListGames query={singleQuery ?? ""} />
+        <ListGames query={finalQuery} />
       </div>
     </div>
   );
