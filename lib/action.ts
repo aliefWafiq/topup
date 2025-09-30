@@ -21,11 +21,12 @@ import { Discount } from "@/types/discount";
 
 interface ActionState {
   success: boolean;
-  message: string;
+  message?: string;
   errors?: {
     nominal?: string;
     kode?: string;
   };
+  data?: any;
 }
 
 // SIGN UP
@@ -179,11 +180,11 @@ export const DepositSaldo = async (
 
     const resultData = await res.json();
     console.log(resultData);
-
-    // revalidatePath("/admin");
-    // redirect("/admin");
-    // BUAT HALAMAN SETELAH NERIMA UNTUK CARA PEMBAYARAN
-    return { success: true, message: "Yey" };
+    
+    return {
+      success: true,
+      data: resultData,
+    }
   } catch (error) {
     console.log(error);
     return {
@@ -191,6 +192,8 @@ export const DepositSaldo = async (
       message: "Terjadi kesalahan pada server. Silakan coba lagi.",
     };
   }
+  // revalidatePath("/deposit");
+  // redirect("/deposit/pembayaran");
 };
 
 // GET DISCOUNT
