@@ -14,10 +14,19 @@ import {
   getDataKeuanganBulanIni,
   getDataTransaksi,
   getDataUser,
-  getPaymentLink
+  getPaymentLink,
 } from "@/lib/data";
 
 import { Discount } from "@/types/discount";
+
+interface ActionState {
+  success: boolean;
+  message: string;
+  errors?: {
+    nominal?: string;
+    kode?: string;
+  };
+}
 
 // SIGN UP
 export const signUpCredentials = async (
@@ -122,6 +131,68 @@ export const AddDiscount = async (prevState: unknown, formData: FormData) => {
   redirect("/discounts");
 };
 
+// DEPOSIT SALDO
+export const DepositSaldo = async (
+  prevState: ActionState | null,
+  formData: FormData
+): Promise<ActionState> => {
+  const nominal = formData.get("nominal");
+  const kode = formData.get("kode");
+  const errors: ActionState["errors"] = {};
+
+  if (!nominal || Number(nominal) <= 0) {
+    errors.nominal = "Nominal wajib diisi.";
+  } else if (Number(nominal) < 100000) {
+    errors.nominal = "Minimal deposit adalah Rp 100.000.";
+  }
+
+  if (!kode) {
+    return {
+      success: false,
+      message: "Nominal dan metode pembayaran wajib diisi.",
+    };
+  }
+
+  const nominalValue = Number(nominal);
+  if (isNaN(nominalValue) || nominalValue <= 0) {
+    return { success: false, message: "Nominal harus berupa angka positif." };
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { success: false, errors, message: "" };
+  }
+
+  try {
+    const url = `https://api.tokovoucher.net/v1/deposit?member_code=${process.env.MEMBER_CODE}&secret=${process.env.SECRET_KEY_TOKOVOUCHER}&nominal=${nominal}&kode=${kode}`;
+
+    const res = await fetch(url, {
+      method: "GET",
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      return {
+        success: false,
+        message: errorData.message || "Gagal melakukan deposit",
+      };
+    }
+
+    const resultData = await res.json();
+    console.log(resultData);
+
+    // revalidatePath("/admin");
+    // redirect("/admin");
+    // BUAT HALAMAN SETELAH NERIMA UNTUK CARA PEMBAYARAN
+    return { success: true, message: "Yey" };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: "Terjadi kesalahan pada server. Silakan coba lagi.",
+    };
+  }
+};
+
 // GET DISCOUNT
 export const getDiscount = async (
   kode_discount: string
@@ -148,10 +219,9 @@ const topUp = async (orderId: string) => {
 
     if (!getOrderId) throw new Error("Data tidak ditemukan");
 
-    const signature = createHash("md5")
-      .update(
-        `${process.env.MEMBER_CODE}:${process.env.SECRET_KEY_TOKOVOUCHER}:${orderId}`
-      )
+    const signature = createHash("md5").update(
+      `${process.env.MEMBER_CODE}:${process.env.SECRET_KEY_TOKOVOUCHER}:${orderId}`
+    );
 
     console.log(signature);
     const total = getOrderId.harga;
@@ -381,20 +451,18 @@ export const PaymentLinkMidtrans = async (id: string) => {
     body: JSON.stringify(body),
   });
 
-  const checkData = await getPaymentLink(dataTransaksi?.id_transaksi || "")
+  const checkData = await getPaymentLink(dataTransaksi?.id_transaksi || "");
 
-  if(!checkData) {
+  if (!checkData) {
     const res = await response.json();
     AddPaymentLink(dataTransaksi?.id_transaksi || "", res.payment_url);
-    console.log(res.payment_url)
-
-    // INI HARUS DI DEBUG KARNA DI HOSTING VERCEL DIA ERROR LINK NYA KEK JADI GK VALID
+    console.log(res.payment_url);
 
     return res.payment_url;
-  }else {
-    return checkData?.link_payment || ""
+  } else {
+    return checkData?.link_payment || "";
   }
-}
+};
 
 export const AddPaymentLink = async (
   id_transaksi: string,

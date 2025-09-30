@@ -16,7 +16,7 @@ export default async function Home({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const resolvedSearchParams = await searchParams; // Await di sini untuk unwrap Promise
+  const resolvedSearchParams = await searchParams; 
   const queryValue = resolvedSearchParams.query ?? "";
   const finalQuery = Array.isArray(queryValue) ? queryValue[0] : queryValue;
 

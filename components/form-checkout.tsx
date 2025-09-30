@@ -91,11 +91,11 @@ export function FormPayment({
 
     if (id_gameUser == "") {
       alert("Mohon isi id game");
-    }
-    // else if (getSaldo < totalHarga) {
-    //   alert("Maaf saldo sedang tidak mencukupi, silahkan melakukan top up lain kali");
-    // }
-    else {
+    } else if (getSaldo < totalHarga) {
+      alert(
+        "Maaf saldo sistem sedang tidak mencukupi, silahkan melakukan top up lain kali"
+      );
+    } else {
       const body = {
         id_transaksi: String(orderId),
         id_user: id_user,
@@ -154,19 +154,21 @@ export function FormPayment({
             ref={id_gameUserRef}
           />
         </div>
-        <div className="w-full">
-          <select
-            name="server"
-            className="border w-full py-2 px-3 rounded"
-            ref={serverRef}
-          >
-            {serverOption.map((server, idx) => (
-              <option key={idx} value={server.value}>
-                {server.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {serverOption && serverOption.length > 0 && (
+          <div className="w-full">
+            <select
+              name="server"
+              className="border w-full py-2 px-3 rounded"
+              ref={serverRef}
+            >
+              {serverOption.map((server, idx) => (
+                <option key={idx} value={server.value}>
+                  {server.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="w-full">
           <input
             type="text"
