@@ -25,7 +25,7 @@ const SearchInput = () => {
 
     return (
         <>
-            <div className="relative flex flex-1 flex-shrink-0 mt-12 w-1/2">
+            <div className="relative flex flex-1 flex-shrink-0 mt-12 w-full">
                 <label htmlFor="search" className="sr-only">
                     Search
                 </label>

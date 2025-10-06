@@ -2,9 +2,8 @@
 import { SubmitButton } from "@/components/button";
 import React from "react";
 import { DepositSaldo } from "@/lib/action";
-import { useActionState } from "react";
+import { useFormState } from 'react-dom';
 
-// Tipe ActionState harus konsisten dengan yang di server
 interface ActionState {
   success: boolean;
   message?: string;
@@ -16,10 +15,7 @@ interface ActionState {
 }
 
 const PageDeposit = () => {
-  const [state, formAction] = useActionState<ActionState | null>(
-    DepositSaldo,
-    null
-  );
+  const [state, formAction] = useFormState(DepositSaldo, null);
 
   return (
     <div className="w-full h-screen flex justify-center items-center">
@@ -85,7 +81,7 @@ const PageDeposit = () => {
                 className="w-full border rounded py-2 px-3"
               />
               {state?.errors?.nominal && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-sm mt-1">
                   {state.errors.nominal}
                 </p>
               )}

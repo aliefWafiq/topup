@@ -12,7 +12,8 @@ import {
   IconListDetails,
   IconReport,
   IconUsers,
-  IconHome
+  IconHome,
+  IconAddressBook
 } from "@tabler/icons-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -43,6 +44,11 @@ const data = {
       title: "Home",
       url: "/home",
       icon: IconHome
+    },
+    {
+      title: "Content Management",
+      url: "/contentManagement",
+      icon: IconAddressBook,
     },
     {
       title: "Game List",

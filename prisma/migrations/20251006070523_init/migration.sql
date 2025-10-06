@@ -100,6 +100,16 @@ CREATE TABLE "PaymentLink" (
     CONSTRAINT "PaymentLink_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Content" (
+    "id" TEXT NOT NULL,
+    "namaComponent" TEXT NOT NULL,
+    "fotoContent" TEXT NOT NULL,
+    "namaContent" TEXT NOT NULL,
+
+    CONSTRAINT "Content_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "accounts_provider_provider_account_id_key" ON "accounts"("provider", "provider_account_id");
 
