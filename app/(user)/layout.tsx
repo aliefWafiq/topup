@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      <main className="px-6">{children}</main>
+      <main className="px-6 bg-gray-50">{children}</main>
     </>
   );
 }

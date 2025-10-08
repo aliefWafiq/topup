@@ -48,19 +48,17 @@ export default async function Home({
           </Carousel>
         </div>
       </div>
-      <SearchInput />
       <div className="mt-8 w-full">
         <div className="w-full h-full flex flex-col justify-center items-center">
           <div className="w-full mb-4">
-            <h1 className="text-base lg:text-2xl font-bold">Game Rekomendasi</h1>
+            <h1 className="text-base lg:text-2xl font-bold">
+              Game Rekomendasi
+            </h1>
           </div>
           <Carousel className="w-full h-full rounded-lg overflow-hidden flex justify-center items-center">
             <CarouselContent className="-ml-4 px-2">
-              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 border-gray-300 rounded-lg">
-                <Link
-                  href={`/`}
-                  className="rounded-lg w-[150px]"
-                >
+              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 bg-white border-gray-300 rounded-lg">
+                <Link href={`/`} className="rounded-lg w-[150px]">
                   <div className="relative w-full lg:h-64 h-32">
                     <Image
                       src={"/avatar.jpg"}
@@ -77,11 +75,8 @@ export default async function Home({
                   </div>
                 </Link>
               </CarouselItem>
-              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 border-gray-300 rounded-lg">
-                <Link
-                  href={`/`}
-                  className="rounded-lg w-[150px]"
-                >
+              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 bg-white border-gray-300 rounded-lg">
+                <Link href={`/`} className="rounded-lg w-[150px]">
                   <div className="relative w-full lg:h-64 h-32">
                     <Image
                       src={"/avatar.jpg"}
@@ -98,11 +93,8 @@ export default async function Home({
                   </div>
                 </Link>
               </CarouselItem>
-              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 border-gray-300 rounded-lg">
-                <Link
-                  href={`/`}
-                  className="rounded-lg w-[150px]"
-                >
+              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 bg-white border-gray-300 rounded-lg">
+                <Link href={`/`} className="rounded-lg w-[150px]">
                   <div className="relative w-full lg:h-64 h-32">
                     <Image
                       src={"/avatar.jpg"}
@@ -119,11 +111,8 @@ export default async function Home({
                   </div>
                 </Link>
               </CarouselItem>
-              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 border-gray-300 rounded-lg">
-                <Link
-                  href={`/`}
-                  className="rounded-lg w-[150px]"
-                >
+              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 bg-white border-gray-300 rounded-lg">
+                <Link href={`/`} className="rounded-lg w-[150px]">
                   <div className="relative w-full lg:h-64 h-32">
                     <Image
                       src={"/avatar.jpg"}
@@ -140,11 +129,8 @@ export default async function Home({
                   </div>
                 </Link>
               </CarouselItem>
-              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 border-gray-300 rounded-lg">
-                <Link
-                  href={`/`}
-                  className="rounded-lg w-[150px]"
-                >
+              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 bg-white border-gray-300 rounded-lg">
+                <Link href={`/`} className="rounded-lg w-[150px]">
                   <div className="relative w-full lg:h-64 h-32">
                     <Image
                       src={"/avatar.jpg"}
@@ -161,11 +147,8 @@ export default async function Home({
                   </div>
                 </Link>
               </CarouselItem>
-              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 border-gray-300 rounded-lg">
-                <Link
-                  href={`/`}
-                  className="rounded-lg w-[150px]"
-                >
+              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 bg-white border-gray-300 rounded-lg">
+                <Link href={`/`} className="rounded-lg w-[150px]">
                   <div className="relative w-full lg:h-64 h-32">
                     <Image
                       src={"/avatar.jpg"}
@@ -182,11 +165,8 @@ export default async function Home({
                   </div>
                 </Link>
               </CarouselItem>
-              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 border-gray-300 rounded-lg">
-                <Link
-                  href={`/`}
-                  className="rounded-lg w-[150px]"
-                >
+              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 bg-white border-gray-300 rounded-lg">
+                <Link href={`/`} className="rounded-lg w-[150px]">
                   <div className="relative w-full lg:h-64 h-32">
                     <Image
                       src={"/avatar.jpg"}
@@ -203,11 +183,8 @@ export default async function Home({
                   </div>
                 </Link>
               </CarouselItem>
-              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 border-gray-300 rounded-lg">
-                <Link
-                  href={`/`}
-                  className="rounded-lg w-[150px]"
-                >
+              <CarouselItem className="basis-1/4 w-[400px] mx-2 border-2 bg-white border-gray-300 rounded-lg">
+                <Link href={`/`} className="rounded-lg w-[150px]">
                   <div className="relative w-full lg:h-64 h-32">
                     <Image
                       src={"/avatar.jpg"}
@@ -228,6 +205,11 @@ export default async function Home({
             <CarouselPrevious className="z-20" />
             <CarouselNext className="z-20" />
           </Carousel>
+        </div>
+        <div className="flex justify-center">
+          <div className="w-1/2">
+            <SearchInput /> 
+          </div>
         </div>
         <ListGames query={finalQuery} />
       </div>

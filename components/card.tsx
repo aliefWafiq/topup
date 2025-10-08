@@ -18,18 +18,18 @@ const Card = ({ data }: { data: Games }) => {
   if(data.status !== 1) return null
 
   return (
-    <Link href={`/${data?.id}`} className="lg:border-2 border-gray-300 rounded-lg w-[150px] lg:w-1/5">
+    <Link href={`/${data?.id}`} className="bg-white rounded-lg w-[150px] lg:w-1/5 hover:shadow-lg group overflow-hidden">
       <div className="relative w-full lg:h-64 h-32">
         <Image
             src={data.logo || "/avatar.jpg"}
             alt={data.nama}
             priority
             fill
-            className="rounded-t-md object-cover"
+            className="rounded-t-md object-cover transition-all duration-300 ease-in-out group-hover:scale-110"
           />
       </div>
       <div className="lg:h-24 h-14 flex text-center items-center">
-        <h1 className="text-base lg:text-2xl font-bold w-full">
+        <h1 className="text-base lg:text-xl font-bold w-full">
           {loading ? 'Memuat...' : data?.nama ?? 'Tidak ditemukan'}
         </h1>
       </div>

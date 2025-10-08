@@ -7,7 +7,7 @@ export const ExportDataToExcel = (
 ) => {
   try {
     if (!dataToExport || dataToExport.length === 0) {
-      console.error("No data to export");
+      alert("No data to export");
       return;
     }
 
