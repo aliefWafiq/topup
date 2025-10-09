@@ -10,52 +10,113 @@ export default async function RootLayout() {
   const json = await res.json();
   const games = await json.data;
 
+  const glassCardStyle =
+    "absolute bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg p-4 text-white";
+
   return (
     <>
-      <section className="w-full h-screen flex flex-col justify-center bg-slate-100">
-        <div className="w-full h-1/2 px-16 flex flex-col justify-end">
-          <h1 className="text-8xl font-bold">Mau topup buat</h1>
-          <h1 className="text-9xl font-bold my-4">Beli skin</h1>
-          <h1 className="text-4xl font-bold">Tapi bingung dimana?</h1>
-        </div>
-        <div className="w-1/2 h-1/2 px-16 flex flex-col justify-center">
-          <p className="w-2/3">
-            Disini kami menyediakan top up dari berbagai macam game dengan harga
-            terjangkau dan juga berbagai diskon yang membuat harga menjadi lebih
-            terjangkau
-          </p>
-          <div className="flex mt-4 gap-4">
-            <Link
-              className="bg-blue-400 p-4 text-white flex items-center w-24 rounded-lg"
-              href="/register"
-            >
-              Register
-            </Link>
-            <Link
-              className="bg-blue-400 p-4 text-white flex items-center w-24 rounded-lg"
-              href="/login"
-            >
-              Log in
-            </Link>
+      <nav
+        className="fixed top-0 left-0 w-full z-50 
+                bg-black/40 backdrop-blur-md 
+                  shadow-md px-16">
+        <div className="w-full mx-auto py-4">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex-shrink-0">
+              <Link href="/" className="text-white text-2xl font-bold">
+                TopUpID
+              </Link>
+            </div>
+
+            <div className="hidden md:flex items-center space-x-8">
+              <Link
+                href="/games"
+                className="text-white hover:text-lg transition-colors">
+                Games
+              </Link>
+              <Link
+                href="/promo"
+                className="text-white hover:text-lg transition-colors">
+                Promo
+              </Link>
+              <Link
+                href="/about"
+                className="text-white hover:text-lg transition-colors">
+                Tentang Kami
+              </Link>
+              <Link
+                href="/register"
+                className="bg-white/10 hover:bg-white/20 border border-white/30 
+                          text-white font-semibold px-4 py-2 rounded-lg 
+                            transition-colors">
+                Register
+              </Link>
+            </div>
           </div>
         </div>
-        <div className="absolute bottom-0 right-0 w-2/3 h-[700px]">
-          <div className="absolute w-[230px] h-[150px] z-20 bottom-5 right-12 hidden">
-            <Image
-              src={"/download__3_-removebg-preview.png"}
-              className="object-cover"
-              fill
-              alt="HSR"
-            />
+      </nav>
+
+      <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
+        <Image
+          src="/bg.jpeg"
+          alt="Background"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+          className="z-0"
+        />
+
+        <div className="absolute left-16 md:left-24 top-1/2 -translate-y-1/2 max-w-2xl z-10 text-white">
+          <div>
+            <h1 className="text-7xl md:text-9xl font-bold my-4">
+              Top up Murah
+            </h1>
+            <h1 className="text-6xl md:text-6xl font-bold">No Ribet</h1>
+            <h1 className="text-6xl md:text-6xl font-bold">No Drama!</h1>
+            <p className="mt-8 text-lg text-gray-300 max-w-md">
+              Disini kami menyediakan top up dari berbagai macam game dengan
+              harga terjangkau dan juga berbagai diskon yang membuat harga
+              menjadi lebih terjangkau.
+            </p>
           </div>
+        </div>
+        <div className="absolute right-[-50px] bottom-0 w-3/5 md:w-1/2 h-full flex items-end justify-center">
           <Image
-            src={
-              "/HonkaiStarRail-FireflySkin''Spring Missive''_waifu2x_art_noise2_scale.png"
-            }
-            className="object-cover"
-            fill
-            alt="HSR"
+            src={"/gruop-Photoroom.png"}
+            width={600}
+            height={600}
+            alt="Character"
+            className="object-contain"
           />
+        </div>
+
+        <div className={`${glassCardStyle} top-1/3 right-[30rem] w-64`}>
+          <div className="flex justify-between items-center mb-1">
+            <p className="text-sm">Battle Pass</p>
+          </div>
+          <div className="w-full bg-white/20 rounded-full h-2.5">
+            <div
+              className="bg-purple-500 h-2.5 rounded-full"
+              style={{ width: "68%" }}
+            ></div>
+          </div>
+        </div>
+        <div
+          className={`${glassCardStyle} bottom-80 right-10 flex items-center gap-2`}
+        >
+          <span>💎</span>
+          <p className="font-semibold">10000 Diamond</p>
+        </div>
+        <div
+          className={`${glassCardStyle} bottom-56 right-[30rem] flex items-center gap-2`}
+        >
+          <span>💎</span>
+          <p className="font-semibold">1000 Diamond</p>
+        </div>
+        <div
+          className={`${glassCardStyle} bottom-32 right-[10rem] flex items-center gap-2`}
+        >
+          <span>💎</span>
+          <p className="font-semibold">500 Diamond</p>
         </div>
       </section>
 
