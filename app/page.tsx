@@ -164,28 +164,29 @@ export default function RootLayout() {
 
       <section
         id="section2"
-        className="w-full h-screen flex flex-col justify-center items-center bg-white px-24"
+        className="w-full h-screen flex flex-col py-8 items-center bg-white px-24"
       >
-        <h1 className="text-6xl font-bold">Lorem ipsum dolor sit amet.</h1>
+        {/* <h1 className="text-6xl font-bold">Lorem ipsum dolor sit amet.</h1>
         <p className="w-1/2 mt-8 mb-12 text-center">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias sed
-          dicta tempore maxime laudantium a unde provident, quasi eaque
-          assumenda neque eveniet quam labore voluptatem placeat blanditiis
-          harum pariatur inventore?
-        </p>
+          Top up berbagai game populer dengan harga lebih murah dari tempat lain. Cocok buat gamers yang mau hemat tapi tetap gas terus
+        </p> */}
 
-        <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
+        <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)] mb-8">
           <ul className="flex items-center justify-center md:justify-start [&_li]:mx-4 [&_img]:max-w-none animate-[infinite-scroll_200s_linear_infinite]">
             {/* Render list pertama */}
             {games.map((g) =>
               g.status !== 0 ? (
-                <li key={g.id} className="border-2 p-3 flex flex-col justify-center items-center w-28 h-28 rounded-lg">
+                <li
+                  key={g.id}
+                  className="border-2 p-3 flex flex-col justify-center items-center w-28 h-28 rounded-lg hover:shadow-lg transition-all duration-300 ease-in-out"
+                >
                   <div className="relative w-12 h-12">
                     <Image
                       src={g.logo || "/avatar.jpg"}
                       alt={g.nama}
                       fill
-                      className="rounded-lg"
+                      priority
+                      className="rounded-lg group-hover:scale-110"
                     />
                   </div>
                   <div>
@@ -194,20 +195,31 @@ export default function RootLayout() {
                 </li>
               ) : null
             )}
+          </ul>
+        </div>
 
-            {games.map((g) =>
-              g.status !== 0 ? (
-                <li key={`${g.id}-duplicate`} aria-hidden="true">
+        <div className="flex w-full gap-4 mt-8">
+          {games.map((g) =>
+            g.status !== 0 && parseInt(g.id) < 7 ? (
+              <div
+                key={g.id}
+                className="border-2 p-5 flex flex-col justify-center items-center w-1/3 h-72 rounded-lg hover:shadow-lg transition-all duration-300 ease-in-out"
+              >
+                <div className="relative w-full h-full rounded-lg">
                   <Image
                     src={g.logo || "/avatar.jpg"}
                     alt={g.nama}
-                    width={50}
-                    height={70}
+                    fill
+                    priority
+                    className="rounded-lg group-hover:scale-110"
                   />
-                </li>
-              ) : null
-            )}
-          </ul>
+                </div>
+                <div className="mt-4">
+                  <p className="text-xl font-bold text-center">{g.nama}</p>
+                </div>
+              </div>
+            ) : null
+          )}
         </div>
       </section>
 
