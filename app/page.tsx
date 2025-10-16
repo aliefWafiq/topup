@@ -164,34 +164,50 @@ export default function RootLayout() {
 
       <section
         id="section2"
-        className="w-full h-screen flex flex-col justify-center items-center bg-white"
+        className="w-full h-screen flex flex-col justify-center items-center bg-white px-24"
       >
-        <h1 className="text-6xl font-bold text-black">
-          Lorem ipsum dolor sit amet.
-        </h1>
-        <p className="w-1/2 mt-8 mb-12 text-center text-black">
+        <h1 className="text-6xl font-bold">Lorem ipsum dolor sit amet.</h1>
+        <p className="w-1/2 mt-8 mb-12 text-center">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias sed
           dicta tempore maxime laudantium a unde provident, quasi eaque
           assumenda neque eveniet quam labore voluptatem placeat blanditiis
           harum pariatur inventore?
         </p>
-        <div className="flex flex-wrap gap-6 justify-center">
-          {games.map((g) =>
-            g.status !== 0 && parseInt(g.id) < 20 ? (
-              <div
-                key={g.id}
-                className="flex items-center gap-4 border-2 border-gray-300 px-5 py-3 rounded-lg"
-              >
-                <Image
-                  src={g.logo || "/avatar.jpg"}
-                  alt={g.nama}
-                  width={50}
-                  height={70}
-                />
-                <p>{g.nama}</p>
-              </div>
-            ) : null
-          )}
+
+        <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
+          <ul className="flex items-center justify-center md:justify-start [&_li]:mx-4 [&_img]:max-w-none animate-[infinite-scroll_200s_linear_infinite]">
+            {/* Render list pertama */}
+            {games.map((g) =>
+              g.status !== 0 ? (
+                <li key={g.id} className="border-2 p-3 flex flex-col justify-center items-center w-28 h-28 rounded-lg">
+                  <div className="relative w-12 h-12">
+                    <Image
+                      src={g.logo || "/avatar.jpg"}
+                      alt={g.nama}
+                      fill
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <p className="mt-2 text-[10px] text-center">{g.nama}</p>
+                  </div>
+                </li>
+              ) : null
+            )}
+
+            {games.map((g) =>
+              g.status !== 0 ? (
+                <li key={`${g.id}-duplicate`} aria-hidden="true">
+                  <Image
+                    src={g.logo || "/avatar.jpg"}
+                    alt={g.nama}
+                    width={50}
+                    height={70}
+                  />
+                </li>
+              ) : null
+            )}
+          </ul>
         </div>
       </section>
 

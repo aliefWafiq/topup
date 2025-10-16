@@ -5,8 +5,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%); /* Adjust based on content width */
+  }
+}
+
 @keyframes tilt {
-  0%, 100% {
+  0%,
+  100% {
     transform: rotate(0deg);
   }
   25% {
@@ -21,8 +31,8 @@
 }
 
 .loadingIcon {
-    position: absolute;
-    animation: tilt 1s infinite ease-in-out;
+  position: absolute;
+  animation: tilt 1s infinite ease-in-out;
 }
 
 @theme inline {
