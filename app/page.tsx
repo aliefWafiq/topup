@@ -164,13 +164,8 @@ export default function RootLayout() {
 
       <section
         id="section2"
-        className="w-full h-screen flex flex-col py-8 items-center bg-white px-24"
+        className="w-full flex flex-col py-8 items-center px-24 bg-gray-100"
       >
-        {/* <h1 className="text-6xl font-bold">Lorem ipsum dolor sit amet.</h1>
-        <p className="w-1/2 mt-8 mb-12 text-center">
-          Top up berbagai game populer dengan harga lebih murah dari tempat lain. Cocok buat gamers yang mau hemat tapi tetap gas terus
-        </p> */}
-
         <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)] mb-8">
           <ul className="flex items-center justify-center md:justify-start [&_li]:mx-4 [&_img]:max-w-none animate-[infinite-scroll_200s_linear_infinite]">
             {/* Render list pertama */}
@@ -178,7 +173,7 @@ export default function RootLayout() {
               g.status !== 0 ? (
                 <li
                   key={g.id}
-                  className="border-2 p-3 flex flex-col justify-center items-center w-28 h-28 rounded-lg hover:shadow-lg transition-all duration-300 ease-in-out"
+                  className="border-2 p-3 flex flex-col justify-center items-center w-28 h-28 rounded-lg hover:shadow-lg transition-all duration-300 ease-in-out bg-white"
                 >
                   <div className="relative w-12 h-12">
                     <Image
@@ -197,21 +192,32 @@ export default function RootLayout() {
             )}
           </ul>
         </div>
+      </section>
 
-        <div className="flex w-full gap-4 mt-8">
+      <section
+        id="section3"
+        className="w-full flex flex-col py-8 items-center bg-gray-100 px-24"
+      >
+        <div className="w-full text-center flex justify-center">
+          <h1 className="text-6xl font-bold w-1/3">
+            Lorem ipsum dolor sit amet.
+          </h1>
+        </div>
+
+        <div className="flex flex-wrap justify-center w-full gap-4 mt-12 h-3/4">
           {games.map((g) =>
-            g.status !== 0 && parseInt(g.id) < 7 ? (
+            g.status !== 0 && parseInt(g.id) < 10 ? (
               <div
                 key={g.id}
-                className="border-2 p-5 flex flex-col justify-center items-center w-1/3 h-72 rounded-lg hover:shadow-lg transition-all duration-300 ease-in-out"
+                className="flex p-5 flex-col justify-center items-center w-1/5 h-72 group hover:cursor-pointer"
               >
-                <div className="relative w-full h-full rounded-lg">
+                <div className="relative w-full h-4/5 rounded-lg">
                   <Image
                     src={g.logo || "/avatar.jpg"}
                     alt={g.nama}
                     fill
                     priority
-                    className="rounded-lg group-hover:scale-110"
+                    className="rounded-lg group-hover:scale-110 transition-all duration-300 ease-in-out"
                   />
                 </div>
                 <div className="mt-4">
@@ -223,7 +229,10 @@ export default function RootLayout() {
         </div>
       </section>
 
-      <section className="w-full h-[700px] flex justify-center items-center relative">
+      <section
+        id="section4"
+        className="w-full h-[700px] flex justify-center items-center relative"
+      >
         <Image
           src="/MASUKKAN KODEMU.png"
           alt="Background"
@@ -232,7 +241,152 @@ export default function RootLayout() {
           quality={100}
         />
       </section>
-      <section className="w-full h-48 flex justify-center items-center relative"></section>
+
+      <section
+        id="section4"
+        className="w-full h-screen flex justify-center items-center bg-gray-100"
+      >
+        <div className="flex flex-col">
+          <p className="text-4xl font-bold">
+            Top up <span className="text-yellow-500 text-6xl">Sat Set</span>
+          </p>
+          <p className="text-4xl font-bold">Langsung Masuk</p>
+          <div className="flex gap-8 mt-8">
+            <div className="bg-white p-3 pt-10 rounded-lg w-64 h-80 shadow-lg">
+              <div className="bg-amber-200 rounded-lg h-full p-3">
+                <p className="font-bold text-5xl text-amber-800">01</p>
+                <div className="flex justify-center mt-6">
+                  <div className="relative w-40 h-24">
+                    <Image src="/Group 8.png" alt="icon game" fill />
+                  </div>
+                </div>
+                <p className="font-bold text-2xl mt-4">Pilih Game</p>
+              </div>
+            </div>
+            <div className="bg-white p-3 pt-10 rounded-lg w-64 h-80 shadow-lg">
+              <div className="bg-blue-200 rounded-lg h-full p-3">
+                <p className="font-bold text-5xl text-blue-800">02</p>
+                <div className="flex justify-center mt-6">
+                  <div className="relative w-24 h-24">
+                    <Image src="/stel.png" alt="icon game" fill />
+                  </div>
+                </div>
+                <p className="font-bold text-2xl mt-4">Masukkan ID</p>
+              </div>
+            </div>
+            <div className="bg-white p-3 pt-10 rounded-lg w-64 h-80 shadow-lg">
+              <div className="bg-purple-200 rounded-lg h-full p-3">
+                <p className="font-bold text-5xl text-purple-800">03</p>
+                <div className="flex justify-center mt-6">
+                  <div className="relative w-24 h-24">
+                    <Image src="/hi.png" alt="icon game" fill />
+                  </div>
+                </div>
+                <p className="font-bold text-2xl mt-4">Pilih Nominal</p>
+              </div>
+            </div>
+            <div className="bg-white p-3 pt-10 rounded-lg w-64 h-80 shadow-lg">
+              <div className="bg-teal-200 rounded-lg h-full p-3">
+                <p className="font-bold text-5xl text-teal-800">04</p>
+                <div className="flex justify-center mt-6">
+                  <div className="relative w-24 h-24">
+                    <Image src="/avenn.png" alt="icon game" fill />
+                  </div>
+                </div>
+                <p className="font-bold text-2xl mt-4">Bayar & Diamond Masuk</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="section5"
+        className="w-full h-screen flex items-center bg-gray-100"
+      >
+        <div className="flex flex-col items-center w-full">
+          <p className="text-4xl font-bold">Testimoni</p>
+          <p className="mt-4">Lebih dari 50.000+ gamers sudah percaya TopUpID</p>
+          <div className="flex justify-center gap-8 mt-12 w-full">
+            <div className="bg-white p-5 pt-10 rounded-lg w-1/5 h-96 shadow-lg">
+              <div className="flex items-center">
+                <Image 
+                  src='/avatar.jpg'
+                  alt="avatar"
+                  width={50}
+                  height={50}
+                  className="rounded-full"
+                />
+                <p className="text-xl ml-3 font-bold">King Von</p>
+              </div>
+              <p className="mt-8">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Consequuntur, neque possimus! Repudiandae veritatis laboriosam
+                blanditiis adipisci aut, animi natus suscipit atque totam ea.
+                Optio ad consectetur id laboriosam facilis fuga aliquam nihil
+                fugiat cupiditate dolore quam, eos molestiae ut modi!
+              </p>
+            </div>
+            <div className="bg-white p-5 pt-10 rounded-lg w-1/5 h-96 shadow-lg">
+              <div className="flex items-center">
+                <Image 
+                  src='/avatar.jpg'
+                  alt="avatar"
+                  width={50}
+                  height={50}
+                  className="rounded-full"
+                />
+                <p className="text-xl ml-3 font-bold">Bryson Tiller</p>
+              </div>
+              <p className="mt-8">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Consequuntur, neque possimus! Repudiandae veritatis laboriosam
+                blanditiis adipisci aut, animi natus suscipit atque totam ea.
+                Optio ad consectetur id laboriosam facilis fuga aliquam nihil
+                fugiat cupiditate dolore quam, eos molestiae ut modi!
+              </p>
+            </div>
+            <div className="bg-white p-5 pt-10 rounded-lg w-1/5 h-96 shadow-lg">
+              <div className="flex items-center">
+                <Image 
+                  src='/avatar.jpg'
+                  alt="avatar"
+                  width={50}
+                  height={50}
+                  className="rounded-full"
+                />
+                <p className="text-xl ml-3 font-bold">Baby Keem</p>
+              </div>
+              <p className="mt-8">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Consequuntur, neque possimus! Repudiandae veritatis laboriosam
+                blanditiis adipisci aut, animi natus suscipit atque totam ea.
+                Optio ad consectetur id laboriosam facilis fuga aliquam nihil
+                fugiat cupiditate dolore quam, eos molestiae ut modi!
+              </p>
+            </div>
+            <div className="bg-white p-5 pt-10 rounded-lg w-1/5 h-96 shadow-lg">
+              <div className="flex items-center">
+                <Image 
+                  src='/avatar.jpg'
+                  alt="avatar"
+                  width={50}
+                  height={50}
+                  className="rounded-full"
+                />
+                <p className="text-xl ml-3 font-bold">Mac Miller</p>
+              </div>
+              <p className="mt-8">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Consequuntur, neque possimus! Repudiandae veritatis laboriosam
+                blanditiis adipisci aut, animi natus suscipit atque totam ea.
+                Optio ad consectetur id laboriosam facilis fuga aliquam nihil
+                fugiat cupiditate dolore quam, eos molestiae ut modi!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
