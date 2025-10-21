@@ -160,6 +160,7 @@ export default function RootLayout() {
           <span>💎</span>
           <p className="font-semibold">500 Diamond</p>
         </div>
+        <div className="absolute bottom-0 w-full h-20 bg-gradient-to-t from-white/80 to-transparent"></div>
       </section>
 
       <section
@@ -168,7 +169,6 @@ export default function RootLayout() {
       >
         <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)] mb-8">
           <ul className="flex items-center justify-center md:justify-start [&_li]:mx-4 [&_img]:max-w-none animate-[infinite-scroll_200s_linear_infinite]">
-            {/* Render list pertama */}
             {games.map((g) =>
               g.status !== 0 ? (
                 <li
@@ -199,8 +199,8 @@ export default function RootLayout() {
         className="w-full flex flex-col py-8 items-center bg-gray-100 px-24"
       >
         <div className="w-full text-center flex justify-center">
-          <h1 className="text-6xl font-bold w-1/3">
-            Lorem ipsum dolor sit amet.
+          <h1 className="text-6xl font-bold w-1/2">
+            Solusi Top Up Cepat, Aman, dan Terpercaya
           </h1>
         </div>
 
@@ -302,16 +302,18 @@ export default function RootLayout() {
 
       <section
         id="section5"
-        className="w-full h-screen flex items-center bg-gray-100"
+        className="w-full h-screen flex items-center bg-gray-100 p-10"
       >
-        <div className="flex flex-col items-center w-full">
-          <p className="text-4xl font-bold">Testimoni</p>
-          <p className="mt-4">Lebih dari 50.000+ gamers sudah percaya TopUpID</p>
+        <div className="flex flex-col items-center justify-center w-full h-full bg-purple-900 rounded-2xl">
+          <p className="text-7xl font-bold text-white">Testimoni</p>
+          <p className="mt-4 text-white">
+            Lebih dari 50.000+ gamers sudah percaya TopUpID
+          </p>
           <div className="flex justify-center gap-8 mt-12 w-full">
             <div className="bg-white p-5 pt-10 rounded-lg w-1/5 h-96 shadow-lg">
               <div className="flex items-center">
-                <Image 
-                  src='/avatar.jpg'
+                <Image
+                  src="/avatar.jpg"
                   alt="avatar"
                   width={50}
                   height={50}
@@ -320,17 +322,15 @@ export default function RootLayout() {
                 <p className="text-xl ml-3 font-bold">King Von</p>
               </div>
               <p className="mt-8">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Consequuntur, neque possimus! Repudiandae veritatis laboriosam
-                blanditiis adipisci aut, animi natus suscipit atque totam ea.
-                Optio ad consectetur id laboriosam facilis fuga aliquam nihil
-                fugiat cupiditate dolore quam, eos molestiae ut modi!
+                “Gila… proses top up di sini cepet banget. Gue cuma klik, bayar,
+                diamond langsung nongol. Kayak cheat tapi legal. Gak bakal
+                pindah tempat lagi sih.”
               </p>
             </div>
             <div className="bg-white p-5 pt-10 rounded-lg w-1/5 h-96 shadow-lg">
               <div className="flex items-center">
-                <Image 
-                  src='/avatar.jpg'
+                <Image
+                  src="/avatar.jpg"
                   alt="avatar"
                   width={50}
                   height={50}
@@ -339,17 +339,15 @@ export default function RootLayout() {
                 <p className="text-xl ml-3 font-bold">Bryson Tiller</p>
               </div>
               <p className="mt-8">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Consequuntur, neque possimus! Repudiandae veritatis laboriosam
-                blanditiis adipisci aut, animi natus suscipit atque totam ea.
-                Optio ad consectetur id laboriosam facilis fuga aliquam nihil
-                fugiat cupiditate dolore quam, eos molestiae ut modi!
+                “Website ini bikin top up tuh gak ribet sama sekali. UI-nya
+                clean, prosesnya cepat, dan banyak promo. Kayak top up sambil
+                rebahan… nyaman banget.”
               </p>
             </div>
             <div className="bg-white p-5 pt-10 rounded-lg w-1/5 h-96 shadow-lg">
               <div className="flex items-center">
-                <Image 
-                  src='/avatar.jpg'
+                <Image
+                  src="/avatar.jpg"
                   alt="avatar"
                   width={50}
                   height={50}
@@ -358,17 +356,15 @@ export default function RootLayout() {
                 <p className="text-xl ml-3 font-bold">Baby Keem</p>
               </div>
               <p className="mt-8">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Consequuntur, neque possimus! Repudiandae veritatis laboriosam
-                blanditiis adipisci aut, animi natus suscipit atque totam ea.
-                Optio ad consectetur id laboriosam facilis fuga aliquam nihil
-                fugiat cupiditate dolore quam, eos molestiae ut modi!
+                “Gw sering top up pas tengah malam dan… tetep masuk secepat itu
+                . Nggak ada drama, nggak ada delay. Pokoknya recommended banget
+                buat gamer!”
               </p>
             </div>
             <div className="bg-white p-5 pt-10 rounded-lg w-1/5 h-96 shadow-lg">
               <div className="flex items-center">
-                <Image 
-                  src='/avatar.jpg'
+                <Image
+                  src="/avatar.jpg"
                   alt="avatar"
                   width={50}
                   height={50}
@@ -377,11 +373,9 @@ export default function RootLayout() {
                 <p className="text-xl ml-3 font-bold">Mac Miller</p>
               </div>
               <p className="mt-8">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Consequuntur, neque possimus! Repudiandae veritatis laboriosam
-                blanditiis adipisci aut, animi natus suscipit atque totam ea.
-                Optio ad consectetur id laboriosam facilis fuga aliquam nihil
-                fugiat cupiditate dolore quam, eos molestiae ut modi!
+                “Biasanya top up bikin ribet, tapi di sini beda. Simple,
+                responsif, dan yang paling penting — aman. Ngerasa kayak punya
+                toko top up pribadi.”
               </p>
             </div>
           </div>
