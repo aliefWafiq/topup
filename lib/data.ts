@@ -159,3 +159,18 @@ export const checkSaldo = async () => {
 
   return saldo
 };
+
+export const getGameRekomendasi = async () => {
+  try {
+    const dataGame = await prisma.transaksi.findMany({
+      where: {
+        operator_produk: 'desc',
+      },
+      take: 5
+    })
+
+    return dataGame[0]?.operator_produk
+  } catch (error) {
+    console.log(error);
+  }
+}
