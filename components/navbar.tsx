@@ -1,11 +1,12 @@
-import Link from "next/link";
+'use client'
 import React, { useState, useEffect } from "react";
 import MobileDrawer from "./MobileDrawer";
 import LogoLink from "./LogoLink";
-import DesktopNavLinks from "./DesktopNavLinks";
+import { DesktopNavLinks } from "./DesktopNavLinks";
 import MobileMenuButton from "./MobileMenuButton";
+import { HomeDrawerLink } from "./drawerLink";
 
-const Navbar = () => {
+export const NavbarLandingPage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
 
@@ -49,4 +50,31 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export const NavbarHome = ({desktopChildren, mobileChildren}: {desktopChildren: React.ReactNode, mobileChildren: React.ReactNode}) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const HandleDrawerToggle = () => {
+    setIsDrawerOpen(!isDrawerOpen)
+  }
+
+  return (
+        <>
+      <div
+        className="border-b-2 w-screen bg-white fixed z-40 top-0">
+          <div className="flex items-center justify-end lg:justify-between mx-auto p-4 lg:px-8">
+            <LogoLink />
+            {desktopChildren}
+          </div>
+      </div>
+      <div
+        className={`sm:hidden fixed flex flex-row p-4 justify-between w-full z-50 backdrop-blur-md transition-all duration-300`}
+      >
+        <LogoLink />
+        <MobileMenuButton onClick={HandleDrawerToggle} />
+        <MobileDrawer isOpen={isDrawerOpen} onClose={HandleDrawerToggle}>
+            {mobileChildren}
+        </MobileDrawer>
+      </div>
+    </>
+  )
+}

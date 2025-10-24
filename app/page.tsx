@@ -4,7 +4,7 @@ import "@/app/globals.css";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Games } from "@/types/game";
-import Navbar from "@/components/navbar";
+import { NavbarLandingPage } from "@/components/navbar";
 
 export default function RootLayout() {
   const [games, setGames] = useState<Games[]>([]);
@@ -24,7 +24,7 @@ export default function RootLayout() {
 
   return (
     <>
-      <Navbar />
+      <NavbarLandingPage />
 
       <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         <Image

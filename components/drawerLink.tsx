@@ -1,35 +1,35 @@
-import React from "react";
+import React from 'react'
 import Link from "next/link";
 import { LogoutButton } from "@/components/button";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import Image from "next/image";
 
-export const DesktopNavLinks = () => {
+export const LandingPageDrawerLink = () => {
     return (
-        <ul className="flex flex-row space-x-6">
-            <li className=" hover:text-blue-900 hover:font-semibold">
-                <Link href="/">Home</Link>
-            </li>
-            <li className=" hover:text-blue-900 hover:font-semibold">
+        <ul className="flex flex-col justify-center items-center space-y-4">
+        <li className="text-3xl hover:text-blue-900 hover:font-semibold">
+            <Link href="/">Home</Link>
+        </li>
+        <li className="text-3xl hover:text-blue-900 hover:font-semibold">
             <Link href="/">Games</Link>
-            </li>
-            <li className=" hover:text-blue-900 hover:font-semibold">
+        </li>
+        <li className="text-3xl hover:text-blue-900 hover:font-semibold">
             <Link href="/">Promo</Link>
-            </li>
-            <li>
+        </li>
+        <li className="mt-4">
             <Link
-                href="/register"
-                className={`border font-semibold px-4 py-2 rounded-lg transition-colors `}
+            href="/register"
+            className={`border border-black text-3xl px-4 py-2 rounded-lg transition-colors `}
             >
                 Register
             </Link>
-            </li>
+        </li>
         </ul>
     )
 }
 
-export const DesktopNavLinksHome = async() => {
+export const HomeDrawerLink = async() => {
     const session = await auth();
     return(
         <div className="flex items-center gap-3">

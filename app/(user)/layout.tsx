@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import Header from "@/components/header";
+import { NavbarHome } from "@/components/navbar";
+import { DesktopNavLinksHome } from "@/components/DesktopNavLinks";
+import MobileDrawer from "@/components/MobileDrawer";
+import { HomeDrawerLink } from "@/components/drawerLink";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,7 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
+      <NavbarHome
+        desktopChildren={<DesktopNavLinksHome />}
+        mobileChildren={<HomeDrawerLink />}
+      />
       <main className="px-6 bg-gray-50">{children}</main>
     </>
   );
