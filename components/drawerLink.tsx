@@ -8,23 +8,25 @@ import Image from "next/image";
 export const LandingPageDrawerLink = () => {
     return (
         <ul className="flex flex-col justify-center items-center space-y-4">
-        <li className="text-3xl hover:text-blue-900 hover:font-semibold">
-            <Link href="/">Home</Link>
-        </li>
-        <li className="text-3xl hover:text-blue-900 hover:font-semibold">
-            <Link href="/">Games</Link>
-        </li>
-        <li className="text-3xl hover:text-blue-900 hover:font-semibold">
-            <Link href="/">Promo</Link>
-        </li>
-        <li className="mt-4">
-            <Link
-            href="/register"
-            className={`border border-black text-3xl px-4 py-2 rounded-lg transition-colors `}
-            >
-                Register
-            </Link>
-        </li>
+            <li className="hover:font-semibold text-2xl">
+                <a href="#hero">Home</a>
+            </li>
+            <li className="hover:font-semibold text-2xl">
+                <a href="#game">Games</a>
+            </li>
+            <li className="hover:font-semibold text-2xl">
+                <a href="#promo">Promo</a>
+            </li>
+            <li className="hover:font-semibold text-2xl">
+                <a href="#testimoni">Testimoni</a>
+            </li>
+            <li className="mt-4">
+                <Link
+                    href="/register"
+                    className={`border border-black text-2xl px-4 py-2 rounded-lg transition-colors `}>
+                    Register
+                </Link>
+            </li>
         </ul>
     )
 }

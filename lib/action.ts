@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { RegisterSchema, SignInSchema, DiscountSchema } from "@/lib/zod";
 import { hashSync } from "bcrypt-ts";
@@ -55,13 +56,28 @@ export const signUpCredentials = async (
         password: hashedPassword,
       },
     });
+    await signIn("credentials", { email, password, redirectTo: "/home" });
   } catch (error) {
-    return {
-      message: "Failed ro register",
-    };
-  }
+    if (
+      error instanceof Error &&
+      (error as any).digest?.includes("NEXT_REDIRECT")
+    ) {
+      throw error;
+    }
 
-  redirect("/login");
+    if (error instanceof AuthError) {
+      return { message: "Gagal login setelah daftar." };
+    }
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return { message: "Email sudah terdaftar." };
+      }
+    }
+
+    console.error("Register Error:", error);
+    return { message: "Gagal untuk register." };
+  }
 };
 
 // SIGN IN
@@ -180,11 +196,11 @@ export const DepositSaldo = async (
 
     const resultData = await res.json();
     console.log(resultData);
-    
+
     return {
       success: true,
       data: resultData,
-    }
+    };
   } catch (error) {
     console.log(error);
     return {

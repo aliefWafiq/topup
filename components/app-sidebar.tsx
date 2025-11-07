@@ -46,11 +46,6 @@ const data = {
       icon: IconHome
     },
     {
-      title: "Content Management",
-      url: "/contentManagement",
-      icon: IconAddressBook,
-    },
-    {
       title: "Game List",
       url: "/games",
       icon: IconListDetails,

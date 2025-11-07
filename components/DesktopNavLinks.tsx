@@ -8,22 +8,24 @@ import Image from "next/image";
 export const DesktopNavLinks = () => {
     return (
         <ul className="flex flex-row space-x-6">
-            <li className=" hover:text-blue-900 hover:font-semibold">
-                <Link href="/">Home</Link>
+            <li className="hover:font-semibold">
+                <a href="#hero">Home</a>
             </li>
-            <li className=" hover:text-blue-900 hover:font-semibold">
-            <Link href="/">Games</Link>
+            <li className="hover:font-semibold">
+                <a href="#game">Games</a>
             </li>
-            <li className=" hover:text-blue-900 hover:font-semibold">
-            <Link href="/">Promo</Link>
+            <li className="hover:font-semibold">
+                <a href="#promo">Promo</a>
+            </li>
+            <li className="hover:font-semibold">
+                <a href="#testimoni">Testimoni</a>
             </li>
             <li>
-            <Link
-                href="/register"
-                className={`border font-semibold px-4 py-2 rounded-lg transition-colors `}
-            >
-                Register
-            </Link>
+                <Link
+                    href="/register"
+                    className={`border font-semibold px-4 py-2 rounded-lg transition-colors `}>
+                    Register
+                </Link>
             </li>
         </ul>
     )

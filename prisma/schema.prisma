@@ -119,10 +119,3 @@ model PaymentLink {
   id_transaksi      String
   link_payment      String
 }
-
-model Content {
-  id                    String    @id @default(cuid())
-  namaComponent         String
-  fotoContent           String
-  namaContent           String
-}

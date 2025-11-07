@@ -4,7 +4,7 @@ import MobileDrawer from "./MobileDrawer";
 import LogoLink from "./LogoLink";
 import { DesktopNavLinks } from "./DesktopNavLinks";
 import MobileMenuButton from "./MobileMenuButton";
-import { HomeDrawerLink } from "./drawerLink";
+import { HomeDrawerLink, LandingPageDrawerLink } from "./drawerLink";
 
 export const NavbarLandingPage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -30,7 +30,7 @@ export const NavbarLandingPage = () => {
   return (
     <>
       <div
-        className={`hidden sm:flex justify-between fixed top-0 left-0 w-full z-50 px-16 py-4 backdrop-blur-md transition-all duration-300 ${
+        className={`hidden sm:flex justify-between fixed top-0 left-0 w-full z-50 px-16 py-8 backdrop-blur-md transition-all duration-300 ${
           navScrolled ? "text-black" : "text-white"
         }`}
       >
@@ -44,7 +44,9 @@ export const NavbarLandingPage = () => {
       >
         <LogoLink />
         <MobileMenuButton onClick={HandleDrawerToggle} />
-        <MobileDrawer isOpen={isDrawerOpen} onClose={HandleDrawerToggle} />
+        <MobileDrawer isOpen={isDrawerOpen} onClose={HandleDrawerToggle}>
+            <LandingPageDrawerLink />
+        </MobileDrawer>
       </div>
     </>
   );

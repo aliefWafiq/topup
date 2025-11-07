@@ -26,7 +26,9 @@ export default function RootLayout() {
     <>
       <NavbarLandingPage />
 
-      <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
+      <section 
+        id="hero"
+        className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         <Image
           src="/bg.jpeg"
           alt="Background"
@@ -90,8 +92,9 @@ export default function RootLayout() {
         <div className="absolute bottom-0 w-full h-20 bg-gradient-to-t from-white/80 to-transparent"></div>
       </section>
 
+      {/* SECTION MARQUEE GAME */}
       <section
-        id="section2"
+        id="marquee"
         className="w-full flex flex-col py-8 items-center md:px-24 bg-gray-100"
       >
         <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)] mb-8">
@@ -121,60 +124,10 @@ export default function RootLayout() {
         </div>
       </section>
 
+      {/* SECTION PROSES TOP UP */}
       <section
-        id="section3"
-        className="w-full flex flex-col py-8 items-center bg-gray-100 md:px-24 px-4"
-      >
-        <div className="w-full md:text-center flex justify-center">
-          <h1 className="text-4xl md:text-6xl font-bold md:w-1/2">
-            Solusi Top Up Cepat, Aman, dan Terpercaya
-          </h1>
-        </div>
-
-        <div className="flex flex-wrap justify-center w-full gap-2 md:gap-4 mt-6 md:mt-12 h-3/4">
-          {games.map((g) =>
-            g.status !== 0 && parseInt(g.id) < 10 ? (
-              <div
-                key={g.id}
-                className="flex md:p-5 flex-col justify-center items-center w-40 md:w-1/5 h-52 md:h-72 group hover:cursor-pointer"
-              >
-                <div className="relative w-full flex-1 min-h-0 rounded-lg">
-                  <Image
-                    src={g.logo || "/avatar.jpg"}
-                    alt={g.nama}
-                    fill
-                    priority
-                    className="rounded-lg group-hover:scale-110 transition-all duration-300 ease-in-out"
-                  />
-                </div>
-
-                <div className="pt-4 h-16 w-full flex items-center justify-center">
-                  <p className="text-lg md:text-xl font-bold text-center">
-                    {g.nama}
-                  </p>
-                </div>
-              </div>
-            ) : null
-          )}
-        </div>
-      </section>
-
-      <section
-        id="section4"
-        className="w-full h-[200px] md:h-[700px] flex justify-center items-center relative"
-      >
-        <Image
-          src="/MASUKKAN KODEMU.png"
-          alt="Background"
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-        />
-      </section>
-
-      <section
-        id="section4"
-        className="w-full md:h-screen flex justify-center items-center bg-gray-100"
+        id="proses"
+        className="w-full pb-24 flex justify-center items-center bg-gray-100"
       >
         <div className="flex flex-col py-5 md:py-0">
           <p className="text-4xl font-bold">
@@ -230,8 +183,62 @@ export default function RootLayout() {
         </div>
       </section>
 
+      {/* SECTION BANNER DISKON */}
       <section
-        id="section5"
+        id="promo"
+        className="w-full h-[200px] md:h-[700px] flex justify-center items-center relative"
+      >
+        <Image
+          src="/MASUKKAN KODEMU.png"
+          alt="Background"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+        />
+      </section>
+
+      {/* SECTION GAME */}
+      <section
+        id="game"
+        className="w-full md:h-screen flex flex-col py-12 items-center bg-gray-100 md:px-24 px-4"
+      >
+        <div className="w-full md:text-center flex justify-center">
+          <h1 className="text-4xl md:text-5xl font-bold md:w-1/2">
+            Solusi Top Up Cepat, Aman, dan Terpercaya
+          </h1>
+        </div>
+
+        <div className="flex flex-wrap justify-center w-full gap-2 md:gap-4 mt-6 md:mt-12 h-3/4">
+          {games.map((g) =>
+            g.status !== 0 && parseInt(g.id) < 12 ? (
+              <div
+                key={g.id}
+                className="flex md:p-5 flex-col justify-center items-center w-40 md:w-1/6 h-52 md:h-64 group hover:cursor-pointer"
+              >
+                <div className="relative w-full flex-1 min-h-0 rounded-lg">
+                  <Image
+                    src={g.logo || "/avatar.jpg"}
+                    alt={g.nama}
+                    fill
+                    priority
+                    className="rounded-lg group-hover:scale-110 transition-all duration-300 ease-in-out"
+                  />
+                </div>
+
+                <div className="pt-4 h-16 w-full flex items-center justify-center">
+                  <p className="text-lg md:text-xl font-bold text-center">
+                    {g.nama}
+                  </p>
+                </div>
+              </div>
+            ) : null
+          )}
+        </div>
+      </section>
+
+      {/* SECTION TESTIMONI */}
+      <section
+        id="testimoni"
         className="w-full h-screen flex items-center bg-gray-100 p-2 md:p-10"
       >
         <div className="flex flex-col items-center justify-center w-full h-full bg-purple-900 rounded-2xl">
@@ -405,6 +412,28 @@ export default function RootLayout() {
           </div>
         </div>
       </section>
+
+      {/* FOOTER */}
+      <footer className="h-60 bg-gray-200 pb-12">
+          <div className="flex w-full h-full">
+            <div className="w-1/2 px-12 flex flex-col justify-center">
+              <h1 className="text-5xl font-bold">TopUp</h1>
+              <p className="mt-4">Buat proses topup mu <br></br> jadi lebih mudah</p>
+            </div>
+            <div className="w-1/2 flex flex-col justify-center items-center md:items-start">
+              <div>
+                <p className="font-bold mb-2">Links</p>
+                <div className="flex flex-col">
+                  <a href="#hero">Home</a>
+                  <a href="#game">Games</a>
+                  <a href="#promo">Promo</a>
+                  <a href="#testimoni">Testimoni</a>
+                </div>
+              </div>
+              {/* <p>© 2025 TopUp. All rights reserved.</p> */}
+            </div>
+          </div>
+      </footer>
     </>
   );
 }
