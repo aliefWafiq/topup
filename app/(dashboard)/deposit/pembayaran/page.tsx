@@ -4,7 +4,7 @@ const PagePembayaran = () => {
   return (
     <div className="w-full h-screen flex justify-center items-center">
           <div
-            className="flex flex-col items-center gap-3 w-1/2 p-6 rounded-lg shadow-2xl"
+            className="flex flex-col items-center gap-3 md:w-1/2 p-6 rounded-lg shadow-2xl"
           >
             <div className="w-full">
               <h1 className="text-2xl mb-4 font-bold">Deposit Saldo</h1>

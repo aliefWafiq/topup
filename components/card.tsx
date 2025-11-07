@@ -18,7 +18,7 @@ const Card = ({ data }: { data: Games }) => {
   if(data.status !== 1) return null
 
   return (
-    <Link href={`/${data?.id}`} className="bg-white rounded-lg w-[150px] lg:w-1/5 hover:shadow-lg group overflow-hidden">
+    <Link href={`/${data?.id}`} className="bg-white rounded-lg w-[150px] mt-4 md:mt-0 lg:w-1/5 hover:shadow-lg group overflow-hidden">
       <div className="relative w-full lg:h-64 h-32">
         <Image
             src={data.logo || "/avatar.jpg"}

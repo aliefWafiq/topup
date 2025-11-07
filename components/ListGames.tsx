@@ -13,7 +13,7 @@ const ListGames = async ({ query }:{query: string}) => {
   }) : []
 
   return (
-    <div className="flex flex-wrap w-full gap-6 justify-center mt-8">
+    <div className="flex flex-wrap w-full md:gap-6 gap-3 justify-center mt-8">
         {Array.isArray(games) && filteredGames.length > 0 ? filteredGames.map((game: Games) => (
             <Card key={game.id} data={game} />
         )) : <p className="text-center text-xl">No games found</p>}

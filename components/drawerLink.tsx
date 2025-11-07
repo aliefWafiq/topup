@@ -35,21 +35,21 @@ export const HomeDrawerLink = async() => {
     const session = await auth();
     return(
         <div className="flex items-center gap-3">
-            <ul className="flex items-center gap-4 mr-5 font-semibold text-gray-600">
+            <ul className="flex flex-col items-center gap-4 mr-5 font-semibold text-gray-600">
                 {session?.user?.role === "admin" && (
                     <li>
-                        <Link className="hover:text-gray-800" href="/admin">
+                        <Link className="hover:text-gray-800 text-2xl" href="/admin">
                             Dashboard
                         </Link>
                     </li>
                 )}
                 <li>
-                    <Link className="hover:text-gray-800" href="/home">
+                    <Link className="hover:text-gray-800 text-2xl" href="/home">
                         Home
                     </Link>
                 </li>
                 <li>
-                    <Link className="hover:text-gray-800" href="/history-transaksi">
+                    <Link className="hover:text-gray-800 text-2xl" href="/history-transaksi">
                         Transaksi
                     </Link>
                 </li>

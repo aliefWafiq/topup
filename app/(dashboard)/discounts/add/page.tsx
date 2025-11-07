@@ -11,7 +11,7 @@ const AddDiscountpage = () => {
     <div className="w-full h-screen flex justify-center items-center">
       <form
         action={formAction}
-        className="flex flex-col items-center gap-3 w-1/2 p-6 rounded-lg shadow-2xl"
+        className="flex flex-col items-center gap-3 md:w-1/2 p-6 rounded-lg shadow-2xl"
       >
         {state?.message ? (
         <div className='p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100' role='alert'>

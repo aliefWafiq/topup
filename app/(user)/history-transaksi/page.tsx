@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 const HistoryTransaksiPage = () => {
   return (
     <div className="min-h-screen flex justify-center py-32">
-        <div>
+        <div className="w-full md:w-auto">
             <h1 className="text-2xl font-bold">Histori Transaksi</h1>
             <HistoryTransaksiTable />
         </div>

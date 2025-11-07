@@ -17,7 +17,6 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      {/* <Header /> */}
       <NavbarHome
         desktopChildren={<DesktopNavLinksHome />}
         mobileChildren={<HomeDrawerLink />}

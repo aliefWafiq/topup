@@ -62,7 +62,7 @@ export const NavbarHome = ({desktopChildren, mobileChildren}: {desktopChildren: 
   return (
         <>
       <div
-        className="border-b-2 w-screen bg-white fixed z-40 top-0">
+        className="hidden sm:block border-b-2 w-screen bg-white fixed z-40 top-0">
           <div className="flex items-center justify-end lg:justify-between mx-auto p-4 lg:px-8">
             <LogoLink />
             {desktopChildren}

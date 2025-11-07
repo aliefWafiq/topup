@@ -30,9 +30,9 @@ export default async function Page() {
     <>
       <SiteHeader />
       <div className="flex flex-1 flex-col">
-        <div className="@container/main flex flex-1 flex-col gap-2 px-6">
-          <div className="flex gap-4 py-4 md:gap-6 md:py-6">
-            <Card className="w-96">
+        <div className="@container/main flex flex-1 flex-col gap-2 md:px-6">
+          <div className="flex flex-col md:flex-row gap-4 py-4 md:gap-6 md:py-6">
+            <Card className="w-full md:w-96">
               <CardHeader>
                 <CardTitle>
                   <FontAwesomeIcon
@@ -48,7 +48,7 @@ export default async function Page() {
                 </h1>
               </CardContent>
             </Card>
-            <Card className="w-72">
+            <Card className="w-full md:w-96">
               <CardHeader>
                 <CardTitle>
                   <FontAwesomeIcon
@@ -62,7 +62,7 @@ export default async function Page() {
                 <h1 className="text-3xl font-bold">{getJumlahTransaksi()}</h1>
               </CardContent>
             </Card>
-            <Card className="w-72">
+            <Card className="w-full md:w-96">
               <CardHeader>
                 <CardTitle>
                   <FontAwesomeIcon
