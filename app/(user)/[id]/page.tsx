@@ -37,7 +37,8 @@ export default async function ProductPage({params}:{
     
     return (
     <div className="flex flex-col items-center justify-center min-h-screen py-32 px-8">
-    <h1 className="text-2xl font-bold mb-4">{namaGame.operator_nama}</h1>
+    <h1 className="text-4xl font-bold mb-8 text-white">{namaGame.operator_nama}</h1>
+    <div className="w-full flex flex-wrap gap-5 justify-center">
         {gameProduct.map((game: Games) => (
             <MenuCard 
                 key={game.code} 
@@ -48,6 +49,7 @@ export default async function ProductPage({params}:{
                 email={session?.user.email || ""}    
             />
         ))} 
+    </div>
     </div>
     )
 }

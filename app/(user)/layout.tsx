@@ -21,7 +21,7 @@ export default function RootLayout({
         desktopChildren={<DesktopNavLinksHome />}
         mobileChildren={<HomeDrawerLink />}
       />
-      <main className="px-6 bg-gray-50">{children}</main>
+      <main className="px-6 bg-gray-900">{children}</main>
     </>
   );
 }

@@ -43,16 +43,20 @@ export const DesktopNavLinksHome = async() => {
                         </Link>
                     </li>
                 )}
-                <li>
-                    <Link className="hover:text-gray-800" href="/home">
-                        Home
-                    </Link>
-                </li>
-                <li>
-                    <Link className="hover:text-gray-800" href="/history-transaksi">
-                        Transaksi
-                    </Link>
-                </li>
+                {session?.user?.role != "admin" && (
+                    <>
+                        <li>
+                            <Link className="hover:text-gray-800" href="/home">
+                                Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="hover:text-gray-800" href="/history-transaksi">
+                                Transaksi
+                            </Link>
+                        </li>
+                    </>
+                )}
                 <li>
                     {session ? (
                         <SessionProvider>

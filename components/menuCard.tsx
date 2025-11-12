@@ -44,10 +44,14 @@ const MenuCard = ({
     <>
       <div
         onClick={() => setShowForm(true)}
-        className="my-2 border-2 border-gray-200 rounded-md w-full lg:w-1/2 p-5 text-start hover:cursor-pointer hover:shadow-xl transition-all duration-300 ease-in-out"
+        className="my-2 border-2 border-gray-200 rounded-md w-full lg:w-1/4 text-start hover:cursor-pointer hover:shadow-xl transition-all duration-300 ease-in-out flex flex-col justify-center overflow-hidden"
       >
-        <p className="font-semibold">{games.nama_produk}</p>
-        <p>Rp {harga(games.price)}</p>
+        <div className="bg-purple-800 text-white p-4 flex items-center h-1/2">
+          <p className="font-semibold">{games.nama_produk}</p>
+        </div>
+        <div className="bg-white p-4 h-1/2">
+          <p>Rp {harga(games.price)}</p>
+        </div>
       </div>
       <AuthProvider>
         {showForm && (
