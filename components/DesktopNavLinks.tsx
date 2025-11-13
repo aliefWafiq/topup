@@ -35,10 +35,10 @@ export const DesktopNavLinksHome = async() => {
     const session = await auth();
     return(
         <div className="flex items-center gap-3">
-            <ul className="flex items-center gap-4 mr-5 font-semibold text-gray-600">
+            <ul className="flex items-center gap-4 mr-5 font-semibold text-white">
                 {session?.user?.role === "admin" && (
                     <li>
-                        <Link className="hover:text-gray-800" href="/admin">
+                        <Link className="hover:text-gray-200" href="/admin">
                             Dashboard
                         </Link>
                     </li>
@@ -46,12 +46,12 @@ export const DesktopNavLinksHome = async() => {
                 {session?.user?.role != "admin" && (
                     <>
                         <li>
-                            <Link className="hover:text-gray-800" href="/home">
+                            <Link className="hover:text-gray-200" href="/home">
                                 Home
                             </Link>
                         </li>
                         <li>
-                            <Link className="hover:text-gray-800" href="/history-transaksi">
+                            <Link className="hover:text-gray-200" href="/history-transaksi">
                                 Transaksi
                             </Link>
                         </li>
@@ -74,11 +74,11 @@ export const DesktopNavLinksHome = async() => {
             </ul>
             {session && (
                 <div className="lg:flex gap-3 items-center hidden">
-                    <div className="flex flex-col justify-center -space-y-1">
-                        <span className="font-semibold text-gray-600 text-right capitalize">
+                    <div className="flex flex-col justify-center -space-y-1 text-white">
+                        <span className="font-semibold text-right capitalize">
                             {session.user.name}
                         </span>
-                        <span className="font-sx text-gray-500 text-right capitalize">
+                        <span className="font-sx text-right capitalize">
                             {session.user.role}
                         </span>
                     </div>
