@@ -19,6 +19,7 @@ import {
 } from "@/lib/data";
 
 import { Discount } from "@/types/discount";
+import { State } from "@/types/state";
 
 interface ActionState {
   success: boolean;
@@ -401,6 +402,38 @@ export const updateDiscountStatus = async (id: string) => {
     return { message: "Data gagal diupdate" };
   }
 };
+
+// UPDATE PROFILE
+export const UpdateProfile = async(
+  prevState: State, 
+  formData: FormData
+): Promise<State> => {
+    const id = formData.get("id") as string
+    const name = formData.get("name") as string
+    const email = formData.get("email") as string
+
+    try {
+      await prisma.user.update({
+        where: {id: id},
+        data: {
+          name: name,
+          email: email
+        }
+      })
+
+      revalidatePath("/profile")
+      return { 
+        message: "Berhasil update profile!",
+        error: null 
+      };
+    } catch (error) {
+      console.log(error)
+      return { 
+        message: "Gagal update profile!",
+        error: error
+      };
+    }
+}
 
 // DELETE DISCOUNT
 export const DeleteDiscount = async (id: string) => {

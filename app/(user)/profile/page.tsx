@@ -1,0 +1,56 @@
+import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link';
+import { auth } from "@/auth";
+import FormEditProfile from '@/components/FormEditProfile';
+
+const ProfilePage = async() => {
+    const session = await auth()
+    return (
+        <div className="flex flex-col items-center gap-4 justify-center min-h-screen py-32 px-8">
+            <div className='bg-white w-1/2 rounded-lg overflow-hidden'>
+                <div className='relative h-32 w-full'>
+                    <Image
+                        src="/profile-banner.jpg"
+                        fill
+                        alt='banner'
+                        className='object-cover'
+                    />
+                </div>
+                <div className='relative flex items-end'>
+                    <Image
+                        src={session?.user.image || "/avatar.jpg"}
+                        alt="avatar"
+                        width={80}
+                        height={80}
+                        className="rounded-full border-4 mx-4 border-white -mt-12 relative z-10"
+                    />
+                </div>
+                <div className='px-5 pt-2 mb-8'>
+                    <div className='flex justify-between'>
+                        <p className='text-2xl font-semibold'>{session?.user.name}</p>
+                        <p className='bg-gray-200 rounded-lg text-base px-3 flex items-center'>{session?.user.role}</p>
+                    </div>
+                    <p className='text-gray-500'>{session?.user.email}</p>
+                </div>
+            </div>
+            <FormEditProfile id_user={session?.user.id || ""}/>
+            <div className='bg-white w-1/2 rounded-lg overflow-hidden p-5'>
+                {/* <Link href="/edit-profile" className='border-b-2 py-2 flex justify-between hover:text-slate-600'>
+                    <p>Edit Akun</p>
+                    <p>{'>'}</p>
+                </Link> */}
+                <Link href={'/history-transaksi'} className='border-b-2 py-2 flex justify-between mb-4 hover:text-slate-600'>
+                    <p>Histori Transaksi</p>
+                    <p>{'>'}</p>
+                </Link>
+                <div className='border-b-2 py-2 flex justify-between hover:text-slate-600'>
+                    <p>Id Game</p>
+                    <p>{'>'}</p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default ProfilePage

@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { getDiscount, updateDiscountStatus } from "@/lib/action";
 import { checkUsedDiscount } from "@/lib/data";
 import { checkSaldo } from "@/lib/data";
-import { check } from "zod";
 
 declare global {
   interface Window {

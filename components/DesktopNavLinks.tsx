@@ -82,7 +82,7 @@ export const DesktopNavLinksHome = async() => {
                             {session.user.role}
                         </span>
                     </div>
-                    <button type="button">
+                    <Link href="/profile">
                         <Image
                             src={session.user.image || "/avatar.jpg"}
                             alt="avatar"
@@ -90,7 +90,7 @@ export const DesktopNavLinksHome = async() => {
                             height={64}
                             className="rounded-full"
                         />
-                    </button>
+                    </Link>
                 </div>
             )}
         </div>
