@@ -6,11 +6,13 @@ import { useActionState, useEffect, useState } from "react";
 import { User } from "@/types/user";
 import { State } from "@/types/state";
 import { UpdateProfile } from "@/lib/action";
+import { useSession } from "next-auth/react";
 
 const FormEditProfile = ({id_user}:{id_user: string}) => {
     const initialState: State = { message: null, error: null }
     const [state, formAction] = useActionState(UpdateProfile, initialState)
     const [datas, setDatas] = useState<User | null>(null)
+    const {update: updateSession, data: session} = useSession()
 
     useEffect(() => {
         const get_user_data = async() => {
@@ -24,6 +26,18 @@ const FormEditProfile = ({id_user}:{id_user: string}) => {
         }
         get_user_data()
     }, [id_user])
+
+    useEffect(() => {
+        if(state.message?.includes('Berhasil')){
+            if(session && session.user){
+                updateSession({
+                    name: datas?.name ?? "",
+                    email: datas?.email ?? "",
+                    role: session?.user.role ?? "user"
+                })
+            }
+        }
+    }, [state.message, datas, updateSession, session])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target

@@ -45,34 +45,61 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const ProtectedRoutes = ["/admin", "/users", "/list-transaksi", "/home", "/thankyou", "/history-transaksi", "discounts", "games"];
-      const adminRoutes = ["/admin", "/list-transaksi", "users", "discounts", "games"]
-      const isAdmin = auth?.user?.role === "admin"
+      const ProtectedRoutes = [
+        "/admin",
+        "/users",
+        "/list-transaksi",
+        "/home",
+        "/thankyou",
+        "/history-transaksi",
+        "discounts",
+        "games",
+        "/profile"
+      ];
+      const adminRoutes = [
+        "/admin",
+        "/list-transaksi",
+        "users",
+        "discounts",
+        "games",
+      ];
+      const isAdmin = auth?.user?.role === "admin";
 
       if (!isLoggedIn && ProtectedRoutes.includes(nextUrl.pathname)) {
         return Response.redirect(new URL("/", nextUrl));
       }
 
-      if(!isAdmin && adminRoutes.includes(nextUrl.pathname)){
-        return Response.redirect(new URL("/", nextUrl))
+      if (!isAdmin && adminRoutes.includes(nextUrl.pathname)) {
+        return Response.redirect(new URL("/", nextUrl));
       }
 
-      const LoggedInProtectedRoutes = ["/login", "/register", "/"]
+      const LoggedInProtectedRoutes = ["/login", "/register", "/"];
       if (isLoggedIn && LoggedInProtectedRoutes.includes(nextUrl.pathname)) {
-        if(!isAdmin) return Response.redirect(new URL("/home", nextUrl));
+        if (!isAdmin) return Response.redirect(new URL("/home", nextUrl));
         return Response.redirect(new URL("/admin", nextUrl));
       }
 
-      return true
+      return true;
     },
-    jwt({token, user}){
-      if(user) token.role = user.role
-      return token
-    },
+    jwt({ token, user, trigger, session }) {
+      if (user) {
+        token.role = user.role;
+        token.name = user.name;
+        token.email = user.email;
+      }
 
-    session({session, token}){
-      session.user.id = token.sub
-      session.user.role = token.role
+      if (trigger == "update" && session) {
+        token.name = session.name;
+        token.email = session.email;
+        token.role = session.role;
+      }
+      return token;
+    },
+    session({session,token}){
+      session.user.id = token.sub as string
+      session.user.role = token.role as string
+      session.user.name = token.name as string
+      session.user.email = token.email as string
 
       return session
     }

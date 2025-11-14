@@ -24,7 +24,7 @@ export const DesktopNavLinks = () => {
                 <Link
                     href="/register"
                     className={`border font-semibold px-4 py-2 rounded-lg transition-colors `}>
-                    Register
+                    Topup Sekarang
                 </Link>
             </li>
         </ul>
