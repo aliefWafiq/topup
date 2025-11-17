@@ -54,7 +54,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         "/history-transaksi",
         "discounts",
         "games",
-        "/profile"
+        "/profile",
+        "/edit-photo"
       ];
       const adminRoutes = [
         "/admin",

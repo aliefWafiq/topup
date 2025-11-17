@@ -3,5 +3,6 @@ export type User = {
     name: string | null,
     email: string | null,
     password: string | null
-    image: string | null
+    profile_image: string | null
+    banner_image: string | null
 }

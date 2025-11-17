@@ -69,17 +69,20 @@ model Session {
 }
  
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  password      String?
-  role          String    @default("user")
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  transaksi     Transaksi[]
-  usedDiscounts   UsedDiscount[]
+  id                    String    @id @default(cuid())
+  name                  String?
+  email                 String?   @unique
+  password              String?
+  role                  String    @default("user")
+  emailVerified         DateTime? @map("email_verified")
+  profile_image         String?
+  banner_image          String?
+  accounts              Account[]
+  sessions              Session[]
+  transaksi             Transaksi[]
+  usedDiscounts         UsedDiscount[]
+
+  id_game_user    Id_game_user?
 
   @@map("users")
 }
@@ -118,4 +121,13 @@ model PaymentLink {
   id                String   @id @default(cuid())
   id_transaksi      String
   link_payment      String
+}
+
+model Id_game_user {
+  id          String @id@default(cuid())
+  userId      String
+  idGameUser  String
+  user        User @relation(fields: [userId], references: [id])
+
+  @@unique([userId])
 }

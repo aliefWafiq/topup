@@ -9,8 +9,9 @@ import { AuthError } from "next-auth";
 import { StatusTransaksi } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { createHash } from "crypto";
-import { unknown } from "zod";
+import { success, unknown } from "zod";
 import { revalidatePath } from "next/cache";
+import { put, del } from "@vercel/blob";
 import {
   getDataKeuanganBulanIni,
   getDataTransaksi,
@@ -404,36 +405,36 @@ export const updateDiscountStatus = async (id: string) => {
 };
 
 // UPDATE PROFILE
-export const UpdateProfile = async(
-  prevState: State, 
+export const UpdateProfile = async (
+  prevState: State,
   formData: FormData
 ): Promise<State> => {
-    const id = formData.get("id") as string
-    const name = formData.get("name") as string
-    const email = formData.get("email") as string
+  const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
 
-    try {
-      await prisma.user.update({
-        where: {id: id},
-        data: {
-          name: name,
-          email: email
-        }
-      })
+  try {
+    await prisma.user.update({
+      where: { id: id },
+      data: {
+        name: name,
+        email: email,
+      },
+    });
 
-      revalidatePath("/profile")
-      return { 
-        message: "Berhasil update profile!",
-        error: null 
-      };
-    } catch (error) {
-      console.log(error)
-      return { 
-        message: "Gagal update profile!",
-        error: error
-      };
-    }
-}
+    revalidatePath("/profile");
+    return {
+      message: "Berhasil update profile!",
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Gagal update profile!",
+      error: error,
+    };
+  }
+};
 
 // DELETE DISCOUNT
 export const DeleteDiscount = async (id: string) => {
@@ -531,3 +532,159 @@ export const AddPaymentLink = async (
     console.log(error);
   }
 };
+
+// UPDATE FOTO USER
+
+const MAX_FILE_SIZE = 4.5 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+];
+
+function validateFile(
+  file: File | null,
+  fieldName: string
+): { valid: boolean; error?: string } {
+  if (!file || file.size === 0) {
+    return { valid: true };
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    return {
+      valid: false,
+      error: `Ukuran ${fieldName} terlalu besar. Maksimal 4.5MB`,
+    };
+  }
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    return {
+      valid: false,
+      error: `Format ${fieldName} tidak didukung. Gunakan JPG, PNG, WEBP, atau GIF`,
+    };
+  }
+  return { valid: true };
+}
+
+async function uploadFile(
+  file: File,
+  folder: string,
+  userId: string,
+  oldUrl: string | null
+): Promise<string> {
+  if (oldUrl) {
+    try {
+      await del(oldUrl);
+    } catch (error) {
+      console.error(`Error deleting old ${folder}:`, error); // ✅ FIX syntax error
+    }
+  }
+  const fileExtension = file.name.split(".").pop() || "jpg";
+  const blob = await put(
+    `${folder}/${userId}-${Date.now()}.${fileExtension}`,
+    file,
+    { access: "public" }
+  );
+  return blob.url;
+}
+
+export async function updateUserPhoto(formData: FormData) {
+  try {
+    const userId = formData.get("userId") as string;
+    const banner = formData.get("banner") as File | null;
+    const photo = formData.get("photo") as File | null;
+
+    if (!userId) {
+      return { success: false, message: "User ID tidak ditemukan" };
+    }
+
+    const bannerValidation = validateFile(banner, "banner");
+    if (!bannerValidation.valid) {
+      return { success: false, message: bannerValidation.error! };
+    }
+
+    const photoValidation = validateFile(photo, "foto profil");
+    if (!photoValidation.valid) {
+      return { success: false, message: photoValidation.error! };
+    }
+
+    const hasBanner = banner && banner.size > 0;
+    const hasPhoto = photo && photo.size > 0; 
+
+    if (!hasBanner && !hasPhoto) { 
+      return {
+        success: false,
+        message: "Pilih minimal satu file untuk diupload",
+      };
+    }
+
+    const currentUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { profile_image: true, banner_image: true },
+    });
+
+    if (!currentUser) {
+      return { success: false, message: "User tidak ditemukan" };
+    }
+
+    const updateData: { banner_image?: string; profile_image?: string } = {};
+
+    if (hasBanner) {
+      updateData.banner_image = await uploadFile(
+        banner!,
+        "banners",
+        userId,
+        currentUser.banner_image
+      );
+    }
+
+    if (hasPhoto) {
+      updateData.profile_image = await uploadFile(
+        photo!,
+        "photos",
+        userId,
+        currentUser.profile_image
+      );
+    }
+
+    console.log('Updating database with:', updateData);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: updateData,
+    });
+
+    revalidatePath("/profile");
+
+    const messages = {
+      both: "Banner dan foto profil berhasil diupdate",
+      banner: "Banner berhasil diupdate",
+      photo: "Foto profil berhasil diupdate"
+    }
+
+    const messageKey = hasBanner && hasPhoto ? 'both' : (hasBanner ? 'banner' : 'photo')
+
+    return { success: true, message: messages[messageKey] };
+
+  } catch (error) {
+    console.error("Error update photo:", error);
+    
+    if (error instanceof Error) {
+      const errorMessages: Record<string, string> = {
+        "rate limit": "Terlalu banyak upload. Coba lagi nanti",
+        "quota": "Kuota storage habis",
+      };
+
+      for (const [key, message] of Object.entries(errorMessages)) {
+        if (error.message.toLowerCase().includes(key)) {
+          return { success: false, message };
+        }
+      }
+    }
+
+    return {
+      success: false,
+      message: "Gagal mengupdate foto. Silakan coba lagi",
+    };
+  }
+}

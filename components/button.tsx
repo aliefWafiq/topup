@@ -34,7 +34,7 @@ export const SubmitButton = ({
       className={clsx(
         "bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer",
         {
-          "opacity-50 cursor-progress": pending,
+          "opacity-50 cursor-not-allowed": pending,
         }
       )}
       type="submit"
