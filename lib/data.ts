@@ -191,3 +191,32 @@ export async function getGameProducts(id: string): Promise<Games[]>{
 
     return gameProduct
 }
+
+export async function listUserGameId(id: string) {
+  try {
+    const dataId = await prisma.id_game_user.findMany({
+      where: {
+        userId: id
+      }
+    })
+
+    return dataId
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function getUserGameId(id: string, idGame: string) {
+  try {
+    const dataId = await prisma.id_game_user.findFirst({
+      where: {
+        userId: id,
+        gameId: idGame
+      }
+    })
+
+    return dataId?.idGameUser
+  } catch (error) {
+    console.error(error)
+  }
+}

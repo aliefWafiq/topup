@@ -25,15 +25,17 @@ export function FormPayment({
   id_user,
   email,
   serverOption,
+  idGameUser 
 }: {
-  namaProduk: string;
-  hargaProduk: number;
-  jenis_id: string;
-  operator_produk: string;
-  code: string;
-  id_user: string;
-  email: string;
-  serverOption: { name: string; value: string }[];
+  namaProduk: string
+  hargaProduk: number
+  jenis_id: string
+  operator_produk: string
+  code: string
+  id_user: string
+  email: string
+  serverOption: { name: string; value: string }[]
+  idGameUser: string
 }) {
   const serverRef = useRef<HTMLSelectElement>(null);
   const id_gameUserRef = useRef<HTMLInputElement>(null);
@@ -151,6 +153,7 @@ export function FormPayment({
             placeholder="Masukkan ID Game User"
             className="w-full border rounded py-2 px-3"
             ref={id_gameUserRef}
+            defaultValue={idGameUser}
           />
         </div>
         {serverOption && serverOption.length > 0 && (

@@ -16,12 +16,14 @@ const MenuCard = ({
   format_form,
   id_user,
   email,
+  idGameUser 
 }: {
-  games: Games;
-  jenis_id: string;
-  format_form: any;
-  id_user: string;
-  email: string;
+  games: Games
+  jenis_id: string
+  format_form: any
+  id_user: string
+  email: string
+  idGameUser: string
 }) => {
   const [showForm, setShowForm] = useState(false);
   const formatForm = React.useMemo(() => {
@@ -65,6 +67,7 @@ const MenuCard = ({
             serverOption={serverOption}
             id_user={id_user}
             email={email}
+            idGameUser={idGameUser || ""}
           />
         )}
       </AuthProvider>

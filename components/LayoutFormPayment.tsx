@@ -11,7 +11,8 @@ export default function LayoutFormPayment({
   code,
   serverOption,
   id_user,
-  email
+  email,
+  idGameUser 
 }: {
   onClose: () => void;
   namaProduk: string;
@@ -22,6 +23,7 @@ export default function LayoutFormPayment({
   serverOption: { name: string; value: string }[];
   id_user: string
   email: string
+  idGameUser: string
 }) {
   const [dateInfo, setDateInfo] = useState<{
     dayName: string;
@@ -88,6 +90,7 @@ export default function LayoutFormPayment({
             id_user={id_user}
             email={email}
             serverOption={serverOption}
+            idGameUser={idGameUser}
           />
         </div>
       </div>

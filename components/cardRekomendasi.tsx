@@ -20,7 +20,7 @@ const CardRekomendasi = async () => {
         <div>
             <div className="w-full h-full flex flex-col justify-center items-center">
                 <div className="w-full mb-4">
-                    <h1 className="text-base lg:text-2xl font-bold">Game Rekomendasi</h1>
+                    <h1 className="text-base lg:text-2xl font-bold text-white">Game Rekomendasi</h1>
                 </div>
                 <div className="w-full flex">
                     { gameRekomendasi === games.operator_produk ? games.map((game: Games) => ( 

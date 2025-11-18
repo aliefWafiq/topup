@@ -682,7 +682,10 @@ export async function updateUserPhoto(formData: FormData) {
 }
 
 // ADD ID GAME USER
-export async function AddIdGameUser(formdata: FormData) {
+export async function AddIdGameUser(
+  prevState: ActionState | null,
+  formdata: FormData,
+): Promise<ActionState>{
   const userId = formdata.get("userId") as string;
   const idGameUser = formdata.get("idGameUser") as string;
   const namagame = formdata.get("namagame") as string;
@@ -708,9 +711,15 @@ export async function AddIdGameUser(formdata: FormData) {
     }
 
     if (error.code === "P2002") {
-      return { error: "User ini sudah memiliki ID game terdaftar" };
+      return { 
+        success: false,
+        message: "User ini sudah memiliki ID game terdaftar" 
+      };
     }
 
-    return { error: "Gagal menyimpan data. Silakan coba lagi." };
+    return { 
+      success: false,
+      message: "Gagal menyimpan data. Silakan coba lagi." 
+    };
   }
 }

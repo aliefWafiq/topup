@@ -1,11 +1,7 @@
 import React from 'react'
 import { auth } from '@/auth'
-import { SubmitButton } from '@/components/button'
 import { getGame } from '@/lib/data'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import Link from 'next/link'
-import { AddIdGameUser } from '@/lib/action'
+import FormAddIdGame from '@/components/formAddIdGame'
 
 const PageFormGame = async({
     params,
@@ -26,17 +22,11 @@ const PageFormGame = async({
         <div className="flex flex-col items-center justify-center min-h-screen py-32 px-8">
             <div className='bg-white w-1/2 rounded-lg p-5'>
                 <h1 className='text-2xl font-semibold'>{namaGame.operator_nama}</h1>
-                <form action={AddIdGameUser} className='mt-8'>
-                    <Input type='hidden' defaultValue={session?.user.id} name='userId' />
-                    <Input type='hidden' defaultValue={namaGame.operator_nama} name='namagame'/>
-                    <Input type='hidden' defaultValue={namaGame.id} name='gameId' />
-
-                    <Label htmlFor='idGameUser' className='mb-2'>Id Game:</Label>
-                    <Input name='idGameUser' className='mb-8'required/>
-
-                    <SubmitButton label='submit'/>
-                    <Link href='/list-id-game' className='mt-4 flex justify-center items-center p-2.5 border-2 rounded-lg hover:border-blue-500' >Kembali</Link>
-                </form>
+                <FormAddIdGame 
+                    session={session}
+                    gameId={namaGame.id}
+                    namaGame={namaGame.operator_nama}
+                />
             </div>
         </div>
     )

@@ -2,6 +2,7 @@ import { Games } from "@/types/game"
 import MenuCard from "@/components/menuCard"
 import { auth } from "@/auth"
 import { getGame, getGameProducts } from "@/lib/data"
+import { getUserGameId } from "@/lib/data";
 
 export default async function ProductPage({params}:{
     params: Promise<{id:string}>,
@@ -9,16 +10,18 @@ export default async function ProductPage({params}:{
     const {id} = await params
     const games = await getGame(id)
     const session = await auth()
-
+    
     if(!games.length){
         return <div>Game tidak ditemukan</div>
     }
-
+    
     const namaGame = games[0]
-
+    
     const productId = namaGame.id
     const gameProducts = await getGameProducts(productId)
     const gameProduct = gameProducts
+
+    const idGameUser = await getUserGameId(session?.user.id || "", productId || "")
     
     return (
     <div className="flex flex-col items-center justify-center min-h-screen py-32 px-8">
@@ -31,7 +34,8 @@ export default async function ProductPage({params}:{
                     jenis_id={namaGame.id} 
                     format_form={namaGame.format_form} 
                     id_user={session?.user.id || ""} 
-                    email={session?.user.email || ""}    
+                    email={session?.user.email || ""} 
+                    idGameUser={idGameUser || ""}   
                 />
             ))} 
         </div>
