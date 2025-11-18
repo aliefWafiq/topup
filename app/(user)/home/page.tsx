@@ -9,17 +9,18 @@ import {
 import SearchInput from "@/components/searchInput";
 import ListGames from "@/components/ListGames";
 import CardRekomendasi from "@/components/cardRekomendasi";
+import Card from "@/components/card";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  const resolvedSearchParams = await searchParams;
-  const queryValue = resolvedSearchParams.query ?? "";
-  const finalQuery = Array.isArray(queryValue) ? queryValue[0] : queryValue;
+  const resolvedSearchParams = await searchParams
+  const queryValue = resolvedSearchParams.query ?? ""
+  const finalQuery = Array.isArray(queryValue) ? queryValue[0] :queryValue;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full md:p-32">
@@ -55,7 +56,10 @@ export default async function Home({
             <SearchInput />
           </div>
         </div>
-        <ListGames query={finalQuery} />
+        <ListGames 
+          query={finalQuery}
+          renderItem={(game) => <Card key={game.id} data={game} />} 
+        />
       </div>
     </div>
   );

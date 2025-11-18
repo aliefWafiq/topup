@@ -2,6 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { Games } from "@/types/game";
 
 export const getUsers = async () => {
   const session = await auth();
@@ -173,4 +174,20 @@ export const getGameRekomendasi = async () => {
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function getGame(id: string): Promise<Games[]>{
+    const res = await fetch("https://api.tokovoucher.net/member/produk/jenis/list?member_code="+ process.env.MEMBER_CODE +"&signature="+ process.env.SIGNATURE_KEY +"&id=" + id)
+    const json = await res.json()
+    const games = json.data
+
+    return games
+}
+
+export async function getGameProducts(id: string): Promise<Games[]>{
+    const res = await fetch("https://api.tokovoucher.net/member/produk/list?member_code="+ process.env.MEMBER_CODE +"&signature="+ process.env.SIGNATURE_KEY +"&id_jenis=" + id)
+    const json = await res.json()
+    const gameProduct = json.data
+
+    return gameProduct
 }

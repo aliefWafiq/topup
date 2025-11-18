@@ -82,7 +82,7 @@ model User {
   transaksi             Transaksi[]
   usedDiscounts         UsedDiscount[]
 
-  id_game_user    Id_game_user?
+  id_game_user    Id_game_user[]
 
   @@map("users")
 }
@@ -126,8 +126,11 @@ model PaymentLink {
 model Id_game_user {
   id          String @id@default(cuid())
   userId      String
+  gameId      String
+  namagame    String
   idGameUser  String
-  user        User @relation(fields: [userId], references: [id])
 
-  @@unique([userId])
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId])
 }

@@ -21,6 +21,7 @@ import {
 
 import { Discount } from "@/types/discount";
 import { State } from "@/types/state";
+import { Id_game_user } from "@prisma/client";
 
 interface ActionState {
   success: boolean;
@@ -210,8 +211,6 @@ export const DepositSaldo = async (
       message: "Terjadi kesalahan pada server. Silakan coba lagi.",
     };
   }
-  // revalidatePath("/deposit");
-  // redirect("/deposit/pembayaran");
 };
 
 // GET DISCOUNT
@@ -535,7 +534,6 @@ export const AddPaymentLink = async (
 
 // UPDATE FOTO USER
 
-const MAX_FILE_SIZE = 4.5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -550,12 +548,6 @@ function validateFile(
 ): { valid: boolean; error?: string } {
   if (!file || file.size === 0) {
     return { valid: true };
-  }
-  if (file.size > MAX_FILE_SIZE) {
-    return {
-      valid: false,
-      error: `Ukuran ${fieldName} terlalu besar. Maksimal 4.5MB`,
-    };
   }
   if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
     return {
@@ -576,7 +568,7 @@ async function uploadFile(
     try {
       await del(oldUrl);
     } catch (error) {
-      console.error(`Error deleting old ${folder}:`, error); // ✅ FIX syntax error
+      console.error(`Error deleting old ${folder}:`, error);
     }
   }
   const fileExtension = file.name.split(".").pop() || "jpg";
@@ -609,9 +601,9 @@ export async function updateUserPhoto(formData: FormData) {
     }
 
     const hasBanner = banner && banner.size > 0;
-    const hasPhoto = photo && photo.size > 0; 
+    const hasPhoto = photo && photo.size > 0;
 
-    if (!hasBanner && !hasPhoto) { 
+    if (!hasBanner && !hasPhoto) {
       return {
         success: false,
         message: "Pilih minimal satu file untuk diupload",
@@ -647,7 +639,7 @@ export async function updateUserPhoto(formData: FormData) {
       );
     }
 
-    console.log('Updating database with:', updateData);
+    console.log("Updating database with:", updateData);
 
     await prisma.user.update({
       where: { id: userId },
@@ -659,20 +651,20 @@ export async function updateUserPhoto(formData: FormData) {
     const messages = {
       both: "Banner dan foto profil berhasil diupdate",
       banner: "Banner berhasil diupdate",
-      photo: "Foto profil berhasil diupdate"
-    }
+      photo: "Foto profil berhasil diupdate",
+    };
 
-    const messageKey = hasBanner && hasPhoto ? 'both' : (hasBanner ? 'banner' : 'photo')
+    const messageKey =
+      hasBanner && hasPhoto ? "both" : hasBanner ? "banner" : "photo";
 
     return { success: true, message: messages[messageKey] };
-
   } catch (error) {
     console.error("Error update photo:", error);
-    
+
     if (error instanceof Error) {
       const errorMessages: Record<string, string> = {
         "rate limit": "Terlalu banyak upload. Coba lagi nanti",
-        "quota": "Kuota storage habis",
+        quota: "Kuota storage habis",
       };
 
       for (const [key, message] of Object.entries(errorMessages)) {
@@ -686,5 +678,39 @@ export async function updateUserPhoto(formData: FormData) {
       success: false,
       message: "Gagal mengupdate foto. Silakan coba lagi",
     };
+  }
+}
+
+// ADD ID GAME USER
+export async function AddIdGameUser(formdata: FormData) {
+  const userId = formdata.get("userId") as string;
+  const idGameUser = formdata.get("idGameUser") as string;
+  const namagame = formdata.get("namagame") as string;
+  const gameId = formdata.get("gameId") as string;
+
+  try {
+    await prisma.id_game_user.create({
+      data: {
+        userId,
+        namagame,
+        gameId,
+        idGameUser,
+      },
+    });
+
+    revalidatePath("/list-id-game");
+    redirect("/list-id-game");
+  } catch (error: any) {
+    console.error("Database Error:", error);
+
+    if (error.message?.includes("NEXT_REDIRECT")) {
+      throw error;
+    }
+
+    if (error.code === "P2002") {
+      return { error: "User ini sudah memiliki ID game terdaftar" };
+    }
+
+    return { error: "Gagal menyimpan data. Silakan coba lagi." };
   }
 }

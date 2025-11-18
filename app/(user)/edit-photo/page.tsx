@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { updateUserPhoto } from '@/lib/action'
 import { useRouter } from 'next/navigation'
 import { getDataUser } from '@/lib/data'
+import Link from 'next/link'
 
 interface InputFileProps {}
 
@@ -18,6 +19,8 @@ const EditPhoto = (props: InputFileProps) => {
     const [selectedBanner, setSelectedBanner] = useState<string|ArrayBuffer|null>(null)
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
+
+    const MAX_FILE_SIZE = 1 * 1024 * 1024
 
     useEffect(() => {
         const fetchDatauser = async() => {
@@ -41,6 +44,12 @@ const EditPhoto = (props: InputFileProps) => {
         const file = e.target.files?.[0]
 
         if(file) {
+            if(file.size > MAX_FILE_SIZE){
+                alert("Size file terlalu besar, maksimal 1 MB")
+                e.target.value = ''
+                return
+            }
+
             const reader = new FileReader()
             reader.onloadend = () => {
                 setSelectedFoto(reader.result)
@@ -53,6 +62,12 @@ const EditPhoto = (props: InputFileProps) => {
         const file = e.target.files?.[0]
 
         if(file) {
+            if(file.size > MAX_FILE_SIZE){
+                alert("Size file terlalu besar, maksimal 1 MB")
+                e.target.value = ''
+                return
+            }
+
             const reader = new FileReader()
             reader.onloadend = () => {
                 setSelectedBanner(reader.result)
@@ -106,6 +121,7 @@ const EditPhoto = (props: InputFileProps) => {
                         fill
                         alt='banner'
                         className='object-cover'
+                        priority
                     />
                 </div>
                 <div className='relative flex items-end'>
@@ -114,6 +130,7 @@ const EditPhoto = (props: InputFileProps) => {
                             src={selectedFoto as string || "/avatar.jpg"}
                             alt="avatar"
                             fill
+                            priority
                         />
                     </div>
                 </div>
@@ -127,6 +144,7 @@ const EditPhoto = (props: InputFileProps) => {
                     <Input id='photo' name='photo' type='file' accept='image/jpeg,image/jpg,image/png,image/webp,image' className='mb-8' onChange={handleFileChangeFoto} disabled={isLoading}/>
 
                     <SubmitButton label='update'/>
+                    <Link href='/profile' className='mt-4 flex justify-center items-center p-2.5 border-2 rounded-lg hover:border-blue-500' >Kembali</Link>
                 </form>
             </div>
         </div>

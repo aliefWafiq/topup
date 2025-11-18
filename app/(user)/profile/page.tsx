@@ -37,15 +37,15 @@ const ProfilePage = async() => {
                 </div>
             </div>
             <FormEditProfile id_user={session?.user.id || ""}/>
-            <div className='bg-white w-1/2 rounded-lg overflow-hidden p-5'>
+            <div className='bg-white w-1/2 rounded-lg p-5'>
                 <Link href={'/history-transaksi'} className='border-b-2 py-2 flex justify-between mb-4 hover:text-slate-600'>
                     <p>Histori Transaksi</p>
                     <p>{'>'}</p>
                 </Link>
-                <div className='border-b-2 py-2 flex justify-between hover:text-slate-600'>
+                <Link href='/list-id-game' className='border-b-2 py-2 flex justify-between hover:text-slate-600'>
                     <p>Id Game</p>
                     <p>{'>'}</p>
-                </div>
+                </Link>
             </div>
         </div>
     )
