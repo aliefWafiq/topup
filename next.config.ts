@@ -9,21 +9,12 @@ const securityHeaders = [
       script-src 'self' 'unsafe-inline' 'unsafe-eval'
       https://app.sandbox.midtrans.com
       https://api.sandbox.midtrans.com
-      https://snap-assets.al-pc-id-b.cdn.gtfslabs.io
-      https://pay.google.com
-      https://js-agent.newrelic.com
-      https://bam.nr-data.net
-      https://gwk.gopayapi.com
-      https://www.google-analytics.com
-      https://ssl.google-analytics.com
+      https://snap-assets.al-pc-id-b.cdn.gtflabs.io 
+      // ... domain lainnya
       https://snap-popup-app.sandbox.midtrans.com;
       
       connect-src 'self' 
-      https://app.sandbox.midtrans.com
-      https://api.sandbox.midtrans.com
-      https://gwk.gopayapi.com
-      https://www.google-analytics.com
-      https://bam.nr-data.net
+      // ... domain lainnya
       https://snap-popup-app.sandbox.midtrans.com;
       
       frame-src 'self' 
@@ -31,14 +22,14 @@ const securityHeaders = [
       https://snap-popup-app.sandbox.midtrans.com;
 
       style-src 'self' 'unsafe-inline' 
-      https://snap-assets.al-pc-id-b.cdn.gtfslabs.io;
+      https://snap-assets.al-pc-id-b.cdn.gtflabs.io;
       
       img-src 'self' data: 
-      https://snap-assets.al-pc-id-b.cdn.gtfslabs.io 
+      https://snap-assets.al-pc-id-b.cdn.gtflabs.io
       https://pay.google.com;
       
       font-src 'self' data: 
-      https://snap-assets.al-pc-id-b.cdn.gtfslabs.io;
+      https://snap-assets.al-pc-id-b.cdn.gtflabs.io;
 
     `.replace(/\n/g, " ").trim(),
   },
