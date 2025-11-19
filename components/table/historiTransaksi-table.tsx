@@ -43,7 +43,7 @@ const HistoryTransaksiTable = async () => {
         </TableHeader>
         <TableBody>
           {transaksi.map((transaksi, i) => (
-            <TableRow key={transaksi.id_transaksi}>
+            <TableRow key={transaksi.id_transaksi} className="bg-slate-100">
               <TableCell className="py-3 px-6">
                 {transaksi.id_transaksi}
               </TableCell>

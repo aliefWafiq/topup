@@ -88,7 +88,7 @@ export function FormPayment({
   const handleCheckout = async () => {
     const server = serverRef.current?.value || "";
     const id_gameUser = id_gameUserRef.current?.value;
-    const getSaldo = await checkSaldo();
+    // const getSaldo = await checkSaldo();
 
     if (id_gameUser == "") {
       alert("Mohon isi id game");
