@@ -92,11 +92,13 @@ export function FormPayment({
 
     if (id_gameUser == "") {
       alert("Mohon isi id game");
-    } else if (getSaldo < totalHarga) {
-      alert(
-        "Maaf saldo sistem sedang tidak mencukupi, silahkan melakukan top up lain kali"
-      );
-    } else {
+    } 
+    // else if (getSaldo < totalHarga) {
+    //   alert(
+    //     "Maaf saldo sistem sedang tidak mencukupi, silahkan melakukan top up lain kali"
+    //   );
+    // }
+    else {
       const body = {
         id_transaksi: String(orderId),
         id_user: id_user,

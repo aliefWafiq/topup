@@ -293,8 +293,6 @@ const topUp = async (orderId: string) => {
         mappedStatus = "CANCELLED";
     }
 
-    console.log("TOP UP");
-
     await prisma.transaksi.update({
       where: { id_transaksi: orderId },
       data: { status: mappedStatus },
