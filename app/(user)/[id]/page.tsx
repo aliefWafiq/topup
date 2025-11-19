@@ -21,7 +21,7 @@ export default async function ProductPage({params}:{
     const gameProducts = await getGameProducts(productId)
     const gameProduct = gameProducts
 
-    const idGameUser = await getUserGameId(session?.user.id || "", productId || "")
+    const idGameUser = await getUserGameId(session?.user.id || "", String(namaGame.id || ""))
     
     return (
     <div className="flex flex-col items-center justify-center min-h-screen py-32 px-8">

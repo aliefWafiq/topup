@@ -684,8 +684,8 @@ export async function updateUserPhoto(formData: FormData) {
 // ADD ID GAME USER
 export async function AddIdGameUser(
   prevState: ActionState | null,
-  formdata: FormData,
-): Promise<ActionState>{
+  formdata: FormData
+): Promise<ActionState> {
   const userId = formdata.get("userId") as string;
   const idGameUser = formdata.get("idGameUser") as string;
   const namagame = formdata.get("namagame") as string;
@@ -711,15 +711,51 @@ export async function AddIdGameUser(
     }
 
     if (error.code === "P2002") {
-      return { 
+      return {
         success: false,
-        message: "User ini sudah memiliki ID game terdaftar" 
+        message: "User ini sudah memiliki ID game terdaftar",
       };
     }
 
-    return { 
+    return {
       success: false,
-      message: "Gagal menyimpan data. Silakan coba lagi." 
+      message: "Gagal menyimpan data. Silakan coba lagi.",
+    };
+  }
+}
+
+export async function EditIdGameUser(
+  prevState: ActionState | null,
+  formData: FormData
+): Promise<ActionState> {
+  const userId = formData.get("userId") as string;
+  const idGameUser = formData.get("idGameUser") as string;
+  const namagame = formData.get("namagame") as string;
+  const gameId = formData.get("gameId") as string;
+
+  try {
+    await prisma.id_game_user.update({
+      where: {
+        userId_gameId: {
+          userId: userId,
+          gameId: gameId,
+        },
+      },
+      data: {
+        idGameUser: idGameUser,
+      },
+    });
+
+    revalidatePath("/list-id-game");
+    redirect("/list-id-game");
+  } catch (error:any) {
+    if (error.message?.includes("NEXT_REDIRECT")) {
+      throw error;
+    }
+
+    return {
+      success: false,
+      message: "Gagal menyimpan data. Silakan coba lagi.",
     };
   }
 }

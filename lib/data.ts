@@ -218,5 +218,22 @@ export async function getUserGameId(id: string, idGame: string) {
     return dataId?.idGameUser
   } catch (error) {
     console.error(error)
+    return null
+  }
+}
+
+export async function getNamaGameUser(id: string, idGame: string) {
+    try {
+    const dataId = await prisma.id_game_user.findFirst({
+      where: {
+        userId: id,
+        gameId: idGame
+      }
+    })
+
+    return dataId?.namagame
+  } catch (error) {
+    console.error(error)
+    return null
   }
 }

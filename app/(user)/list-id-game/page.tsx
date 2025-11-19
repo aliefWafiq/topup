@@ -18,9 +18,9 @@ const PageListIdGame = async() => {
                 <div className='mt-8'>
                     <Link href="/list-id-game/add-id-game" className='bg-blue-500 p-3 rounded-lg hover:bg-blue-600 text-white transition-all ease-in-out'>Tambah Id game</Link>
                 </div>
-                <div className='mt-8 flex gap-4'>
+                <div className='mt-8 flex flex-wrap gap-4'>
                     {dataIdUser?.map((game: id_game_user) => (
-                        <CardIdGameUser idGame={game.gameId} namaGame={game.namagame} />
+                        <CardIdGameUser key={game.gameId} idGame={game.gameId} namaGame={game.namagame} />
                     ))}
                 </div>
             </div>
