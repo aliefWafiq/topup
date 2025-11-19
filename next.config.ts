@@ -1,37 +1,44 @@
+// next.config.ts
 import type { NextConfig } from "next";
 
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value: `
-      default-src 'self'; 
+      default-src 'self';
       
       script-src 'self' 'unsafe-inline' 'unsafe-eval'
-      https://app.sandbox.midtrans.com
-      https://api.sandbox.midtrans.com
-      https://snap-assets.al-pc-id-b.cdn.gtflabs.io 
-      // ... domain lainnya
-      https://snap-popup-app.sandbox.midtrans.com;
-      
-      connect-src 'self' 
-      // ... domain lainnya
-      https://snap-popup-app.sandbox.midtrans.com;
-      
-      frame-src 'self' 
-      https://app.sandbox.midtrans.com
-      https://snap-popup-app.sandbox.midtrans.com;
+        https://app.sandbox.midtrans.com
+        https://api.sandbox.midtrans.com
+        https://snap-popup-app.sandbox.midtrans.com
+        https://snap-popup.sandbox.midtrans.com     
+        https://snap-assets.al-pc-id-b.cdn.gtflabs.io
+        https://www.googletagmanager.com
+        https://www.google-analytics.com
+        https://bam.nr-data.net;
 
-      style-src 'self' 'unsafe-inline' 
-      https://snap-assets.al-pc-id-b.cdn.gtflabs.io;
-      
-      img-src 'self' data: 
-      https://snap-assets.al-pc-id-b.cdn.gtflabs.io
-      https://pay.google.com;
-      
-      font-src 'self' data: 
-      https://snap-assets.al-pc-id-b.cdn.gtflabs.io;
+      style-src 'self' 'unsafe-inline'
+        https://snap-assets.al-pc-id-b.cdn.gtflabs.io;
 
-    `.replace(/\n/g, " ").trim(),
+      connect-src 'self' data:
+        https://app.sandbox.midtrans.com
+        https://api.sandbox.midtrans.com
+        https://snap-popup-app.sandbox.midtrans.com
+        https://snap-popup.sandbox.midtrans.com
+        https://gwk.gopayapi.com
+        https://bam.nr-data.net
+        https://www.google-analytics.com;
+
+      frame-src 'self'
+        https://app.sandbox.midtrans.com
+        https://snap-popup-app.sandbox.midtrans.com;
+
+      img-src 'self' data: blob: https:;
+
+      font-src 'self' data:;
+    `
+      .replace(/\s+/g, " ")
+      .trim(),
   },
 ];
 
@@ -63,7 +70,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: "/:path*",
         headers: securityHeaders,
       },
     ];
