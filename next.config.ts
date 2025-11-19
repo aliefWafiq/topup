@@ -4,6 +4,8 @@ const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value: `
+      default-src 'self'; 
+      
       script-src 'self' 'unsafe-inline' 'unsafe-eval'
       https://app.sandbox.midtrans.com
       https://api.sandbox.midtrans.com
@@ -11,10 +13,34 @@ const securityHeaders = [
       https://pay.google.com
       https://js-agent.newrelic.com
       https://bam.nr-data.net
-      https://gwk.gopayapi.com/sdk/stable/gp-container.min.js
+      https://gwk.gopayapi.com
       https://www.google-analytics.com
-      https://ssl.google-analytics.com;
-    `.replace(/\n/g, " "),
+      https://ssl.google-analytics.com
+      https://snap-popup-app.sandbox.midtrans.com;
+      
+      connect-src 'self' 
+      https://app.sandbox.midtrans.com
+      https://api.sandbox.midtrans.com
+      https://gwk.gopayapi.com
+      https://www.google-analytics.com
+      https://bam.nr-data.net
+      https://snap-popup-app.sandbox.midtrans.com;
+      
+      frame-src 'self' 
+      https://app.sandbox.midtrans.com
+      https://snap-popup-app.sandbox.midtrans.com;
+
+      style-src 'self' 'unsafe-inline' 
+      https://snap-assets.al-pc-id-b.cdn.gtfslabs.io;
+      
+      img-src 'self' data: 
+      https://snap-assets.al-pc-id-b.cdn.gtfslabs.io 
+      https://pay.google.com;
+      
+      font-src 'self' data: 
+      https://snap-assets.al-pc-id-b.cdn.gtfslabs.io;
+
+    `.replace(/\n/g, " ").trim(),
   },
 ];
 
@@ -46,7 +72,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)", // berlaku untuk semua route
+        source: "/(.*)",
         headers: securityHeaders,
       },
     ];
