@@ -343,13 +343,19 @@ export const updateStatus = async (
   statusMidtrans: string
 ) => {
   try {
+    // Parse ID - ambil bagian sebelum tanda "-"
+    const actualId = id_transaksi.split('-')[0];
+    
+    console.log("ID dari Midtrans:", id_transaksi);
+    console.log("ID setelah parsing:", actualId);
+
     // Validasi apakah transaksi ada
     const transaksi = await prisma.transaksi.findUnique({
-      where: { id_transaksi }
+      where: { id_transaksi: actualId }
     });
 
     if (!transaksi) {
-      console.error(`Transaksi dengan ID ${id_transaksi} tidak ditemukan`);
+      console.error(`Transaksi dengan ID ${actualId} tidak ditemukan`);
       return "FAILED";
     }
 
@@ -375,16 +381,15 @@ export const updateStatus = async (
     }
 
     await prisma.transaksi.update({
-      where: { id_transaksi },
+      where: { id_transaksi: actualId },
       data: { status: mappedStatus },
     });
 
     if (mappedStatus === "PAID") {
-      await topUp(id_transaksi);
+      await topUp(actualId);
     }
 
     console.log("Status updated:", mappedStatus);
-    console.log("Midtrans status:", statusMidtrans);
     return mappedStatus;
   } catch (error) {
     console.error("Gagal update status:", error);
