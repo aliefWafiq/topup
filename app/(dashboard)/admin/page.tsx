@@ -17,7 +17,7 @@ export default async function Page() {
   const saldo = await checkSaldo();
   const data = await listDataKeuangan();
 
-  const chartData = (data ?? []).map((item) => ({
+  const chartData = (data ?? []).map((item: any) => ({
     bulan: item.periode.toLocaleDateString("id-ID", {
       month: "long",
       year: "numeric",
