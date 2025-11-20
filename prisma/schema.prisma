@@ -36,6 +36,7 @@ model Transaksi {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   user User @relation(fields: [id_user], references: [id], onDelete: Cascade)
+  paymentLink     PaymentLink?
 }
 
 model Account {
@@ -119,8 +120,10 @@ model DataKeuangan {
 
 model PaymentLink {
   id                String   @id @default(cuid())
-  id_transaksi      String
+  id_transaksi      String   @unique
   link_payment      String
+
+  transaksi         Transaksi  @relation(fields: [id_transaksi], references: [id_transaksi], onDelete: Cascade)
 }
 
 model Id_game_user {

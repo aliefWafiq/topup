@@ -343,6 +343,16 @@ export const updateStatus = async (
   statusMidtrans: string
 ) => {
   try {
+    // Validasi apakah transaksi ada
+    const transaksi = await prisma.transaksi.findUnique({
+      where: { id_transaksi }
+    });
+
+    if (!transaksi) {
+      console.error(`Transaksi dengan ID ${id_transaksi} tidak ditemukan`);
+      return "FAILED";
+    }
+
     let mappedStatus: StatusTransaksi;
     switch (statusMidtrans) {
       case "settlement":
@@ -369,15 +379,16 @@ export const updateStatus = async (
       data: { status: mappedStatus },
     });
 
-    if (mappedStatus === "PAID") topUp(id_transaksi);
+    if (mappedStatus === "PAID") {
+      await topUp(id_transaksi);
+    }
 
-    console.log(mappedStatus);
-    console.log(statusMidtrans);
-
+    console.log("Status updated:", mappedStatus);
+    console.log("Midtrans status:", statusMidtrans);
     return mappedStatus;
   } catch (error) {
-    console.log("Gagal", error);
-    return unknown;
+    console.error("Gagal update status:", error);
+    return "FAILED";
   }
 };
 
