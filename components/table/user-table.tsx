@@ -25,7 +25,7 @@ const UserTable = async () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((user) => (
+          {users.map((user: any) => (
             <TableRow key={user.id} className="">
               <TableCell className="py-4 px-8">{user.name}</TableCell>
               <TableCell className="py-4">{user.email}</TableCell>

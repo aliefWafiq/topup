@@ -28,7 +28,7 @@ const TransaksiTable = async () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transaksi?.map((item) => (
+          {transaksi?.map((item: any) => (
             <TableRow key={item.id_transaksi} className="">
               <TableCell className="py-4 px-8">{item.id_transaksi}</TableCell>
               <TableCell className="py-4">{item.id_user}</TableCell>

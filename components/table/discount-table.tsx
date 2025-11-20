@@ -38,7 +38,7 @@ const DiscountTable = async () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {discount?.map((item) => (
+          {discount?.map((item: any) => (
             <TableRow key={item.id} className="">
               <TableCell className="py-4 px-8">{item.id}</TableCell>
               <TableCell className="py-4">{item.nama_diskon}</TableCell>
