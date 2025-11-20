@@ -1,5 +1,5 @@
 "use server";
-import { prisma } from "@/lib/prisma";
+import prisma from "./prisma";
 import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { RegisterSchema, SignInSchema, DiscountSchema } from "@/lib/zod";

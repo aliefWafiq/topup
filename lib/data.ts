@@ -1,5 +1,5 @@
 "use server"
-import { prisma } from "@/lib/prisma";
+import prisma from "./prisma";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Games } from "@/types/game";
