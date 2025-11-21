@@ -349,7 +349,6 @@ export const updateStatus = async (
     console.log("ID dari Midtrans:", id_transaksi);
     console.log("ID setelah parsing:", actualId);
 
-    // Validasi apakah transaksi ada
     const transaksi = await prisma.transaksi.findUnique({
       where: { id_transaksi: actualId }
     });
@@ -357,6 +356,11 @@ export const updateStatus = async (
     if (!transaksi) {
       console.error(`Transaksi dengan ID ${actualId} tidak ditemukan`);
       return "FAILED";
+    }
+
+    if(statusMidtrans === "PENDING"){
+      console.log("Status pending, tidak ada update yang dilakukan.");
+      return "PENDING";
     }
 
     let mappedStatus: StatusTransaksi;
