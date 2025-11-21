@@ -1,31 +1,130 @@
 import { updateStatus } from "@/lib/action";
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// Untuk Next.js App Router, gunakan runtime nodejs jika butuh setImmediate
+export const runtime = 'nodejs'; // atau 'edge' jika tidak butuh setImmediate
+export const dynamic = 'force-dynamic';
 
-export async function POST(req: Request) {
+// Verify signature Midtrans
+function verifyMidtransSignature(body: any): boolean {
   try {
-    const arrayBuffer = await req.arrayBuffer()
-    const raw = await Buffer.from(arrayBuffer)
-    const bodyString = raw.toString("utf-8");
+    const serverKey = process.env.MIDTRANS_SERVER_KEY;
+    if (!serverKey) {
+      console.error("❌ MIDTRANS_SERVER_KEY not found!");
+      return false;
+    }
 
-    const parsed = JSON.parse(bodyString)
-    const { order_id, transaction_status } = parsed
+    const signatureKey = body.signature_key;
+    const orderId = body.order_id;
+    const statusCode = body.status_code;
+    const grossAmount = body.gross_amount;
 
-    console.log("Received Midtrans Notification:", parsed);
-    setImmediate(() => {  
-      updateStatus(order_id, transaction_status)
-      .catch(error => console.log(error))
-    })
+    const hash = crypto
+      .createHash('sha512')
+      .update(`${orderId}${statusCode}${grossAmount}${serverKey}`)
+      .digest('hex');
 
-    return new Response(JSON.stringify({ status: "OK" }), { status: 200 });
-  } catch (err) {
-    console.error("Error membaca body:", err);
-    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
-      status: 500,
-    });
+    const isValid = hash === signatureKey;
+    
+    if (!isValid) {
+      console.error("❌ Invalid signature!");
+      console.error("Expected:", hash);
+      console.error("Received:", signatureKey);
+    }
+
+    return isValid;
+  } catch (error) {
+    console.error("Error verifying signature:", error);
+    return false;
   }
+}
+
+export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  
+  try {
+    // Parse body
+    const body = await request.json();
+    
+    const {
+      order_id,
+      transaction_status,
+      fraud_status,
+      signature_key,
+      status_code,
+      gross_amount
+    } = body;
+
+    console.log("=== MIDTRANS WEBHOOK RECEIVED ===");
+    console.log("Timestamp:", new Date().toISOString());
+    console.log("Order ID:", order_id);
+    console.log("Transaction Status:", transaction_status);
+    console.log("Fraud Status:", fraud_status);
+    console.log("Status Code:", status_code);
+
+    // Verify signature untuk keamanan
+    if (!verifyMidtransSignature(body)) {
+      console.error("❌ Signature verification failed!");
+      return NextResponse.json(
+        { message: "Unauthorized - Invalid signature" },
+        { status: 401 }
+      );
+    }
+
+    console.log("✅ Signature verified");
+
+    // Handle fraud detection
+    if (fraud_status === 'deny' || fraud_status === 'challenge') {
+      console.log(`⚠️ Fraud status: ${fraud_status}`);
+      await updateStatus(order_id, 'cancel');
+      return NextResponse.json(
+        { message: "Transaction flagged as fraud" },
+        { status: 200 }
+      );
+    }
+
+    // Process update status
+    console.log("🔄 Processing status update...");
+    
+    const result = await updateStatus(order_id, transaction_status);
+    
+    const duration = Date.now() - startTime;
+    console.log(`✅ Status updated to: ${result} (${duration}ms)`);
+    console.log("===================================");
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Notification processed",
+        status: result
+      },
+      { status: 200 }
+    );
+
+  } catch (error: any) {
+    const duration = Date.now() - startTime;
+    console.error("❌ Webhook Error:", error.message);
+    console.error("Duration:", duration + "ms");
+    console.error("Stack:", error.stack);
+
+    // Tetap return 200 agar Midtrans tidak retry terus-menerus
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error processing notification",
+        error: error.message
+      },
+      { status: 200 }
+    );
+  }
+}
+
+// Optional: GET endpoint untuk health check
+export async function GET() {
+  return NextResponse.json({
+    status: "OK",
+    message: "Midtrans webhook endpoint is running",
+    timestamp: new Date().toISOString()
+  });
 }

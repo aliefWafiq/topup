@@ -1,5 +1,5 @@
 "use server";
-import prisma from "./prisma";
+import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { RegisterSchema, SignInSchema, DiscountSchema } from "@/lib/zod";
@@ -22,6 +22,16 @@ import {
 import { Discount } from "@/types/discount";
 import { State } from "@/types/state";
 import { Id_game_user } from "@prisma/client";
+
+const STATUS_PRIORITY: Record<string, number> = {
+  'FAILED': 1,
+  'CANCELLED': 2,
+  'PENDING': 3,
+  'PAID': 4,
+  'REFUNDED': 5,
+  'PROCESSING': 6,
+  'COMPLETED': 7,
+};
 
 interface ActionState {
   success: boolean;
@@ -233,28 +243,41 @@ export const getDiscount = async (
 // TOPUP
 const topUp = async (orderId: string) => {
   try {
+    console.log(`[TopUp] Starting for order: ${orderId}`);
+
     const getOrderId = await prisma.transaksi.findUnique({
       where: { id_transaksi: orderId },
+      select: {
+        kode_produk: true,
+        id_gameUser: true,
+        server: true,
+        harga: true,
+      }
     });
 
-    if (!getOrderId) throw new Error("Data tidak ditemukan");
+    if (!getOrderId) {
+      throw new Error("Data tidak ditemukan");
+    }
 
-    const signature = createHash("md5").update(
-      `${process.env.MEMBER_CODE}:${process.env.SECRET_KEY_TOKOVOUCHER}:${orderId}`
-    );
+    const signature = createHash("md5")
+      .update(`${process.env.MEMBER_CODE}:${process.env.SECRET_KEY_TOKOVOUCHER}:${orderId}`)
+      .digest('hex'); // ✅ Tambahkan .digest('hex')
 
-    console.log(signature);
+    console.log(`[TopUp] Signature generated`);
+    
     const total = getOrderId.harga;
     const totalBersih = total - 2000;
 
     const body = {
       ref_id: orderId,
-      produk: getOrderId?.kode_produk,
-      tujuan: getOrderId?.id_gameUser,
-      server_id: getOrderId?.server,
+      produk: getOrderId.kode_produk,
+      tujuan: getOrderId.id_gameUser,
+      server_id: getOrderId.server,
       member_code: process.env.MEMBER_CODE,
       signature: signature,
     };
+
+    console.log(`[TopUp] Calling API Tokovoucher...`);
 
     const response = await fetch("https://api.tokovoucher.net/v1/transaksi", {
       method: "POST",
@@ -263,23 +286,16 @@ const topUp = async (orderId: string) => {
       },
       body: JSON.stringify(body),
     });
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const currentDate = new Date();
-    const periode = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
-    );
-    const dataKeuangan = await getDataKeuanganBulanIni(periode);
-
     const responseData = await response.json();
-    console.log(responseData);
+    console.log(`[TopUp] API Response:`, responseData);
 
     let mappedStatus: StatusTransaksi;
-    switch (responseData.status) {
+    switch (responseData.status?.toLowerCase()) {
       case "pending":
         mappedStatus = "PROCESSING";
         break;
@@ -293,25 +309,32 @@ const topUp = async (orderId: string) => {
         mappedStatus = "CANCELLED";
     }
 
+    // Update transaksi status
     await prisma.transaksi.update({
       where: { id_transaksi: orderId },
       data: { status: mappedStatus },
     });
 
+    console.log(`[TopUp] Updated to ${mappedStatus}`);
+
+    // Update data keuangan
+    const currentDate = new Date();
+    const periode = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
+
     const existing = await prisma.dataKeuangan.findFirst({
-      where: {
-        periode,
-      },
+      where: { periode },
     });
 
     if (existing) {
-      const totalAkhir = (dataKeuangan?.total ?? 0) + total;
-      const totalBersihAkhir = (dataKeuangan?.totalBersih ?? 0) + totalBersih;
       await prisma.dataKeuangan.update({
         where: { id: existing.id },
         data: {
-          total: totalAkhir,
-          totalBersih: totalBersihAkhir,
+          total: { increment: total },
+          totalBersih: { increment: totalBersih },
         },
       });
     } else {
@@ -324,16 +347,12 @@ const topUp = async (orderId: string) => {
       });
     }
 
+    console.log(`✅ [TopUp] Completed successfully for ${orderId}`);
     return mappedStatus;
-  } catch (error) {
-    console.error("Error mengirim POST: ", error);
-    return NextResponse.json({
-      success: false,
-      message: "Gagal mengirim data",
-    });
-    {
-      status: 500;
-    }
+
+  } catch (error: any) {
+    console.error(`❌ [TopUp] Error for ${orderId}:`, error.message);
+    throw error; // Throw agar bisa di-catch di updateStatus
   }
 };
 
@@ -346,30 +365,40 @@ export const updateStatus = async (
     // Parse ID - ambil bagian sebelum tanda "-"
     const actualId = id_transaksi.split('-')[0];
     
-    console.log("ID dari Midtrans:", id_transaksi);
+    console.log(`[${new Date().toISOString()}] Webhook received`);
+    console.log("Order ID dari Midtrans:", id_transaksi);
     console.log("ID setelah parsing:", actualId);
+    console.log("Status Midtrans:", statusMidtrans);
 
-    const transaksi = await prisma.transaksi.findUnique({
-      where: { id_transaksi: actualId }
-    });
-
-    if (!transaksi) {
-      console.error(`Transaksi dengan ID ${actualId} tidak ditemukan`);
-      return "FAILED";
-    }
-
-    if(statusMidtrans === "PENDING"){
-      console.log("Status pending, tidak ada update yang dilakukan.");
+    // ✅ Skip pending (lowercase!)
+    if (statusMidtrans.toLowerCase() === "pending") {
+      console.log("⏭️ Skipping pending status (already default)");
       return "PENDING";
     }
 
+    // Query transaksi dengan minimal select
+    const transaksi = await prisma.transaksi.findUnique({
+      where: { id_transaksi: actualId },
+      select: {
+        status: true,
+        id_user: true,
+        harga: true,
+        kode_produk: true,
+        id_gameUser: true,
+        server: true,
+      }
+    });
+
+    if (!transaksi) {
+      console.error(`❌ Transaksi dengan ID ${actualId} tidak ditemukan`);
+      return "FAILED";
+    }
+
+    // Map status
     let mappedStatus: StatusTransaksi;
-    switch (statusMidtrans) {
+    switch (statusMidtrans.toLowerCase()) {
       case "settlement":
         mappedStatus = "PAID";
-        break;
-      case "pending":
-        mappedStatus = "PENDING";
         break;
       case "cancel":
         mappedStatus = "CANCELLED";
@@ -381,22 +410,59 @@ export const updateStatus = async (
         mappedStatus = "REFUNDED";
         break;
       default:
+        console.log(`⚠️ Unknown status: ${statusMidtrans}`);
         mappedStatus = "FAILED";
     }
 
-    await prisma.transaksi.update({
-      where: { id_transaksi: actualId },
-      data: { status: mappedStatus },
-    });
+    // Check priority untuk prevent override
+    const currentPriority = STATUS_PRIORITY[transaksi.status] || 0;
+    const newPriority = STATUS_PRIORITY[mappedStatus] || 0;
 
-    if (mappedStatus === "PAID") {
-      await topUp(actualId);
+    if (newPriority <= currentPriority) {
+      console.log(`⏭️ Skip update: ${mappedStatus} (${newPriority}) <= ${transaksi.status} (${currentPriority})`);
+      return transaksi.status;
     }
 
-    console.log("Status updated:", mappedStatus);
+    // Update dengan updateMany untuk idempotency
+    const updated = await prisma.transaksi.updateMany({
+      where: {
+        id_transaksi: actualId,
+        status: transaksi.status // Only update if status hasn't changed
+      },
+      data: { status: mappedStatus }
+    });
+
+    if (updated.count === 0) {
+      console.log("⏭️ Already updated by another webhook");
+      return mappedStatus;
+    }
+
+    console.log(`✅ Status updated: ${transaksi.status} → ${mappedStatus}`);
+
+    // ✅ TopUp async (non-blocking) - Hanya jika PAID dan belum di-topup sebelumnya
+    if (mappedStatus === "PAID" && transaksi.status !== "PAID") {
+      console.log(`💰 Triggering topUp for ${actualId}`);
+      
+      // Jalankan di background tanpa await
+      topUp(actualId)
+        .then((result) => {
+          console.log(`✅ TopUp completed for ${actualId}:`, result);
+        })
+        .catch((error) => {
+          console.error(`❌ TopUp failed for ${actualId}:`, error);
+          // Optional: Bisa tambahkan retry logic atau queue di sini
+        });
+    }
+
     return mappedStatus;
-  } catch (error) {
-    console.error("Gagal update status:", error);
+
+  } catch (error: any) {
+    console.error("❌ Error updateStatus:", error.message);
+    
+    if (error.code === 'P2024') {
+      console.error("⚠️ CONNECTION POOL EXHAUSTED - Increase connection_limit!");
+    }
+    
     return "FAILED";
   }
 };
@@ -470,33 +536,34 @@ export const DeleteDiscount = async (id: string) => {
 };
 
 // PAYMENT LINK
+// PAYMENT LINK
 export const PaymentLinkMidtrans = async (id: string) => {
   const dataTransaksi = await getDataTransaksi(id);
   const startTime = new Date();
   const dataUser = await getDataUser(dataTransaksi?.id_user || "");
 
+  // ✅ Generate unique order_id
+  const order_id = `${dataTransaksi?.id_transaksi}-${Date.now()}`;
+
   const body = {
     transaction_details: {
-      order_id: dataTransaksi?.id_transaksi,
+      order_id: order_id, // ✅ Gunakan order_id yang unik
       gross_amount: dataTransaksi?.harga,
       payment_link_id: "",
     },
     customer_required: false,
     usage_limit: 1,
     expiry: {
-      start_time: startTime,
+      start_time: startTime.toISOString(), // ✅ Convert to ISO string
       duration: 20,
       unit: "days",
     },
     item_details: [
       {
-        id_user: dataTransaksi?.id_user,
-        id_gameUser: dataTransaksi?.id_gameUser,
-        operator_produk: dataTransaksi?.operator_produk,
+        id: dataTransaksi?.kode_produk,
         name: dataTransaksi?.kode_produk,
         price: dataTransaksi?.harga,
         quantity: 1,
-        server: dataTransaksi?.server,
       },
     ],
     customer_details: {
@@ -525,8 +592,8 @@ export const PaymentLinkMidtrans = async (id: string) => {
 
   if (!checkData) {
     const res = await response.json();
-    AddPaymentLink(dataTransaksi?.id_transaksi || "", res.payment_url);
-    console.log(res.payment_url);
+    await AddPaymentLink(dataTransaksi?.id_transaksi || "", res.payment_url);
+    console.log("Payment URL:", res.payment_url);
 
     return res.payment_url;
   } else {
