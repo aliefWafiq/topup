@@ -2,16 +2,14 @@ import { updateStatus } from "@/lib/action";
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 
-// Untuk Next.js App Router, gunakan runtime nodejs jika butuh setImmediate
-export const runtime = 'nodejs'; // atau 'edge' jika tidak butuh setImmediate
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-// Verify signature Midtrans
 function verifyMidtransSignature(body: any): boolean {
   try {
     const serverKey = process.env.MIDTRANS_SERVER_KEY;
     if (!serverKey) {
-      console.error("❌ MIDTRANS_SERVER_KEY not found!");
+      console.error("MIDTRANS_SERVER_KEY not found!");
       return false;
     }
 
@@ -28,7 +26,7 @@ function verifyMidtransSignature(body: any): boolean {
     const isValid = hash === signatureKey;
     
     if (!isValid) {
-      console.error("❌ Invalid signature!");
+      console.error("Invalid signature!");
       console.error("Expected:", hash);
       console.error("Received:", signatureKey);
     }
@@ -44,7 +42,6 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
   
   try {
-    // Parse body
     const body = await request.json();
     
     const {
@@ -56,27 +53,25 @@ export async function POST(request: NextRequest) {
       gross_amount
     } = body;
 
-    console.log("=== MIDTRANS WEBHOOK RECEIVED ===");
-    console.log("Timestamp:", new Date().toISOString());
-    console.log("Order ID:", order_id);
-    console.log("Transaction Status:", transaction_status);
-    console.log("Fraud Status:", fraud_status);
-    console.log("Status Code:", status_code);
+    // console.log("=== MIDTRANS WEBHOOK RECEIVED ===");
+    // console.log("Timestamp:", new Date().toISOString());
+    // console.log("Order ID:", order_id);
+    // console.log("Transaction Status:", transaction_status);
+    // console.log("Fraud Status:", fraud_status);
+    // console.log("Status Code:", status_code);
 
-    // Verify signature untuk keamanan
     if (!verifyMidtransSignature(body)) {
-      console.error("❌ Signature verification failed!");
+      console.error("Signature verification failed!");
       return NextResponse.json(
         { message: "Unauthorized - Invalid signature" },
         { status: 401 }
       );
     }
 
-    console.log("✅ Signature verified");
+    // console.log("Signature verified");
 
-    // Handle fraud detection
     if (fraud_status === 'deny' || fraud_status === 'challenge') {
-      console.log(`⚠️ Fraud status: ${fraud_status}`);
+      console.log(`Fraud status: ${fraud_status}`);
       await updateStatus(order_id, 'cancel');
       return NextResponse.json(
         { message: "Transaction flagged as fraud" },
@@ -84,14 +79,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Process update status
-    console.log("🔄 Processing status update...");
+    console.log("Processing status update...");
     
     const result = await updateStatus(order_id, transaction_status);
     
-    const duration = Date.now() - startTime;
-    console.log(`✅ Status updated to: ${result} (${duration}ms)`);
-    console.log("===================================");
+    // const duration = Date.now() - startTime;
+    // console.log(`Status updated to: ${result} (${duration}ms)`);
+    // console.log("===================================");
 
     return NextResponse.json(
       {
@@ -104,11 +98,10 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     const duration = Date.now() - startTime;
-    console.error("❌ Webhook Error:", error.message);
-    console.error("Duration:", duration + "ms");
-    console.error("Stack:", error.stack);
+    // console.error("Webhook Error:", error.message);
+    // console.error("Duration:", duration + "ms");
+    // console.error("Stack:", error.stack);
 
-    // Tetap return 200 agar Midtrans tidak retry terus-menerus
     return NextResponse.json(
       {
         success: false,
@@ -120,7 +113,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Optional: GET endpoint untuk health check
 export async function GET() {
   return NextResponse.json({
     status: "OK",

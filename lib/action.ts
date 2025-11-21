@@ -261,7 +261,7 @@ const topUp = async (orderId: string) => {
 
     const signature = createHash("md5")
       .update(`${process.env.MEMBER_CODE}:${process.env.SECRET_KEY_TOKOVOUCHER}:${orderId}`)
-      .digest('hex'); // ✅ Tambahkan .digest('hex')
+      .digest('hex');
 
     console.log(`[TopUp] Signature generated`);
     
@@ -277,7 +277,7 @@ const topUp = async (orderId: string) => {
       signature: signature,
     };
 
-    console.log(`[TopUp] Calling API Tokovoucher...`);
+    // console.log(`[TopUp] Calling API Tokovoucher...`);
 
     const response = await fetch("https://api.tokovoucher.net/v1/transaksi", {
       method: "POST",
@@ -309,7 +309,6 @@ const topUp = async (orderId: string) => {
         mappedStatus = "CANCELLED";
     }
 
-    // Update transaksi status
     await prisma.transaksi.update({
       where: { id_transaksi: orderId },
       data: { status: mappedStatus },
@@ -317,7 +316,6 @@ const topUp = async (orderId: string) => {
 
     console.log(`[TopUp] Updated to ${mappedStatus}`);
 
-    // Update data keuangan
     const currentDate = new Date();
     const periode = new Date(
       currentDate.getFullYear(),
@@ -347,12 +345,16 @@ const topUp = async (orderId: string) => {
       });
     }
 
-    console.log(`✅ [TopUp] Completed successfully for ${orderId}`);
+    console.log(`[TopUp] Completed successfully for ${orderId}`);
     return mappedStatus;
 
   } catch (error: any) {
-    console.error(`❌ [TopUp] Error for ${orderId}:`, error.message);
-    throw error; // Throw agar bisa di-catch di updateStatus
+    console.error(`[TopUp] Error for ${orderId}:`, error.message);
+    await prisma.transaksi.update({
+      where: { id_transaksi: orderId },
+      data: { status: "FAILED" },
+    });
+    throw error; 
   }
 };
 
@@ -362,21 +364,17 @@ export const updateStatus = async (
   statusMidtrans: string
 ) => {
   try {
-    // Parse ID - ambil bagian sebelum tanda "-"
     const actualId = id_transaksi.split('-')[0];
-    
-    console.log(`[${new Date().toISOString()}] Webhook received`);
-    console.log("Order ID dari Midtrans:", id_transaksi);
-    console.log("ID setelah parsing:", actualId);
-    console.log("Status Midtrans:", statusMidtrans);
+    // console.log(`[${new Date().toISOString()}] Webhook received`);
+    // console.log("Order ID dari Midtrans:", id_transaksi);
+    // console.log("ID setelah parsing:", actualId);
+    // console.log("Status Midtrans:", statusMidtrans);
 
-    // ✅ Skip pending (lowercase!)
     if (statusMidtrans.toLowerCase() === "pending") {
-      console.log("⏭️ Skipping pending status (already default)");
+      console.log("Skipping pending status (already default)");
       return "PENDING";
     }
 
-    // Query transaksi dengan minimal select
     const transaksi = await prisma.transaksi.findUnique({
       where: { id_transaksi: actualId },
       select: {
@@ -390,7 +388,7 @@ export const updateStatus = async (
     });
 
     if (!transaksi) {
-      console.error(`❌ Transaksi dengan ID ${actualId} tidak ditemukan`);
+      console.error(`Transaksi dengan ID ${actualId} tidak ditemukan`);
       return "FAILED";
     }
 
@@ -410,11 +408,9 @@ export const updateStatus = async (
         mappedStatus = "REFUNDED";
         break;
       default:
-        console.log(`⚠️ Unknown status: ${statusMidtrans}`);
         mappedStatus = "FAILED";
     }
 
-    // Check priority untuk prevent override
     const currentPriority = STATUS_PRIORITY[transaksi.status] || 0;
     const newPriority = STATUS_PRIORITY[mappedStatus] || 0;
 
@@ -423,11 +419,10 @@ export const updateStatus = async (
       return transaksi.status;
     }
 
-    // Update dengan updateMany untuk idempotency
     const updated = await prisma.transaksi.updateMany({
       where: {
         id_transaksi: actualId,
-        status: transaksi.status // Only update if status hasn't changed
+        status: transaksi.status
       },
       data: { status: mappedStatus }
     });
@@ -439,28 +434,25 @@ export const updateStatus = async (
 
     console.log(`✅ Status updated: ${transaksi.status} → ${mappedStatus}`);
 
-    // ✅ TopUp async (non-blocking) - Hanya jika PAID dan belum di-topup sebelumnya
     if (mappedStatus === "PAID" && transaksi.status !== "PAID") {
-      console.log(`💰 Triggering topUp for ${actualId}`);
+      console.log(`Triggering topUp for ${actualId}`);
       
-      // Jalankan di background tanpa await
       topUp(actualId)
         .then((result) => {
-          console.log(`✅ TopUp completed for ${actualId}:`, result);
+          console.log(`TopUp completed for ${actualId}:`, result);
         })
         .catch((error) => {
-          console.error(`❌ TopUp failed for ${actualId}:`, error);
-          // Optional: Bisa tambahkan retry logic atau queue di sini
+          console.error(`TopUp failed for ${actualId}:`, error);
         });
     }
 
     return mappedStatus;
 
   } catch (error: any) {
-    console.error("❌ Error updateStatus:", error.message);
+    console.error("Error updateStatus:", error.message);
     
     if (error.code === 'P2024') {
-      console.error("⚠️ CONNECTION POOL EXHAUSTED - Increase connection_limit!");
+      console.error("CONNECTION POOL EXHAUSTED - Increase connection_limit!");
     }
     
     return "FAILED";
@@ -536,25 +528,23 @@ export const DeleteDiscount = async (id: string) => {
 };
 
 // PAYMENT LINK
-// PAYMENT LINK
 export const PaymentLinkMidtrans = async (id: string) => {
   const dataTransaksi = await getDataTransaksi(id);
   const startTime = new Date();
   const dataUser = await getDataUser(dataTransaksi?.id_user || "");
 
-  // ✅ Generate unique order_id
   const order_id = `${dataTransaksi?.id_transaksi}-${Date.now()}`;
 
   const body = {
     transaction_details: {
-      order_id: order_id, // ✅ Gunakan order_id yang unik
+      order_id: order_id,
       gross_amount: dataTransaksi?.harga,
       payment_link_id: "",
     },
     customer_required: false,
     usage_limit: 1,
     expiry: {
-      start_time: startTime.toISOString(), // ✅ Convert to ISO string
+      start_time: startTime.toISOString(), 
       duration: 20,
       unit: "days",
     },
