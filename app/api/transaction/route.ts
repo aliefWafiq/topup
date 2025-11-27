@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         order_id: id_transaksi,
         gross_amount: price,
       },
-      item_details: {
+      item_details: [{
         jenis_id: jenis_id,
         id_user: id_user,
         id_gameUser: id_gameUser,
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         quantity: 1,
         server: server,
         code: code,
-      },
+      }],
       customer_details: {
         email,
       },
