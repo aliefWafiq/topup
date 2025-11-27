@@ -243,6 +243,8 @@ export const getDiscount = async (
 // TOPUP
 const topUp = async (orderId: string) => {
   try {
+    console.log(`[TopUp] Starting for order: ${orderId}`);
+
     const getOrderId = await prisma.transaksi.findUnique({
       where: { id_transaksi: orderId },
       select: {
@@ -274,6 +276,8 @@ const topUp = async (orderId: string) => {
       member_code: process.env.MEMBER_CODE,
       signature: signature,
     };
+
+    // console.log(`[TopUp] Calling API Tokovoucher...`);
 
     const response = await fetch("https://api.tokovoucher.net/v1/transaksi", {
       method: "POST",
@@ -367,6 +371,7 @@ export const updateStatus = async (
     // console.log("Status Midtrans:", statusMidtrans);
 
     if (statusMidtrans.toLowerCase() === "pending") {
+      console.log("Skipping pending status (already default)");
       return "PENDING";
     }
 
