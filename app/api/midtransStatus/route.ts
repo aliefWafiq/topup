@@ -53,12 +53,12 @@ export async function POST(request: NextRequest) {
       gross_amount
     } = body;
 
-    // console.log("=== MIDTRANS WEBHOOK RECEIVED ===");
-    // console.log("Timestamp:", new Date().toISOString());
-    // console.log("Order ID:", order_id);
-    // console.log("Transaction Status:", transaction_status);
-    // console.log("Fraud Status:", fraud_status);
-    // console.log("Status Code:", status_code);
+    console.log("=== MIDTRANS WEBHOOK RECEIVED ===");
+    console.log("Timestamp:", new Date().toISOString());
+    console.log("Order ID:", order_id);
+    console.log("Transaction Status:", transaction_status);
+    console.log("Fraud Status:", fraud_status);
+    console.log("Status Code:", status_code);
 
     if (!verifyMidtransSignature(body)) {
       console.error("Signature verification failed!");
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // console.log("Signature verified");
+    console.log("Signature verified");
 
     if (fraud_status === 'deny' || fraud_status === 'challenge') {
       console.log(`Fraud status: ${fraud_status}`);
@@ -83,9 +83,9 @@ export async function POST(request: NextRequest) {
     
     const result = await updateStatus(order_id, transaction_status);
     
-    // const duration = Date.now() - startTime;
-    // console.log(`Status updated to: ${result} (${duration}ms)`);
-    // console.log("===================================");
+    const duration = Date.now() - startTime;
+    console.log(`Status updated to: ${result} (${duration}ms)`);
+    console.log("===================================");
 
     return NextResponse.json(
       {
@@ -98,9 +98,9 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     const duration = Date.now() - startTime;
-    // console.error("Webhook Error:", error.message);
-    // console.error("Duration:", duration + "ms");
-    // console.error("Stack:", error.stack);
+    console.error("Webhook Error:", error.message);
+    console.error("Duration:", duration + "ms");
+    console.error("Stack:", error.stack);
 
     return NextResponse.json(
       {
