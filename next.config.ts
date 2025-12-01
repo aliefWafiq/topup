@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       "8mrxxogiq7r7hcmg.public.blob.vercel-storage.com",
       "cdn.aplikasikreasi.id",
       "play-lh.googleusercontent.com",
+      "upload.wikimedia.org"
     ],
     remotePatterns: [
       { protocol: "https", hostname: "cdn.aplikasikreasi.id", pathname: "**" },

@@ -414,26 +414,75 @@ export default function RootLayout() {
       </section>
 
       {/* FOOTER */}
-      <footer className="h-60 bg-gray-200 pb-12">
-          <div className="flex w-full h-full">
-            <div className="w-1/2 px-12 flex flex-col justify-center">
-              <h1 className="text-5xl font-bold">TopUp</h1>
-              <p className="mt-4">Buat proses topup mu <br></br> jadi lebih mudah</p>
+      <footer className="bg-gray-900 text-gray-300 py-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div className="space-y-4">
+              <h1 className="text-4xl font-bold text-white">TopUp</h1>
+              <p className="text-sm leading-relaxed text-gray-400">
+                Platform top-up game termurah, tercepat, dan terpercaya di Indonesia.
+                Buat pengalaman gamingmu lebih seru.
+              </p>
             </div>
-            <div className="w-1/2 flex flex-col justify-center items-center md:items-start">
-              <div>
-                <p className="font-bold mb-2">Links</p>
-                <div className="flex flex-col">
-                  <a href="#hero">Home</a>
-                  <a href="#game">Games</a>
-                  <a href="#promo">Promo</a>
-                  <a href="#testimoni">Testimoni</a>
-                </div>
+
+            <div>
+              <h3 className="text-white font-semibold mb-6 text-lg">Akses Cepat</h3>
+              <ul className="space-y-3 text-sm">
+                <li><a href="#hero" className="hover:text-blue-500 transition-colors">Home</a></li>
+                <li><a href="#game" className="hover:text-blue-500 transition-colors">Daftar Game</a></li>
+                <li><a href="#promo" className="hover:text-blue-500 transition-colors">Promo Spesial</a></li>
+                <li><a href="#testimoni" className="hover:text-blue-500 transition-colors">Ulasan Pelanggan</a></li>
+                <li><a href="#track" className="hover:text-blue-500 transition-colors">Lacak Pesanan</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-white font-semibold mb-6 text-lg">Ikuti Kami</h3>
+              <div className="flex space-x-4">
+                <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                </a>
               </div>
-              {/* <p>© 2025 TopUp. All rights reserved.</p> */}
+            </div>
+
+            <div>
+                <h3 className="text-white font-semibold mb-6 text-lg">Pembayaran</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-white h-10 rounded flex items-center justify-center overflow-hidden">
+                    <Image src="https://www.svgrepo.com/show/303676/bca-bank-central-asia-logo.svg" alt="BCA" width={40} height={40} />
+                  </div>
+                  <div className="bg-white h-10 rounded flex items-center justify-center overflow-hidden">
+                    <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Bank_Negara_Indonesia_logo_%282004%29.svg" alt="BNI" width={40} height={40} />
+                  </div>
+                  <div className="bg-white h-10 rounded flex items-center justify-center overflow-hidden">
+                    <Image src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg" alt="BNI" width={50} height={50} />
+                  </div>
+                  <div className="bg-white h-10 rounded flex items-center justify-center overflow-hidden">
+                    <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/768px-Logo_dana_blue.svg.png?20200124191307" alt="DANA" width={50} height={50} />
+                  </div>
+                  <div className="bg-white h-10 rounded flex items-center justify-center overflow-hidden">
+                    <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Logo_Gopay.svg/768px-Logo_Gopay.svg.png?20240815061050" alt="GOPAY" width={30} height={30} />
+                  </div>
+                </div>
+            </div>
+            
+          </div>
+
+          <div className="border-t border-gray-800 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+              <p className="text-sm text-gray-500">© 2025 TopUp Indonesia. All rights reserved.</p>
+              <div className="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-500">
+                <a href="#" className="hover:text-white">Privacy Policy</a>
+                <a href="#" className="hover:text-white">Terms of Service</a>
+              </div>
             </div>
           </div>
-      </footer>
+        </footer>
     </>
   );
 }
