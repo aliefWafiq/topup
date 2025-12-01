@@ -10,8 +10,10 @@ import SearchInput from "@/components/searchInput";
 import ListGames from "@/components/ListGames";
 import CardRekomendasi from "@/components/cardRekomendasi";
 import Card from "@/components/card";
+import { Suspense } from "react";
+import LoadingCard from "@/components/loadingCard";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export default async function Home({
   searchParams,
@@ -30,17 +32,17 @@ export default async function Home({
             <CarouselContent>
               <CarouselItem>
                 <div className="md:w-[1250px] md:h-[400px] w-[400px] h-[200px] relative">
-                  <Image src={"/X.jpg"} fill alt="banner" />
+                  <Image src={"/X.jpg"} fill alt="banner" priority sizes="(max-width: 768px) 100vw, 80vw" />
                 </div>
               </CarouselItem>
               <CarouselItem>
                 <div className="md:w-[1250px] md:h-[400px] w-[400px] h-[200px] relative">
-                  <Image src={"/banner-valo.jpg"} fill alt="banner" />
+                  <Image src={"/banner-valo.jpg"} fill alt="banner" priority sizes="(max-width: 768px) 100vw, 80vw" />
                 </div>
               </CarouselItem>
               <CarouselItem>
                 <div className="md:w-[1250px] md:h-[400px] w-[400px] h-[200px] relative">
-                  <Image src={"/Ninomae.jpg"} fill alt="banner" />
+                  <Image src={"/Ninomae.jpg"} fill alt="banner" priority sizes="(max-width: 768px) 100vw, 80vw" />
                 </div>
               </CarouselItem>
             </CarouselContent>
@@ -50,16 +52,20 @@ export default async function Home({
         </div>
       </div>
       <div className="mt-2 md:mt-8 w-full">
-        <CardRekomendasi/>
+        <Suspense fallback={<LoadingCard/>}>
+          <CardRekomendasi/>
+        </Suspense>
         <div className="flex justify-center">
           <div className="md:w-1/2 w-full">
-            <SearchInput />
+              <SearchInput />
           </div>
         </div>
-        <ListGames 
-          query={finalQuery}
-          renderItem={(game) => <Card key={game.id} data={game} />} 
-        />
+            <Suspense fallback={<LoadingCard/>}>
+              <ListGames 
+                query={finalQuery}
+                renderItem={(game) => <Card key={game.id} data={game} />} 
+              />
+            </Suspense>
       </div>
     </div>
   );
