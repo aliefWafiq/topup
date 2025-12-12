@@ -10,39 +10,34 @@ import {
 import { IconCircleCheckFilled } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
 import { PaymentLink } from "@/components/button";
+import PaginationControl from "@/components/ui/pagination-control";
 
-const HistoryTransaksiTable = async () => {
-  let transaksi = (await getHistoryTransaksiUser()) ?? [];
+const HistoryTransaksiTable = async ({ currentPage }: { currentPage: number }) => {
+  let data = await getHistoryTransaksiUser(currentPage);
 
-  if (!transaksi?.length)
-    return <h1 className="text-xl mt-8">No Data Found</h1>;
+  if (!data || !data.transaksi?.length){
+    return <h1 className="text-xl mt-8">No Data Found</h1>
+  }
+
+  const { transaksi, totalPages } = data
 
   return (
+  <div className="w-full">
     <div className="overflow-hidden rounded-lg border mt-4">
       <Table>
         <TableHeader className="bg-slate-100">
           <TableRow>
-            <TableHead className="py-3 px-6 text-left text-sm">
-              Id Transaksi
-            </TableHead>
-            <TableHead className="py-3 px-6 text-left text-sm">
-              Id Game User
-            </TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">Id Transaksi</TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">Id Game User</TableHead>
             <TableHead className="py-3 px-6 text-left text-sm">Game</TableHead>
-            <TableHead className="py-3 px-6 text-left text-sm">
-              Server
-            </TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">Server</TableHead>
             <TableHead className="py-3 px-6 text-left text-sm">Harga</TableHead>
-            <TableHead className="py-3 px-6 text-left text-sm">
-              Status
-            </TableHead>
-            <TableHead className="py-3 px-6 text-left text-sm">
-              Action
-            </TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">Status</TableHead>
+            <TableHead className="py-3 px-6 text-left text-sm">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transaksi.map((transaksi: any, i: any) => (
+          {transaksi.map((transaksi: any) => (
             <TableRow key={transaksi.id_transaksi} className="bg-slate-100">
               <TableCell className="py-3 px-6">
                 {transaksi.id_transaksi}
@@ -53,7 +48,9 @@ const HistoryTransaksiTable = async () => {
               <TableCell className="py-3 px-6">
                 {transaksi.operator_produk}
               </TableCell>
-              <TableCell className="py-3 px-6">{transaksi.server}</TableCell>
+              <TableCell className="py-3 px-6">
+                {transaksi.server}
+              </TableCell>
               <TableCell className="py-3 px-6">
                 Rp {transaksi.harga.toLocaleString("id-ID")}
               </TableCell>
@@ -88,6 +85,11 @@ const HistoryTransaksiTable = async () => {
         </TableBody>
       </Table>
     </div>
+
+    <div className="mt-5 flex justify-end bg-white p-3 rounded-lg">
+      <PaginationControl totalPages={totalPages}/>
+    </div>
+  </div> 
   );
 };
 

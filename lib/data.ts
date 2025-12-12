@@ -4,6 +4,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Games } from "@/types/game";
 
+const items_per_page = 5;
+
 export const getUsers = async () => {
   const session = await auth();
 
@@ -26,18 +28,31 @@ export const getJumlahUser = async () => {
   }
 };
 
-export const getHistoryTransaksiUser = async () => {
+export const getHistoryTransaksiUser = async(currentPage: number) => {
   const session = await auth();
+  const userId = session?.user.id;
+
+  const offset = (currentPage - 1) * items_per_page;
 
   try {
-    const userId = session?.user.id;
-    const historyTransaksi = await prisma.transaksi.findMany({
-      where: { id_user: userId },
-      orderBy: { createdAt: "desc" },
-    });
-    return historyTransaksi;
+    const [transaksi, totalCount] = await prisma.$transaction([
+      prisma.transaksi.findMany({
+        where: { id_user: userId },
+        orderBy: { createdAt: "desc" },
+        take: items_per_page,
+        skip: offset,
+      }),
+      prisma.transaksi.count({
+        where: { id_user: userId },
+      })
+    ])
+
+    const totalPages = Math.ceil(totalCount / items_per_page)
+
+    return { transaksi, totalPages }
   } catch (error) {
     console.log(error);
+    return null
   }
 };
 
