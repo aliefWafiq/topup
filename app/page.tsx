@@ -432,7 +432,6 @@ export default function RootLayout() {
                 <li><a href="#game" className="hover:text-blue-500 transition-colors">Daftar Game</a></li>
                 <li><a href="#promo" className="hover:text-blue-500 transition-colors">Promo Spesial</a></li>
                 <li><a href="#testimoni" className="hover:text-blue-500 transition-colors">Ulasan Pelanggan</a></li>
-                <li><a href="#track" className="hover:text-blue-500 transition-colors">Lacak Pesanan</a></li>
               </ul>
             </div>
 
