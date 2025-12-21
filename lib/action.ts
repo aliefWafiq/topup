@@ -7,13 +7,10 @@ import { hashSync } from "bcrypt-ts";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { StatusTransaksi } from "@prisma/client";
-import { NextResponse } from "next/server";
 import { createHash } from "crypto";
-import { success, unknown } from "zod";
 import { revalidatePath } from "next/cache";
 import { put, del } from "@vercel/blob";
 import {
-  getDataKeuanganBulanIni,
   getDataTransaksi,
   getDataUser,
   getPaymentLink,
@@ -21,7 +18,6 @@ import {
 
 import { Discount } from "@/types/discount";
 import { State } from "@/types/state";
-import { Id_game_user } from "@prisma/client";
 
 const STATUS_PRIORITY: Record<string, number> = {
   'FAILED': 1,
@@ -834,3 +830,49 @@ export async function EditIdGameUser(
     };
   }
 }
+
+// jadikan parameter untuk variabel nyaa 
+
+export const Checkout = async (
+  server: string, 
+  id_gameUser: string, 
+  totalHarga: number, 
+  orderId: number, 
+  id_user: string, 
+  namaProduk: string, 
+  jenis_id: string,
+  operator_produk: string,
+  code: string,
+  idDiscount: string | null,
+  email: string
+) => {
+      const body = {
+        id_transaksi: String(orderId),
+        id_user: id_user,
+        id_gameUser: id_gameUser,
+        nama_produk: namaProduk,
+        price: totalHarga,
+        jenis_id: jenis_id,
+        operator_produk: operator_produk,
+        server: server,
+        code: code,
+        id_discount: idDiscount != null ? idDiscount : "",
+        email,
+      };
+
+      const response = await fetch("/api/transaction", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const json = await response.json();
+      if (json.status && json.data?.token) {
+        window.snap.pay(json.data.token);
+      } else {
+        alert("Transaksi gagal: " + json.message);
+      }
+    
+  };

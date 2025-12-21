@@ -23,7 +23,7 @@ export const DesktopNavLinks = () => {
             <li>
                 <Link
                     href="/register"
-                    className={`border font-semibold px-4 py-2 rounded-lg transition-colors `}>
+                    className={`border font-semibold px-4 py-2 rounded-lg transition-colors hover:bg-blue-500 hover:text-white border-blue-400`}>
                     Topup Sekarang
                 </Link>
             </li>

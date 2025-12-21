@@ -1,9 +1,10 @@
 "use client";
 import { CheckOut } from "@/components/button";
 import Script from "next/script";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { getDiscount, updateDiscountStatus } from "@/lib/action";
 import { checkUsedDiscount } from "@/lib/data";
+import { Checkout } from "@/lib/action";
 import { checkSaldo } from "@/lib/data";
 
 declare global {
@@ -47,6 +48,8 @@ export function FormPayment({
   const [discountMessage, setDiscountMessage] = useState<string>("");
   const [idDiscount, setIdDiscount] = useState<string | null>(null);
 
+  const [isPending, setIsPending] = useState(false)
+
   const handleDiscountChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -85,50 +88,45 @@ export function FormPayment({
     }
   };
 
-  const handleCheckout = async () => {
-    const server = serverRef.current?.value || "";
-    const id_gameUser = id_gameUserRef.current?.value;
-    // const getSaldo = await checkSaldo();
-
+  const handleCheckout = async() => {
+    setIsPending(true)
+    const id_gameUser = id_gameUserRef.current?.value
+    
     if (id_gameUser == "") {
-      alert("Mohon isi id game");
-    } 
-    // else if (getSaldo < totalHarga) {
-    //   alert(
-    //     "Maaf saldo sistem sedang tidak mencukupi, silahkan melakukan top up lain kali"
-    //   );
-    // }
-    else {
-      const body = {
-        id_transaksi: String(orderId),
-        id_user: id_user,
-        id_gameUser: id_gameUser,
-        nama_produk: namaProduk,
-        price: totalHarga,
-        jenis_id: jenis_id,
-        operator_produk: operator_produk,
-        server: server,
-        code: code,
-        id_discount: idDiscount != null ? idDiscount : "",
-        email,
-      };
-
-      const response = await fetch("/api/transaction", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-
-      const json = await response.json();
-      if (json.status && json.data?.token) {
-        window.snap.pay(json.data.token);
-      } else {
-        alert("Transaksi gagal: " + json.message);
-      }
+      alert("Mohon isi id game")
+      setIsPending(false)
+      return
     }
-  };
+
+    const getSaldo = await checkSaldo()
+    if (getSaldo < totalHarga) {
+      alert(
+        "Maaf saldo sistem sedang tidak mencukupi, silahkan melakukan top up lain kali"
+      )
+      setIsPending(false)
+      return
+    }
+    
+    try {
+      await Checkout(
+        serverRef.current ? serverRef.current.value : "",
+        id_gameUserRef.current ? id_gameUserRef.current.value : "",
+        totalHarga,
+        orderId,
+        id_user,
+        namaProduk,
+        jenis_id,
+        operator_produk,
+        code,
+        idDiscount,
+        email
+      )
+    }catch (error) {
+      console.error(error)
+    }finally{
+      setIsPending(false)
+    }
+  }
 
   return (
     <>
@@ -198,7 +196,7 @@ export function FormPayment({
           </div>
         </div>
         <div className="mb-2 pt-4 w-full">
-          <CheckOut onClick={handleCheckout} />
+          <CheckOut onClick={handleCheckout} pendingStatus={isPending} />
         </div>
       </div>
     </>

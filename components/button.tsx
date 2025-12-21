@@ -1,11 +1,13 @@
 "use client";
 import { useFormStatus } from "react-dom";
-import { useActionState, useTransition } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { clsx } from "clsx";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { ExportDataToExcel } from "@/lib/ExcelExport";
 import { PaymentLinkMidtrans } from "@/lib/action";
+import { set } from "zod";
+import { is } from "zod/v4/locales";
 
 const initialState = {
   message: "",
@@ -50,14 +52,20 @@ export const SubmitButton = ({
   );
 };
 
-export const CheckOut = ({ onClick }: { onClick?: () => void }) => {
+export const CheckOut = ({ onClick, pendingStatus }: { onClick?: () => void, pendingStatus?: boolean }) => {
   return (
     <button
-      className={"bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer focus:bg-blue-500"}
+      className={clsx(
+        "bg-blue-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-blue-600 hover:cursor-pointer focus:bg-blue-500",
+        {
+          "opacity-50 cursor-not-allowed": pendingStatus,
+        }
+      )}
       type="button"
+      disabled={pendingStatus}
       onClick={onClick}
     >
-    Checkout
+      {pendingStatus ? "Processing" : "Checkout"}
     </button>
   );
 };
@@ -130,22 +138,26 @@ export const DeleteButton = ({
 };
 
 export const LogoutButton = () => {
-  const pending = useFormStatus();
+  const [ isPending, setPending ] = useState(false);
 
+  const handlePending = () => {
+    setPending(true);
+    signOut({ callbackUrl: '/login' });
+  }
   return (
     <>
       <button
+        type="submit"
         className={clsx(
-          "bg-red-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-red-600 hover:cursor-pointer",
+          "bg-red-700 text-white w-full font-medium py-2.5 px-6 text-base rounded-sm hover:bg-red-600 hover:cursor-pointer focus:bg-red-500",
           {
-            "opacity-50 cursor-progress": !pending,
+            "opacity-50 cursor-not-allowed": isPending,
           }
         )}
-        onClick={() => {
-          signOut();
-        }}
+        onClick={handlePending}
+        disabled={isPending}
       >
-        Log Out
+        {isPending ? 'Processing' : "Log Out"}
       </button>
     </>
   );

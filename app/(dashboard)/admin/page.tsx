@@ -37,7 +37,7 @@ export default async function Page() {
                 <CardTitle>
                   <FontAwesomeIcon
                     icon={faCreditCard}
-                    className="text-2xl bg-slate-100 p-3 rounded-xl"
+                    className=" bg-slate-100 p-3 rounded-xl text-4xl"
                   />
                 </CardTitle>
               </CardHeader>
@@ -53,7 +53,7 @@ export default async function Page() {
                 <CardTitle>
                   <FontAwesomeIcon
                     icon={faBasketShopping}
-                    className="text-2xl bg-slate-100 p-3 rounded-xl"
+                    className="text-4xl bg-slate-100 p-3 rounded-xl"
                   />
                 </CardTitle>
               </CardHeader>
@@ -67,7 +67,7 @@ export default async function Page() {
                 <CardTitle>
                   <FontAwesomeIcon
                     icon={faUsers}
-                    className="text-2xl bg-slate-100 p-3 rounded-xl"
+                    className="text-4xl bg-slate-100 p-3 rounded-xl"
                   />
                 </CardTitle>
               </CardHeader>
