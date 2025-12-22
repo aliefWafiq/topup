@@ -5,21 +5,32 @@ import { redirect } from "next/navigation";
 import { Games } from "@/types/game";
 
 const items_per_page = 5;
+const admin_table_per_page = 10;
 
-export const getUsers = async () => {
+export const getUsers = async (currentPage: number) => {
   const session = await auth();
+  const offset = (currentPage - 1) * admin_table_per_page
 
   if (!session || !session.user || session.user.role !== "admin") redirect("/");
 
   try {
-    const users = await prisma.user.findMany();
-    return users;
+    const [user, totalCount] = await prisma.$transaction([
+    prisma.user.findMany({
+      take: admin_table_per_page,
+      skip: offset
+    }),
+    prisma.user.count()
+  ])
+
+  const totalPages = Math.ceil(totalCount / admin_table_per_page)
+
+  return {user, totalPages}
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getJumlahUser = async () => {
+export const getJumlahUser = async() => {
   try {
     const jumlahUser = await prisma.user.count();
     return jumlahUser;
@@ -67,14 +78,25 @@ export const getDataUser = async (id: string) => {
   }
 };
 
-export const getTransaksi = async () => {
+export const getTransaksi = async(currentPage: number) => {
+  const offset = (currentPage - 1) * items_per_page;
+
   try {
-    const transaksi = await prisma.transaksi.findMany({
-      orderBy: { createdAt: "desc" },
-    });
-    return transaksi;
+    const [transaksi, totalCount] = await prisma.$transaction([
+      prisma.transaksi.findMany({
+        orderBy: { createdAt: "desc" },
+        take: admin_table_per_page,
+        skip: offset,
+      }),
+      prisma.transaksi.count()
+    ]);
+
+    const totalPages = Math.ceil(totalCount / items_per_page)
+
+    return {transaksi, totalPages};
   } catch (error) {
-    console.log(error);
+    console.log(error)
+    return null
   }
 };
 

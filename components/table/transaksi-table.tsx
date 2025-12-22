@@ -10,11 +10,19 @@ import {
 import { IconCircleCheckFilled, IconLoader } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
 import { getTransaksi } from "@/lib/data";
+import PaginationControl from "@/components/ui/pagination-control";
 
-const TransaksiTable = async () => {
-  const transaksi = await getTransaksi();
+const TransaksiTable = async({ currentPage }: { currentPage: number }) => {
+  const data = await getTransaksi(currentPage);
+
+  if(!data || !data.transaksi?.length) {
+    return <h1 className="text-xl mt-8">No Data Found</h1>
+  }
+
+  const { transaksi, totalPages } = data
 
   return (
+  <div className="w-full">
     <div className="overflow-hidden rounded-lg border mt-4">
       <Table>
         <TableHeader className="bg-slate-100">
@@ -59,6 +67,10 @@ const TransaksiTable = async () => {
         </TableBody>
       </Table>
     </div>
+    <div className="mt-5">
+      <PaginationControl totalPages={totalPages} />
+    </div>
+  </div>
   );
 };
 

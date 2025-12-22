@@ -2,13 +2,10 @@ import type { Metadata } from "next"
 import HistoryTransaksiTable from "@/components/table/historiTransaksi-table"
 import LoadingTable from "@/components/loadingTable"
 import { Suspense } from "react"
+import { SearchParamsProps } from "@/types/searchProps"
 
 export const metadata: Metadata = {
     title: "Transaksi",
-}
-
-type SearchParamsProps = {
-  searchParams: Promise<{ page?: string }>;
 }
 
 const HistoryTransaksiPage = async({ searchParams }: SearchParamsProps) => {

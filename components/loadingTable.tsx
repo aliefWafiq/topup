@@ -3,7 +3,7 @@ import Skeleton from '@/components/skeleton'
 
 const LoadingTable = () => {
     return (
-        <Skeleton className="w-full md:w-[100ch] h-[50ch] rounded-lg mt-4"/>
+        <Skeleton className="w-full md:w-full h-[50ch] rounded-lg mt-4"/>
     )
 }
 

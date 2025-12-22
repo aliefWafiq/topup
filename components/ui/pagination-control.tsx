@@ -26,7 +26,7 @@ const PaginationControl = ({totalPages}:{totalPages: number}) => {
 
     return (
         <Pagination>
-            <PaginationContent>
+            <PaginationContent className='flex justify-center'>
                 <PaginationItem>
                     <PaginationPrevious
                         href={createPageUrl(currentPage - 1)}
@@ -34,11 +34,13 @@ const PaginationControl = ({totalPages}:{totalPages: number}) => {
                         className={currentPage <= 1 ? 'pointer-events-none opacity-50' : ''}
                     />
                 </PaginationItem>
-                {/* {pages.map((pageNumber) => (
+                <div className='flex w-1/3 overflow-scroll'>
+                {pages.map((pageNumber) => (
                     <PaginationItem key={pageNumber}>
                         <PaginationLink isActive={currentPage === pageNumber}>{pageNumber}</PaginationLink>
                     </PaginationItem>
-                ))} */}
+                ))}
+                </div>
                 <PaginationItem className='text-muted-foreground text-sm'>
                     of {totalPages}
                 </PaginationItem>
